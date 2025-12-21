@@ -94,7 +94,7 @@ export async function POST(req: Request) {
     const modelMessages = await convertToModelMessages(messages);
 
     const result = streamText({
-      model: openrouter("tngtech/deepseek-r1t2-chimera:free"),
+      model: openrouter("xiaomi/mimo-v2-flash:free"),
       system: systemPrompt,
       messages: modelMessages,
       temperature: 0.7,
