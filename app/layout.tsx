@@ -34,7 +34,7 @@ const cascadiaCode = Cascadia_Code({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://sharifdotg.vercel.app'),
+  metadataBase: new URL('https://www.sharifdotg.me'),
   title: "Sharif Md. Yousuf - Competitive Programmer & Software Developer",
   description: "Portfolio of Sharif Md. Yousuf, a competitive programmer and CSE student at University of Asia Pacific. ICPC Dhaka Regionalist 2024, showcasing web development projects and programming achievements.",
   keywords: [
@@ -55,7 +55,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://sharifdotg.vercel.app",
+    url: "https://www.sharifdotg.me",
     title: "Sharif Md. Yousuf - Competitive Programmer & Software Developer",
     description: "ICPC Dhaka Regionalist 2024 | CSE Student at UAP | Full-Stack Developer",
     siteName: "Sharif's Portfolio",

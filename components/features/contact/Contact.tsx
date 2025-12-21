@@ -197,7 +197,7 @@ export default function Contact() {
                   transition={{ delay: 0.1 + index * 0.1 }}
                 >
                   <Card
-                    className="group p-4 hover:scale-[1.02] transition-transform"
+                    className="group p-3 sm:p-4 hover:scale-[1.02] transition-transform"
                     variant="bordered"
                     hover
                   >
@@ -232,10 +232,10 @@ export default function Contact() {
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
               transition={{ delay: 0.4 }}
             >
-              <h4 className="text-lg font-display font-semibold text-ctp-text mb-4 flex items-center gap-2">
+              <h4 className="text-base sm:text-lg font-display font-semibold text-ctp-text mb-4 flex items-center gap-2">
                 <span>Connect on Social Media</span>
               </h4>
-              <div className="flex flex-wrap gap-3">
+              <div className="flex flex-wrap gap-2 sm:gap-3">
                 {socialLinks.map((social, index) => (
                   <motion.a
                     key={social.label}
@@ -267,13 +267,13 @@ export default function Contact() {
             animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 30 }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <Card className="p-6 bg-ctp-surface0/50" variant="elevated">
-              <h3 className="text-2xl font-display font-bold text-ctp-text mb-6 flex items-center gap-2">
-                <Send className="w-6 h-6 text-ctp-blue" />
+            <Card className="p-4 sm:p-6 bg-ctp-surface0/50" variant="elevated">
+              <h3 className="text-xl sm:text-2xl font-display font-bold text-ctp-text mb-4 sm:mb-6 flex items-center gap-2">
+                <Send className="w-5 h-5 sm:w-6 sm:h-6 text-ctp-blue" />
                 Send a Message
               </h3>
 
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}

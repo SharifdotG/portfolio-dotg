@@ -2,6 +2,8 @@
 
 > A modern, Catppuccin Mocha themed portfolio website built with Next.js 16, featuring real-time Codeforces and LeetCode stats, and an AI-powered chatbot assistant.
 
+🌐 **Live Demo**: [https://www.sharifdotg.me](https://www.sharifdotg.me)
+
 [![Next.js](https://img.shields.io/badge/Next.js-16-black?style=flat-square&logo=next.js)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7+-3178C6?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)

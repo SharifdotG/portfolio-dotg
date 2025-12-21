@@ -84,6 +84,15 @@ export default function Hero() {
                   Md. Yousuf
                 </span>
               </h1>
+              <div className="flex items-center justify-center lg:justify-start gap-2 text-lg sm:text-xl text-ctp-subtext0">
+                <span className="inline-block w-6 h-4 sm:w-7 sm:h-5 rounded-sm overflow-hidden" role="img" aria-label="Flag of Bangladesh">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" className="w-full h-full" role="img" aria-label="Flag of Bangladesh">
+                    <rect width="1200" height="800" fill="#006a4e" />
+                    <circle cx="460" cy="400" r="200" fill="#f42a41" />
+                  </svg>
+                </span>
+                <span>Dhaka, Bangladesh</span>
+              </div>
             </motion.div>
 
             <motion.p
