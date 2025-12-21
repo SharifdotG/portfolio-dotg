@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Github, Linkedin, Mail, Code2, Heart, ArrowUp, Twitter, Facebook, Instagram } from "lucide-react";
+import { Github, Linkedin, Mail, Code2, ArrowUp, Twitter, Facebook, Instagram } from "lucide-react";
 import { SiDiscord } from "@icons-pack/react-simple-icons";
 import { PERSONAL_INFO } from "@/lib/constants";
 
@@ -195,22 +195,9 @@ export default function Footer() {
           viewport={{ once: true }}
           transition={{ delay: 0.4 }}
         >
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <p className="text-center text-ctp-subtext0 text-sm flex items-center justify-center flex-wrap gap-1">
-              © {currentYear} Sharif Md. Yousuf. Built with
-              <motion.span
-                animate={{ scale: [1, 1.2, 1] }}
-                transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-              >
-                <Heart className="w-4 h-4 text-ctp-red fill-ctp-red inline" />
-              </motion.span>
-              using Next.js & Tailwind CSS
-            </p>
-            <p className="text-xs text-ctp-subtext1">
-              Last updated: {new Date().toLocaleDateString("en-US", {
-                month: "long",
-                year: "numeric",
-              })}
+              © {currentYear} Sharif Md. Yousuf. dotG for Life (≧∇≦)ﾉ
             </p>
           </div>
         </motion.div>
