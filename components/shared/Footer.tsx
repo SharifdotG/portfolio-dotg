@@ -81,23 +81,9 @@ export default function Footer() {
               <span className="gradient-text">SharifdotG</span>
             </motion.h3>
             <p className="text-ctp-subtext0 text-sm mb-4 leading-relaxed">
-              Competitive Programmer & Software Developer passionate about solving
-              complex problems and building innovative solutions.
+              A Competitive Programmer and a Computer Science Student.
+              Experienced in building web applications and developer tools.
             </p>
-            <div className="space-y-2 text-sm text-ctp-subtext1">
-              <p className="flex items-center gap-2">
-                <span className="w-2 h-2 bg-ctp-blue rounded-full" />
-                ICPC Dhaka Regionalist 2024
-              </p>
-              <p className="flex items-center gap-2">
-                <span className="w-2 h-2 bg-ctp-green rounded-full" />
-                UAP CSE Student
-              </p>
-              <p className="flex items-center gap-2">
-                <span className="w-2 h-2 bg-ctp-mauve rounded-full" />
-                CGPA: 3.81/4.00
-              </p>
-            </div>
           </motion.div>
 
           {/* Quick Links */}
