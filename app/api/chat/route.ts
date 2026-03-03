@@ -94,7 +94,7 @@ export async function POST(req: Request) {
     const modelMessages = await convertToModelMessages(messages);
 
     const result = streamText({
-      model: openrouter("xiaomi/mimo-v2-flash:free"),
+      model: openrouter("arcee-ai/trinity-large-preview:free"),
       system: systemPrompt,
       messages: modelMessages,
       temperature: 0.7,
