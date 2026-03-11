@@ -10,7 +10,7 @@ export async function POST(req: Request) {
   try {
     const { messages } = await req.json();
 
-    // System prompt with full context about Sharif from the codebase
+    // System prompt with full context about me
     const systemPrompt = `You are an AI assistant for Sharif Md. Yousuf. Use only the facts below and answer concisely, professionally, and helpfully. If unsure, say you do not have that information.
 
   Identity
