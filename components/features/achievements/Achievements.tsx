@@ -3,54 +3,48 @@
 import { useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { Trophy, Award, Star, Calendar, ExternalLink, FileImage, X } from "lucide-react";
+import {
+  Trophy,
+  Award,
+  Star,
+  Calendar,
+  ExternalLink,
+  FileImage,
+  X,
+} from "lucide-react";
 import Section from "@/components/ui/Section";
 import SectionTitle from "@/components/ui/SectionTitle";
-import Card from "@/components/ui/Card";
 import { ACHIEVEMENTS } from "@/lib/constants";
 
-// Icon mapping based on achievement type
-const getIconForType = (type: string) => {
-  switch (type) {
-    case "competition":
-      return Trophy;
-    case "scholarship":
-    case "academic":
-      return Award;
-    case "rating":
-    case "certification":
-      return Star;
-    case "training":
-      return Star;
-    case "volunteer":
-      return Award;
-    default:
-      return Trophy;
-  }
+const ease = [0.22, 1, 0.36, 1] as const;
+
+const typeStyles: Record<
+  string,
+  { icon: typeof Trophy; color: string; bg: string }
+> = {
+  competition: {
+    icon: Trophy,
+    color: "text-ctp-yellow",
+    bg: "bg-ctp-yellow/10",
+  },
+  scholarship: { icon: Award, color: "text-ctp-blue", bg: "bg-ctp-blue/10" },
+  academic: { icon: Award, color: "text-ctp-blue", bg: "bg-ctp-blue/10" },
+  rating: { icon: Star, color: "text-ctp-green", bg: "bg-ctp-green/10" },
+  certification: { icon: Star, color: "text-ctp-green", bg: "bg-ctp-green/10" },
+  training: { icon: Star, color: "text-ctp-mauve", bg: "bg-ctp-mauve/10" },
+  volunteer: { icon: Award, color: "text-ctp-pink", bg: "bg-ctp-pink/10" },
 };
 
-// Color mapping based on achievement type
-const getColorForType = (type: string) => {
-  switch (type) {
-    case "competition":
-      return "text-ctp-yellow";
-    case "scholarship":
-    case "academic":
-      return "text-ctp-blue";
-    case "rating":
-    case "certification":
-      return "text-ctp-green";
-    case "training":
-      return "text-ctp-mauve";
-    case "volunteer":
-      return "text-ctp-pink";
-    default:
-      return "text-ctp-mauve";
-  }
+const fallbackStyle = {
+  icon: Trophy,
+  color: "text-ctp-mauve",
+  bg: "bg-ctp-mauve/10",
 };
 
 export default function Achievements() {
-  const [selectedCertificate, setSelectedCertificate] = useState<string | null>(null);
+  const [selectedCertificate, setSelectedCertificate] = useState<string | null>(
+    null,
+  );
 
   return (
     <Section id="achievements">
@@ -61,87 +55,76 @@ export default function Achievements() {
         subtitle="Milestones in competitive programming, academics, and community service"
       />
 
-      {/* Achievements Grid */}
-      <div className="grid md:grid-cols-2 gap-6">
-        {ACHIEVEMENTS.map((achievement, index) => {
-          const Icon = getIconForType(achievement.type);
-          const colorClass = getColorForType(achievement.type);
+      <motion.div
+        className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-6xl mx-auto"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-60px" }}
+        transition={{ staggerChildren: 0.04 }}
+      >
+        {ACHIEVEMENTS.map((achievement) => {
+          const style = typeStyles[achievement.type] ?? fallbackStyle;
+          const Icon = style.icon;
 
           return (
             <motion.div
               key={achievement.title}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{
-                delay: index * 0.05,
-                duration: 0.5,
-                ease: [0.25, 0.1, 0.25, 1],
+              variants={{
+                hidden: { opacity: 0, y: 20 },
+                visible: {
+                  opacity: 1,
+                  y: 0,
+                  transition: { duration: 0.4, ease },
+                },
               }}
+              className="rounded-2xl border border-ctp-surface0/60 bg-ctp-surface0/30 backdrop-blur-sm p-5 hover:border-ctp-surface1 transition-colors"
             >
-              <Card
-                className="p-6 h-full group hover:border-ctp-blue/50 hover:shadow-lg transition-all duration-500"
-                variant="bordered"
-              >
-                <div className="flex items-start gap-4">
-                  <motion.div
-                    className={`p-3 bg-ctp-surface0 rounded-lg ${colorClass}`}
-                    whileHover={{ scale: 1.1, rotate: 5 }}
-                    transition={{ type: "spring", stiffness: 400, damping: 10 }}
-                  >
-                    <Icon className="w-6 h-6" />
-                  </motion.div>
+              <div className="flex items-start gap-3">
+                <div className={`p-2 rounded-lg ${style.bg} shrink-0`}>
+                  <Icon className={`w-4 h-4 ${style.color}`} />
+                </div>
+                <div className="min-w-0">
+                  <h3 className="text-sm font-semibold text-ctp-text leading-snug mb-1 line-clamp-2">
+                    {achievement.title}
+                  </h3>
+                  <p className="text-xs text-ctp-subtext0 mb-1">
+                    {achievement.organization}
+                  </p>
+                  <span className="flex items-center gap-1 text-xs text-ctp-overlay0">
+                    <Calendar className="w-3 h-3" />
+                    {achievement.date}
+                  </span>
 
-                  <div className="flex-1 min-w-0">
-                    <h3 className="text-lg font-display font-semibold text-ctp-text mb-1 group-hover:text-ctp-blue transition-colors duration-300">
-                      {achievement.title}
-                    </h3>
+                  {achievement.viewType === "link" && achievement.link && (
+                    <a
+                      href={achievement.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 mt-2 text-xs text-ctp-blue hover:text-ctp-sapphire transition-colors"
+                    >
+                      View <ExternalLink className="w-3 h-3" />
+                    </a>
+                  )}
 
-                    <div className="flex flex-wrap items-center gap-2 mb-2 text-sm text-ctp-subtext0">
-                      <span className="font-medium text-ctp-blue">
-                        {achievement.organization}
-                      </span>
-                      <span>•</span>
-                      <span className="flex items-center gap-1">
-                        <Calendar className="w-3.5 h-3.5" />
-                        {achievement.date}
-                      </span>
-                    </div>
-
-                    <p className="text-sm text-ctp-subtext1 mb-3 leading-relaxed">
-                      {achievement.description}
-                    </p>
-
-                    {achievement.viewType === "link" && achievement.link && (
-                      <a
-                        href={achievement.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 text-sm text-ctp-blue hover:text-ctp-sapphire transition-colors duration-300 group/link"
-                      >
-                        {achievement.type === "certification" ? "View Certificate" : "View Profile"}
-                        <ExternalLink className="w-3.5 h-3.5 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform" />
-                      </a>
-                    )}
-
-                    {achievement.viewType === "image" && achievement.certificateImage && (
+                  {achievement.viewType === "image" &&
+                    achievement.certificateImage && (
                       <button
-                        onClick={() => setSelectedCertificate(achievement.certificateImage)}
-                        className="inline-flex items-center gap-1.5 text-sm text-ctp-blue hover:text-ctp-sapphire transition-colors duration-300 group/btn"
+                        onClick={() =>
+                          setSelectedCertificate(achievement.certificateImage)
+                        }
+                        className="inline-flex items-center gap-1 mt-2 text-xs text-ctp-blue hover:text-ctp-sapphire transition-colors"
                       >
-                        View Certificate
-                        <FileImage className="w-3.5 h-3.5 group-hover/btn:scale-110 transition-transform" />
+                        Certificate <FileImage className="w-3 h-3" />
                       </button>
                     )}
-                  </div>
                 </div>
-              </Card>
+              </div>
             </motion.div>
           );
         })}
-      </div>
+      </motion.div>
 
-      {/* Certificate Viewer Modal */}
+      {/* Certificate Modal */}
       <AnimatePresence>
         {selectedCertificate && (
           <motion.div
@@ -153,32 +136,27 @@ export default function Achievements() {
           >
             <motion.div
               className="relative max-w-5xl w-full max-h-[90vh] bg-ctp-base border border-ctp-surface0 rounded-2xl shadow-2xl overflow-hidden"
-              initial={{ scale: 0.9, y: 20 }}
+              initial={{ scale: 0.95, y: 10 }}
               animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.9, y: 20 }}
-              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              exit={{ scale: 0.95, y: 10 }}
+              transition={{ duration: 0.2, ease }}
               onClick={(e) => e.stopPropagation()}
             >
-              {/* Close Button */}
               <button
                 onClick={() => setSelectedCertificate(null)}
-                className="absolute top-4 right-4 z-10 p-2 bg-ctp-surface0 hover:bg-ctp-surface1 rounded-full text-ctp-text transition-colors duration-200"
+                className="absolute top-4 right-4 z-10 p-2 bg-ctp-surface0 hover:bg-ctp-surface1 rounded-full text-ctp-text transition-colors"
                 aria-label="Close certificate"
               >
                 <X className="w-5 h-5" />
               </button>
-
-              {/* Certificate Image */}
               <div className="p-8">
-                <div className="relative w-full h-full flex items-center justify-center">
-                  <Image
-                    src={selectedCertificate}
-                    alt="Certificate"
-                    width={1200}
-                    height={800}
-                    className="max-w-full max-h-[calc(90vh-8rem)] object-contain rounded-lg shadow-lg"
-                  />
-                </div>
+                <Image
+                  src={selectedCertificate}
+                  alt="Certificate"
+                  width={1200}
+                  height={800}
+                  className="max-w-full max-h-[calc(90vh-8rem)] object-contain rounded-lg mx-auto"
+                />
               </div>
             </motion.div>
           </motion.div>

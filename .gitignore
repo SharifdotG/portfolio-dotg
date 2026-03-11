@@ -71,3 +71,6 @@ ENV/
 
 # GitHub Copilot
 .github/
+
+# Claude/Anthropic
+.claude/

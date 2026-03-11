@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import {
   Calendar,
@@ -8,279 +8,175 @@ import {
   Building,
   Briefcase,
   GraduationCap,
+  ChevronDown,
+  BookOpen,
   Award,
-  Sparkles,
 } from "lucide-react";
 import Section from "@/components/ui/Section";
-import Card from "@/components/ui/Card";
+import SectionTitle from "@/components/ui/SectionTitle";
 import { EXPERIENCE, ORGANIZING_VOLUNTEERING } from "@/lib/constants";
 
-type TabType = "experience" | "organizing";
+const ease = [0.22, 1, 0.36, 1] as const;
+
+const typeConfig: Record<
+  string,
+  { icon: typeof Briefcase; color: string; bg: string; label: string }
+> = {
+  work: {
+    icon: Briefcase,
+    color: "text-ctp-blue",
+    bg: "bg-ctp-blue/10",
+    label: "Work",
+  },
+  teaching: {
+    icon: BookOpen,
+    color: "text-ctp-green",
+    bg: "bg-ctp-green/10",
+    label: "Teaching",
+  },
+  education: {
+    icon: GraduationCap,
+    color: "text-ctp-mauve",
+    bg: "bg-ctp-mauve/10",
+    label: "Education",
+  },
+};
+
+// Sort: work first, then teaching, then education
+const sortedExperience = [...EXPERIENCE].sort((a, b) => {
+  const order = { work: 0, teaching: 1, education: 2 };
+  return (
+    (order[a.type as keyof typeof order] ?? 3) -
+    (order[b.type as keyof typeof order] ?? 3)
+  );
+});
 
 export default function Experience() {
-  const [activeTab, setActiveTab] = useState<TabType>("experience");
+  const [showOrganizing, setShowOrganizing] = useState(false);
 
   return (
     <Section id="experience" className="relative overflow-hidden">
-      {/* Decorative background */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/4 left-10 w-96 h-96 bg-ctp-green/5 rounded-full blur-[120px]" />
-        <div className="absolute bottom-1/4 right-10 w-80 h-80 bg-ctp-yellow/5 rounded-full blur-[100px]" />
+      <SectionTitle
+        badge="Experience"
+        title="Work & Education"
+        highlightWord="Education"
+        subtitle="A journey through learning, building, and teaching"
+      />
+
+      {/* Experience Cards */}
+      <div className="max-w-3xl mx-auto space-y-4 mb-12">
+        {sortedExperience.map((exp, index) => {
+          const config = typeConfig[exp.type] ?? typeConfig.work;
+          const Icon = config.icon;
+
+          return (
+            <motion.div
+              key={exp.title}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ duration: 0.5, delay: index * 0.08, ease }}
+              className="rounded-2xl border border-ctp-surface0/60 bg-ctp-surface0/30 backdrop-blur-sm p-6 hover:border-ctp-surface1 transition-colors"
+            >
+              <div className="flex items-start gap-4">
+                <div
+                  className={`p-2.5 rounded-xl ${config.bg} shrink-0 mt-0.5`}
+                >
+                  <Icon className={`w-5 h-5 ${config.color}`} />
+                </div>
+
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-start justify-between gap-3 mb-1">
+                    <h3 className="text-lg font-display font-bold text-ctp-text">
+                      {exp.title}
+                    </h3>
+                    <span
+                      className={`shrink-0 px-2.5 py-0.5 text-xs font-medium rounded-full ${config.bg} ${config.color}`}
+                    >
+                      {config.label}
+                    </span>
+                  </div>
+
+                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-ctp-subtext0 mb-3">
+                    <span className="flex items-center gap-1.5">
+                      <Building className="w-3.5 h-3.5" />
+                      {exp.organization}
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                      <MapPin className="w-3.5 h-3.5" />
+                      {exp.location}
+                    </span>
+                    <span className="flex items-center gap-1.5 text-ctp-blue">
+                      <Calendar className="w-3.5 h-3.5" />
+                      {exp.startDate} – {exp.endDate}
+                    </span>
+                  </div>
+
+                  <ul className="space-y-1.5">
+                    {exp.description.map((item, idx) => (
+                      <li
+                        key={idx}
+                        className="flex items-start gap-2 text-sm text-ctp-subtext0"
+                      >
+                        <span className="text-ctp-blue mt-0.5 shrink-0">·</span>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </motion.div>
+          );
+        })}
       </div>
 
-      {/* Header */}
-      <motion.div
-        className="text-center max-w-3xl mx-auto mb-16"
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
-      >
-        <motion.div
-          className="inline-flex items-center gap-2 px-4 py-2 bg-ctp-surface0/50 backdrop-blur-sm border border-ctp-surface1 rounded-full text-sm mb-6"
-          initial={{ scale: 0 }}
-          whileInView={{ scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+      {/* Organizing & Volunteering — collapsible */}
+      <div className="max-w-3xl mx-auto">
+        <button
+          onClick={() => setShowOrganizing(!showOrganizing)}
+          className="flex items-center gap-2 text-sm font-medium text-ctp-subtext0 hover:text-ctp-text transition-colors mx-auto"
         >
-          <Sparkles className="w-4 h-4 text-ctp-green" />
-          <span className="text-ctp-text font-medium">My Professional Path</span>
-        </motion.div>
+          <Award className="w-4 h-4" />
+          Organizing & Volunteering ({ORGANIZING_VOLUNTEERING.length})
+          <ChevronDown
+            className={`w-4 h-4 transition-transform duration-200 ${showOrganizing ? "rotate-180" : ""}`}
+          />
+        </button>
 
-        <h2 className="text-4xl sm:text-5xl lg:text-6xl font-display font-bold text-ctp-text mb-6">
-          Experience & <span className="gradient-text">Education</span>
-        </h2>
-
-        <p className="text-lg text-ctp-subtext0 leading-relaxed">
-          A journey through learning, teaching, and community building
-        </p>
-      </motion.div>
-
-      {/* Tab Navigation */}
-      <div className="max-w-4xl mx-auto mb-12">
-        <div className="flex gap-2 bg-ctp-surface0/30 backdrop-blur-sm p-2 rounded-xl w-fit mx-auto">
-          <motion.button
-            onClick={() => setActiveTab("experience")}
-            className={`relative px-6 py-3 rounded-lg font-medium transition-colors ${
-              activeTab === "experience"
-                ? "text-ctp-text"
-                : "text-ctp-subtext0 hover:text-ctp-text"
-            }`}
-            whileTap={{ scale: 0.95 }}
-          >
-            {activeTab === "experience" && (
-              <motion.div
-                layoutId="activeTab"
-                className="absolute inset-0 bg-ctp-blue/20 border border-ctp-blue/30 rounded-lg"
-                transition={{ type: "spring", stiffness: 500, damping: 30 }}
-              />
-            )}
-            <span className="relative z-10 flex items-center gap-2">
-              <Briefcase className="w-4 h-4" />
-              Work & Education
-            </span>
-          </motion.button>
-
-          <motion.button
-            onClick={() => setActiveTab("organizing")}
-            className={`relative px-6 py-3 rounded-lg font-medium transition-colors ${
-              activeTab === "organizing"
-                ? "text-ctp-text"
-                : "text-ctp-subtext0 hover:text-ctp-text"
-            }`}
-            whileTap={{ scale: 0.95 }}
-          >
-            {activeTab === "organizing" && (
-              <motion.div
-                layoutId="activeTab"
-                className="absolute inset-0 bg-ctp-blue/20 border border-ctp-blue/30 rounded-lg"
-                transition={{ type: "spring", stiffness: 500, damping: 30 }}
-              />
-            )}
-            <span className="relative z-10 flex items-center gap-2">
-              <Award className="w-4 h-4" />
-              Organizing & Volunteering
-            </span>
-          </motion.button>
-        </div>
-      </div>
-
-      {/* Content */}
-      <div className="max-w-6xl mx-auto">
-        {activeTab === "experience" ? (
-          <ExperienceGrid />
-        ) : (
-          <OrganizingGrid />
-        )}
+        <AnimatePresence>
+          {showOrganizing && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3, ease }}
+              className="overflow-hidden"
+            >
+              <div className="grid sm:grid-cols-2 gap-3 mt-6">
+                {ORGANIZING_VOLUNTEERING.map((item, index) => (
+                  <motion.div
+                    key={item.title}
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.04, duration: 0.3 }}
+                    className="rounded-xl border border-ctp-surface0/60 bg-ctp-surface0/20 p-4"
+                  >
+                    <span className="text-xs font-mono text-ctp-blue">
+                      {item.date}
+                    </span>
+                    <h4 className="text-sm font-semibold text-ctp-text mt-1 line-clamp-2">
+                      {item.title}
+                    </h4>
+                    <p className="text-xs text-ctp-subtext0 mt-1">
+                      {item.organization}
+                    </p>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </Section>
-  );
-}
-
-// Experience & Education Grid
-function ExperienceGrid() {
-  return (
-    <div className="grid md:grid-cols-2 gap-6">
-      {EXPERIENCE.map((exp, index) => {
-        const TypeIcon = exp.type === "teaching" ? Briefcase : GraduationCap;
-        const colorScheme = exp.type === "teaching"
-          ? { bg: "bg-ctp-green/10", text: "text-ctp-green", border: "border-ctp-green/30" }
-          : { bg: "bg-ctp-mauve/10", text: "text-ctp-mauve", border: "border-ctp-mauve/30" };
-
-        return (
-          <motion.div
-            key={exp.title}
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true, margin: "-50px" }}
-            transition={{ duration: 0.5, delay: index * 0.1 }}
-            whileHover={{ y: -5, scale: 1.02 }}
-          >
-            <Card className="p-6 h-full hover:border-ctp-blue transition-all duration-300" variant="bordered">
-              {/* Icon & Type Badge */}
-              <div className="flex items-start justify-between mb-4">
-                <div className={`p-3 ${colorScheme.bg} rounded-xl`}>
-                  <TypeIcon className={`w-6 h-6 ${colorScheme.text}`} />
-                </div>
-                <div className={`px-3 py-1 ${colorScheme.bg} ${colorScheme.text} text-xs font-medium rounded-full border ${colorScheme.border}`}>
-                  {exp.type === "teaching" ? "Teaching" : "Education"}
-                </div>
-              </div>
-
-              {/* Title & Organization */}
-              <h3 className="text-xl font-display font-bold text-ctp-text mb-2">
-                {exp.title}
-              </h3>
-
-              <div className="space-y-2 mb-4">
-                <div className="flex items-center gap-2 text-ctp-subtext0 text-sm">
-                  <Building className="w-4 h-4 shrink-0" />
-                  <span className="font-medium">{exp.organization}</span>
-                </div>
-                <div className="flex items-center gap-2 text-ctp-subtext1 text-sm">
-                  <MapPin className="w-4 h-4 shrink-0" />
-                  <span>{exp.location}</span>
-                </div>
-                <div className="flex items-center gap-2 text-ctp-blue text-sm">
-                  <Calendar className="w-4 h-4 shrink-0" />
-                  <span className="font-medium">
-                    {exp.startDate} - {exp.endDate}
-                  </span>
-                </div>
-              </div>
-
-              {/* Description List */}
-              <ul className="space-y-2">
-                {exp.description.map((item, idx) => (
-                  <motion.li
-                    key={idx}
-                    className="flex items-start gap-2 text-sm text-ctp-subtext0"
-                    initial={{ opacity: 0, x: -10 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.1 * idx }}
-                  >
-                    <span className="text-ctp-blue mt-1">•</span>
-                    <span>{item}</span>
-                  </motion.li>
-                ))}
-              </ul>
-            </Card>
-          </motion.div>
-        );
-      })}
-    </div>
-  );
-}
-
-// Organizing & Volunteering Grid
-function OrganizingGrid() {
-  const organizer = ORGANIZING_VOLUNTEERING.filter((item) => item.category === "organizer");
-  const volunteer = ORGANIZING_VOLUNTEERING.filter((item) => item.category === "volunteer");
-
-  return (
-    <div className="space-y-12">
-      {/* Organizer Section */}
-      {organizer.length > 0 && (
-        <div>
-          <h3 className="text-2xl font-display font-bold text-ctp-text mb-6 flex items-center gap-3">
-            <div className="p-2 bg-ctp-blue/10 rounded-lg">
-              <Award className="w-5 h-5 text-ctp-blue" />
-            </div>
-            Event Organizer
-          </h3>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {organizer.map((item, index) => (
-              <OrganizingCard key={item.title} item={item} index={index} type="organizer" />
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Volunteer Section */}
-      {volunteer.length > 0 && (
-        <div>
-          <h3 className="text-2xl font-display font-bold text-ctp-text mb-6 flex items-center gap-3">
-            <div className="p-2 bg-ctp-green/10 rounded-lg">
-              <Sparkles className="w-5 h-5 text-ctp-green" />
-            </div>
-            Volunteer Work
-          </h3>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {volunteer.map((item, index) => (
-              <OrganizingCard key={item.title} item={item} index={index} type="volunteer" />
-            ))}
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-// Organizing Card Component
-function OrganizingCard({
-  item,
-  index,
-  type,
-}: {
-  item: typeof ORGANIZING_VOLUNTEERING[0];
-  index: number;
-  type: "organizer" | "volunteer";
-}) {
-  const colorScheme = type === "organizer"
-    ? { bg: "bg-ctp-blue/10", text: "text-ctp-blue", border: "border-ctp-blue/30" }
-    : { bg: "bg-ctp-green/10", text: "text-ctp-green", border: "border-ctp-green/30" };
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-50px" }}
-      transition={{ duration: 0.4, delay: index * 0.05 }}
-      whileHover={{ y: -5 }}
-    >
-      <Card className="p-5 h-full hover:border-ctp-blue transition-all duration-300" variant="bordered">
-        {/* Date Badge */}
-        <div className={`inline-flex items-center gap-1 px-3 py-1 ${colorScheme.bg} ${colorScheme.text} text-xs font-medium rounded-full border ${colorScheme.border} mb-3`}>
-          <Calendar className="w-3 h-3" />
-          {item.date}
-        </div>
-
-        {/* Title */}
-        <h4 className="text-base font-display font-bold text-ctp-text mb-2 line-clamp-2">
-          {item.title}
-        </h4>
-
-        {/* Organization */}
-        <p className="text-xs text-ctp-subtext0 font-medium mb-2">
-          {item.organization}
-        </p>
-
-        {/* Description */}
-        <p className="text-xs text-ctp-subtext1 leading-relaxed line-clamp-3">
-          {item.description}
-        </p>
-      </Card>
-    </motion.div>
   );
 }

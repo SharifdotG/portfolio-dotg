@@ -37,7 +37,9 @@ export const SKILLS = {
     { name: "React", level: "Intermediate", category: "Framework" },
     { name: "Django", level: "Intermediate", category: "Framework" },
     { name: ".NET", level: "Beginner", category: "Framework" },
+    { name: "Angular", level: "Beginner", category: "Framework" },
     { name: "Tailwind CSS", level: "Advanced", category: "Framework" },
+    { name: "Bootstrap", level: "Intermediate", category: "Framework" },
   ],
   tools: [
     { name: "SQL", level: "Intermediate", category: "Database" },
@@ -47,6 +49,7 @@ export const SKILLS = {
     { name: "Git", level: "Advanced", category: "Tool" },
     { name: "Linux", level: "Intermediate", category: "Tool" },
     { name: "Markdown", level: "Advanced", category: "Tool" },
+    { name: "Convex", level: "Beginner", category: "Database" },
   ],
   fundamentals: [
     { name: "OOP", level: "Advanced", category: "Fundamental" },
@@ -61,7 +64,14 @@ export const PROJECTS = [
     title: "DevStudy AI Suite",
     description:
       "Student-focused web application providing an AI chat assistant, file utilities, PDF summarization, and multiple developer tools.",
-    techStack: ["Next.js 15", "React 19", "TypeScript", "Tailwind CSS", "Supabase", "OpenRouter"],
+    techStack: [
+      "Next.js 15",
+      "React 19",
+      "TypeScript",
+      "Tailwind CSS",
+      "Supabase",
+      "OpenRouter",
+    ],
     githubUrl: "https://github.com/SharifdotG/DevStudy-AI-Suite-Web",
     githubRepo: "SharifdotG/DevStudy-AI-Suite-Web",
     liveUrl: "http://dev-study-ai-suite-web.vercel.app/",
@@ -84,7 +94,7 @@ export const PROJECTS = [
   {
     title: "SharifdotG's CodeVault",
     description:
-      "GitHub repository of 1,300+ solutions for problems from Codeforces, LeetCode, and 25+ other online judges.",
+      "GitHub repository of 2,000+ competitive programming solutions from Codeforces, LeetCode, and 25+ other online judges.",
     techStack: ["C", "C++", "Python", "Algorithms", "Data Structures"],
     githubUrl: "https://github.com/SharifdotG/SharifdotG-s-CodeVault",
     githubRepo: "SharifdotG/SharifdotG-s-CodeVault",
@@ -96,15 +106,35 @@ export const PROJECTS = [
   {
     title: "Catppuccin Dark Pro",
     description:
-      "Developer-focused VSCode theme that combines the aesthetics of the Catppuccin Mocha theme and the syntax highlighting of the One Dark Pro theme.",
+      "Developer-focused VSCode theme that combines the aesthetics of the Catppuccin Mocha theme and the syntax highlighting of the One Dark Pro theme. 4,800+ downloads.",
     techStack: ["JSON", "VSCode Extension", "Theme Development"],
     githubUrl: "https://github.com/SharifdotG/catppuccin-dark-pro",
     githubRepo: "SharifdotG/catppuccin-dark-pro",
-    liveUrl: "https://marketplace.visualstudio.com/items?itemName=SharifdotG.catppuccin-dark-pro",
+    liveUrl:
+      "https://marketplace.visualstudio.com/items?itemName=SharifdotG.catppuccin-dark-pro",
     extensionId: "SharifdotG.catppuccin-dark-pro",
     featured: true,
     image: "/projects/catppuccin-dark-pro.png",
     category: "Tools & Extensions",
+  },
+  {
+    title: "BlogsdotG",
+    description:
+      "A modern blogging platform with rich-text editing, real-time data sync, and light/dark theme support.",
+    techStack: [
+      "Next.js 16",
+      "React 19",
+      "Convex",
+      "Tiptap",
+      "Tailwind CSS",
+      "Framer Motion",
+    ],
+    githubUrl: "https://github.com/SharifdotG/BlogsdotG",
+    githubRepo: "SharifdotG/BlogsdotG",
+    liveUrl: null,
+    featured: true,
+    image: "/projects/blogsdotg.png",
+    category: "Web Development",
   },
   {
     title: "dotG Mono",
@@ -123,7 +153,8 @@ export const PROJECTS = [
     description:
       "CNN-based machine learning model for recognizing handwritten digits using the MNIST dataset with high accuracy.",
     techStack: ["Python", "TensorFlow", "Keras", "CNN", "Machine Learning"],
-    githubUrl: "https://github.com/SharifdotG/Handwritten-Digit-Recognition-Using-CNN",
+    githubUrl:
+      "https://github.com/SharifdotG/Handwritten-Digit-Recognition-Using-CNN",
     githubRepo: "SharifdotG/Handwritten-Digit-Recognition-Using-CNN",
     liveUrl: null,
     featured: false,
@@ -159,7 +190,8 @@ export const PROJECTS = [
     description:
       "Prolog-based expert system knowledgebase for Call of Duty weapons with inference engine for weapon recommendations.",
     techStack: ["Prolog", "Expert Systems", "Logic Programming"],
-    githubUrl: "https://github.com/SharifdotG/Call-of-Duty-Weapon-Knowledgebase-Prolog-Project",
+    githubUrl:
+      "https://github.com/SharifdotG/Call-of-Duty-Weapon-Knowledgebase-Prolog-Project",
     githubRepo: "SharifdotG/Call-of-Duty-Weapon-Knowledgebase-Prolog-Project",
     liveUrl: null,
     featured: false,
@@ -173,7 +205,8 @@ export const ACHIEVEMENTS = [
     title: "ICPC Dhaka Regionalist 2024",
     organization: "ICPC",
     date: "November 2024",
-    description: "Competed in the prestigious ICPC Asia West Continent Dhaka Regional Contest",
+    description:
+      "Competed in the prestigious ICPC Asia West Continent Dhaka Regional Contest",
     link: null,
     certificateImage: "/certificates/icpc-dhaka-2024.jpg",
     type: "competition",
@@ -193,9 +226,32 @@ export const ACHIEVEMENTS = [
     title: "BUBT BIUCPC 2025",
     organization: "Bangladesh University of Business & Technology",
     date: "November 29, 2025",
-    description: "Participated in BUBT Inter University Collaborative Programming Contest",
+    description:
+      "Participated in BUBT Inter University Collaborative Programming Contest",
     link: null,
     certificateImage: "/certificates/bubt-biucpc-2025.jpg",
+    type: "competition",
+    viewType: "image",
+  },
+  {
+    title: "KUET IUPC 2025",
+    organization: "Khulna University of Engineering & Technology",
+    date: "2025",
+    description:
+      "Participated in KUET Inter University Programming Contest 2025",
+    link: null,
+    certificateImage: "/certificates/kuet-iupc-2025.jpg",
+    type: "competition",
+    viewType: "image",
+  },
+  {
+    title: "BUBT IUCPC 2025",
+    organization: "Bangladesh University of Business & Technology",
+    date: "2025",
+    description:
+      "Participated in BUBT Inter University Collaborative Programming Contest 2025",
+    link: null,
+    certificateImage: "/certificates/bubt-iucpc-2025.jpg",
     type: "competition",
     viewType: "image",
   },
@@ -203,7 +259,8 @@ export const ACHIEVEMENTS = [
     title: "UAP Inter University Collaborative Programming Contest 1.0",
     organization: "University of Asia Pacific",
     date: "January 27, 2024",
-    description: "Participated in the first Inter University Collaborative Programming Contest at UAP",
+    description:
+      "Participated in the first Inter University Collaborative Programming Contest at UAP",
     link: null,
     certificateImage: "/certificates/uap-contest-2024.jpg",
     type: "competition",
@@ -213,7 +270,8 @@ export const ACHIEVEMENTS = [
     title: "ICPC Jamilur Reza Chowdhury Scholarship",
     organization: "ICPC Foundation",
     date: "3 Semesters",
-    description: "Received scholarship for 3 semesters (Spring 2023, Fall 2023, Spring 2024) for Competitive Programming excellence",
+    description:
+      "Received scholarship for 3 semesters (Spring 2023, Fall 2023, Spring 2024) for Competitive Programming excellence",
     link: null,
     certificateImage: "/certificates/jrc-scholarship.jpg",
     type: "scholarship",
@@ -223,7 +281,8 @@ export const ACHIEVEMENTS = [
     title: "Vice Chancellor Awards (2x) & Dean's Awards (4x)",
     organization: "University of Asia Pacific",
     date: "2022-2025",
-    description: "Received academic excellence awards for maintaining high CGPA across multiple semesters",
+    description:
+      "Received academic excellence awards for maintaining high CGPA across multiple semesters",
     link: null,
     certificateImage: "/certificates/vc-deans-awards.jpg",
     type: "academic",
@@ -243,7 +302,8 @@ export const ACHIEVEMENTS = [
     title: "Codeforces Specialist (Max Rating: 1438)",
     organization: "Codeforces",
     date: "Ongoing",
-    description: "Achieved Specialist rank on Codeforces competitive programming platform",
+    description:
+      "Achieved Specialist rank on Codeforces competitive programming platform",
     link: "https://codeforces.com/profile/SharifdotG",
     certificateImage: null,
     type: "rating",
@@ -253,7 +313,8 @@ export const ACHIEVEMENTS = [
     title: "CodeChef 3 Stars (Max Rating: 1635)",
     organization: "CodeChef",
     date: "Ongoing",
-    description: "Achieved 3-star rating on CodeChef competitive programming platform",
+    description:
+      "Achieved 3-star rating on CodeChef competitive programming platform",
     link: "https://www.codechef.com/users/sharifdotg",
     certificateImage: null,
     type: "rating",
@@ -263,7 +324,8 @@ export const ACHIEVEMENTS = [
     title: "HackerRank Problem Solving (Basic)",
     organization: "HackerRank",
     date: "August 2, 2024",
-    description: "Completed HackerRank Problem Solving certification at Basic level",
+    description:
+      "Completed HackerRank Problem Solving certification at Basic level",
     link: "https://www.hackerrank.com/certificates/0e0b3a6b156d",
     certificateImage: null,
     type: "certification",
@@ -283,7 +345,8 @@ export const ACHIEVEMENTS = [
     title: "Foundational C# with Microsoft Certification",
     organization: "freeCodeCamp",
     date: "2024",
-    description: "Completed the Foundational C# certification program in collaboration with Microsoft",
+    description:
+      "Completed the Foundational C# certification program in collaboration with Microsoft",
     link: "https://www.freecodecamp.org/certification/sharifdotg/foundational-c-sharp-with-microsoft",
     certificateImage: null,
     type: "certification",
@@ -303,7 +366,8 @@ export const ACHIEVEMENTS = [
     title: "EEE TECH FEST 2.0 Programming Contest",
     organization: "University of Asia Pacific",
     date: "June 3, 2024",
-    description: "Participated in EEE TECH FEST 2.0 Intra University Programming Contest",
+    description:
+      "Participated in EEE TECH FEST 2.0 Intra University Programming Contest",
     link: null,
     certificateImage: "/certificates/eee-fest-2.jpg",
     type: "competition",
@@ -313,7 +377,8 @@ export const ACHIEVEMENTS = [
     title: "EEE TECH FEST 2023 Intra University Programming Contest",
     organization: "University of Asia Pacific",
     date: "March 29, 2023",
-    description: "Participated in EEE TECH FEST 2023 Intra University Programming Contest",
+    description:
+      "Participated in EEE TECH FEST 2023 Intra University Programming Contest",
     link: null,
     certificateImage: "/certificates/eee-fest-2023.jpg",
     type: "competition",
@@ -323,7 +388,8 @@ export const ACHIEVEMENTS = [
     title: "5th Place, Inter Department Math Olympiad 3.0 & 4.0",
     organization: "University of Asia Pacific",
     date: "2023, 2024",
-    description: "Secured 5th position in university math olympiad for two consecutive years",
+    description:
+      "Secured 5th position in university math olympiad for two consecutive years",
     link: null,
     certificateImage: "/certificates/math-olympiad.jpg",
     type: "competition",
@@ -333,17 +399,20 @@ export const ACHIEVEMENTS = [
     title: "Volunteer - 11th Convocation of University of Asia Pacific",
     organization: "University of Asia Pacific",
     date: "July 26, 2025",
-    description: "Volunteered in organizing and coordinating the university's convocation ceremony",
+    description:
+      "Volunteered in organizing and coordinating the university's convocation ceremony",
     link: null,
     certificateImage: "/certificates/convocation-volunteer-2025.jpg",
     type: "volunteer",
     viewType: "image",
   },
   {
-    title: "Volunteer - National IT Competition for Youth with Disabilities 2025",
+    title:
+      "Volunteer - National IT Competition for Youth with Disabilities 2025",
     organization: "Government of Bangladesh",
     date: "May 31, 2025",
-    description: "Supported participants and technical arrangements for inclusive technology competition",
+    description:
+      "Supported participants and technical arrangements for inclusive technology competition",
     link: null,
     certificateImage: "/certificates/it-disability-volunteer-2025.png",
     type: "volunteer",
@@ -353,7 +422,8 @@ export const ACHIEVEMENTS = [
     title: "Volunteer - Prize Giving Ceremony for WMTC Winners",
     organization: "World Mathematics Team Championship",
     date: "February 8, 2025",
-    description: "Coordinated prize distribution for World Mathematics Team Championship winners",
+    description:
+      "Coordinated prize distribution for World Mathematics Team Championship winners",
     link: null,
     certificateImage: "/certificates/wmtc-volunteer-2025.jpg",
     type: "volunteer",
@@ -376,10 +446,23 @@ export const EXPERIENCE = [
     type: "education",
   },
   {
+    title: "Trainee Software Engineer (Intern)",
+    organization: "Bangladesh Software Solution",
+    location: "Dhaka, Bangladesh",
+    startDate: "February 2026",
+    endDate: "Present",
+    description: [
+      "Working on full-stack web development projects",
+      "Learning industry-standard software engineering practices",
+      "Collaborating with cross-functional teams on client projects",
+    ],
+    type: "work",
+  },
+  {
     title: "Competitive Programming Trainer & Mentor",
     organization: "University of Asia Pacific",
     location: "Dhaka, Bangladesh",
-    startDate: "2023",
+    startDate: "July 2024",
     endDate: "Present",
     description: [
       "Training and mentoring students in competitive programming and problem-solving",
@@ -393,52 +476,61 @@ export const EXPERIENCE = [
 
 export const ORGANIZING_VOLUNTEERING = [
   {
-    title: "Organizer at the UAP Inter University Collaborative Programming Contest 1.0",
+    title:
+      "Organizer at the UAP Inter University Collaborative Programming Contest 1.0",
     date: "January 26 & 27, 2024",
     organization: "University of Asia Pacific",
-    description: "Organized Inter University programming contest bringing together students from multiple private universities",
+    description:
+      "Organized Inter University programming contest bringing together students from multiple private universities",
     category: "organizer",
   },
   {
     title: "Organizer at the Intra University Math Fest 3.0",
     date: "May 6, 2025",
     organization: "University of Asia Pacific",
-    description: "Organized third edition of math olympiad fostering problem-solving culture",
+    description:
+      "Organized third edition of math olympiad fostering problem-solving culture",
     category: "organizer",
   },
   {
     title: "Organizer at the Intra University Math Fest 2.0",
     date: "October 28, 2024",
     organization: "University of Asia Pacific",
-    description: "Organized second edition of university math olympiad with increased participation",
+    description:
+      "Organized second edition of university math olympiad with increased participation",
     category: "organizer",
   },
   {
     title: "Organizer at the JRC Memorial 1st Intra University Math Fest 2023",
     date: "March 28, 2023",
     organization: "University of Asia Pacific",
-    description: "Organized inaugural math olympiad in memory of Professor Jamilur Reza Chowdhury",
+    description:
+      "Organized inaugural math olympiad in memory of Professor Jamilur Reza Chowdhury",
     category: "organizer",
   },
   {
     title: "Volunteer at the Prize Giving Ceremony for WMTC Winners",
     date: "February 8, 2025",
     organization: "World Mathematics Team Championship",
-    description: "Coordinated prize distribution for World Mathematics Team Championship winners",
+    description:
+      "Coordinated prize distribution for World Mathematics Team Championship winners",
     category: "volunteer",
   },
   {
     title: "Volunteer at the 11th Convocation of University of Asia Pacific",
     date: "July 26, 2025",
     organization: "University of Asia Pacific",
-    description: "Assisted in organizing and coordinating the university's convocation ceremony",
+    description:
+      "Assisted in organizing and coordinating the university's convocation ceremony",
     category: "volunteer",
   },
   {
-    title: "Volunteer at the National IT Competition for Youth with Disabilities 2025",
+    title:
+      "Volunteer at the National IT Competition for Youth with Disabilities 2025",
     date: "May 31, 2025",
     organization: "National Initiative",
-    description: "Supported participants and technical arrangements for inclusive technology competition",
+    description:
+      "Supported participants and technical arrangements for inclusive technology competition",
     category: "volunteer",
   },
 ];

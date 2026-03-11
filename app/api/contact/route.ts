@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
     if (!name || !email || !message) {
       return NextResponse.json(
         { error: "All fields are required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -19,22 +19,28 @@ export async function POST(req: NextRequest) {
     if (!emailRegex.test(email)) {
       return NextResponse.json(
         { error: "Invalid email address" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     // Use env-driven sender/recipient with safe defaults (Resend sandbox domain)
-    const fromAddress = process.env.RESEND_FROM || "Sharif Portfolio <onboarding@resend.dev>";
+    const fromAddress =
+      process.env.RESEND_FROM || "Sharif Portfolio <onboarding@resend.dev>";
     const toAddress = process.env.RESEND_TO || "sharifmdyousuf007@gmail.com";
 
-    // Basic HTML escaping for message content
-    const safeMessage = String(message)
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/\n/g, "<br>");
+    // HTML escaping helper
+    const escapeHtml = (str: string) =>
+      String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
 
-    const subject = `Portfolio Contact: Message from ${name}`;
+    const safeName = escapeHtml(name);
+    const safeEmail = escapeHtml(email);
+    const safeMessage = escapeHtml(message).replace(/\n/g, "<br>");
+
+    const subject = `Portfolio Contact: Message from ${safeName}`;
 
     const { data, error } = await resend.emails.send({
       from: fromAddress,
@@ -43,7 +49,7 @@ export async function POST(req: NextRequest) {
       subject,
       html: `
         <h2>New Contact Form Submission</h2>
-        <p><strong>From:</strong> ${name} (${email})</p>
+        <p><strong>From:</strong> ${safeName} (${safeEmail})</p>
         <p><strong>Message:</strong></p>
         <p>${safeMessage}</p>
       `,
@@ -54,13 +60,13 @@ export async function POST(req: NextRequest) {
       console.error("Resend error:", error);
       return NextResponse.json(
         { error: "Failed to send email" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
     // Mailto fallback for client-side open
     const mailtoLink = `mailto:${encodeURIComponent(toAddress)}?subject=${encodeURIComponent(
-      subject
+      subject,
     )}&body=${encodeURIComponent(`From: ${name} (${email})\n\n${message}`)}`;
 
     return NextResponse.json({
@@ -73,7 +79,7 @@ export async function POST(req: NextRequest) {
     console.error("Contact form error:", error);
     return NextResponse.json(
       { error: "Failed to process contact form" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
