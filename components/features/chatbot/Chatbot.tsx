@@ -40,7 +40,7 @@ export default function Chatbot() {
     <>
       {/* Floating Button — clears mobile bottom nav */}
       <motion.div
-        className="fixed bottom-20 right-6 md:bottom-6 md:right-6 z-40"
+        className="fixed bottom-24 right-4 z-40"
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ delay: 1, type: "spring", stiffness: 260, damping: 20 }}
@@ -75,7 +75,7 @@ export default function Chatbot() {
             />
 
             <motion.div
-              className="fixed bottom-20 right-4 md:bottom-6 md:right-6 z-50 w-[90vw] max-w-md"
+              className="fixed bottom-24 right-4 z-50 w-[90vw] max-w-md"
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}

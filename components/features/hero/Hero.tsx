@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import {
   Github,
   Linkedin,
-  Download,
+  FileText,
   ArrowRight,
   Twitter,
   Facebook,
@@ -16,20 +16,48 @@ import { PERSONAL_INFO } from "@/lib/constants";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
+const springTransition = {
+  type: "spring" as const,
+  stiffness: 130,
+  damping: 18,
+  mass: 0.9,
+};
+
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: { staggerChildren: 0.1 },
+    transition: {
+      delayChildren: 0.15,
+      staggerChildren: 0.1,
+    },
   },
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
+  hidden: { opacity: 0, y: 24, filter: "blur(6px)" },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.6, ease },
+    filter: "blur(0px)",
+    transition: springTransition,
+  },
+};
+
+const imageVariants = {
+  hidden: { opacity: 0, y: 30, scale: 0.9, rotate: 2, filter: "blur(8px)" },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    rotate: 0,
+    filter: "blur(0px)",
+    transition: {
+      type: "spring" as const,
+      stiffness: 120,
+      damping: 15,
+      mass: 0.95,
+    },
   },
 };
 
@@ -46,53 +74,81 @@ export default function Hero() {
   return (
     <section
       id="hero"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-ctp-base pt-20 pb-10"
+      className="relative min-h-screen overflow-hidden bg-ctp-base pt-20 pb-10"
     >
-      {/* Subtle background */}
+      {/* Layered ambient background */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-125 h-125 bg-ctp-blue/10 rounded-full blur-[150px]" />
-        <div className="absolute bottom-1/4 right-1/4 w-100 h-100 bg-ctp-mauve/10 rounded-full blur-[150px]" />
+        <div className="absolute inset-0 text-ctp-blue/15 bg-[linear-gradient(to_right,currentColor_1px,transparent_1px),linear-gradient(to_bottom,currentColor_1px,transparent_1px)] bg-size-[42px_42px] mask-[radial-gradient(circle_at_center,black_30%,transparent_82%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_20%,rgba(137,180,250,0.14),transparent_34%),radial-gradient(circle_at_85%_78%,rgba(203,166,247,0.12),transparent_35%)]" />
+        <div className="absolute inset-0 bg-linear-to-b from-transparent via-ctp-base/20 to-ctp-base/85" />
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="relative z-10 mx-auto flex min-h-[calc(100vh-5rem)] w-full max-w-7xl items-center px-4 sm:px-6 lg:px-8">
         <motion.div
-          className="flex flex-col-reverse lg:flex-row items-center justify-between gap-12 lg:gap-20"
+          className="grid w-full grid-cols-1 items-center gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16"
           variants={containerVariants}
           initial="hidden"
           animate="visible"
         >
-          {/* Left Column: Text */}
-          <div className="flex-1 text-center lg:text-left space-y-6">
+          {/* Image first on mobile, right side on desktop */}
+          <motion.div
+            className="order-1 flex justify-center lg:order-2 lg:justify-end"
+            variants={imageVariants}
+            whileHover={{ y: -4, scale: 1.015 }}
+            transition={springTransition}
+          >
+            <div className="relative w-[min(66vw,16rem)] sm:w-80 md:w-96 lg:w-100">
+              <motion.div
+                className="absolute -inset-6 rounded-[2.5rem] bg-ctp-blue/10 blur-2xl"
+                animate={{ scale: [1, 1.05, 1] }}
+                transition={{ duration: 4, repeat: Infinity, ease }}
+              />
+
+              <div className="relative aspect-square overflow-hidden rounded-full border border-ctp-surface1/70 bg-ctp-mantle/70 p-2 shadow-[0_20px_60px_rgba(0,0,0,0.28)] backdrop-blur-sm">
+                <div className="relative h-full w-full overflow-hidden rounded-full border border-ctp-surface0/80">
+                  <Image
+                    src="/profile.jpg"
+                    alt="Sharif Md. Yousuf"
+                    fill
+                    className="object-cover object-top"
+                    priority
+                  />
+                </div>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Text content */}
+          <div className="order-2 space-y-6 text-center lg:order-1 lg:text-left">
             <motion.div
               variants={itemVariants}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-ctp-surface0/40 backdrop-blur-sm border border-ctp-surface0/50 rounded-full text-sm"
+              className="inline-flex items-center gap-2 rounded-full border border-ctp-surface0/80 bg-ctp-surface0/35 px-4 py-2 text-sm backdrop-blur-sm"
             >
               <span className="font-mono text-ctp-blue">Hello, I&apos;m</span>
             </motion.div>
 
             <motion.h1
               variants={itemVariants}
-              className="text-5xl sm:text-6xl lg:text-7xl font-display font-bold tracking-tight"
+              className="font-display text-5xl font-bold tracking-tight sm:text-6xl lg:text-7xl"
             >
-              <span className="gradient-text">Sharif</span>
-              <br />
+              <span className="gradient-text">Sharif</span> <br />
               <span className="text-ctp-text">Md. Yousuf</span>
             </motion.h1>
 
             <motion.p
               variants={itemVariants}
-              className="text-lg text-ctp-subtext0"
+              className="mx-auto max-w-xl font-body text-lg leading-relaxed text-ctp-subtext0 lg:mx-0"
             >
-              Competitive Programmer &middot; Software Engineer &middot; CS
-              Student
+              Trainee Software Engineer Intern • Competitive Programmer •
+              Computer Science Student
             </motion.p>
 
             <motion.div
               variants={itemVariants}
-              className="flex items-center justify-center lg:justify-start gap-2 text-sm text-ctp-subtext0"
+              className="flex items-center justify-center gap-2 text-sm text-ctp-subtext0 lg:justify-start"
             >
               <span
-                className="inline-block w-5 h-3.5 rounded-sm overflow-hidden"
+                className="inline-block h-3.5 w-5 overflow-hidden rounded-sm"
                 role="img"
                 aria-label="Flag of Bangladesh"
               >
@@ -110,94 +166,78 @@ export default function Hero() {
 
             <motion.div
               variants={itemVariants}
-              className="flex flex-wrap items-center justify-center lg:justify-start gap-3 pt-2"
+              className="flex flex-wrap items-center justify-center gap-3 pt-2 lg:justify-start"
             >
-              <button
+              <motion.button
                 onClick={() =>
                   document
                     .getElementById("projects")
                     ?.scrollIntoView({ behavior: "smooth" })
                 }
-                className="px-6 py-2.5 bg-ctp-blue text-ctp-crust font-semibold rounded-lg hover:bg-ctp-sapphire transition-colors flex items-center gap-2 group"
+                whileHover={{ y: -3, scale: 1.02 }}
+                whileTap={{ scale: 0.97 }}
+                transition={springTransition}
+                className="group flex items-center gap-2 rounded-xl bg-ctp-blue px-6 py-2.5 font-body font-semibold text-ctp-crust transition-colors hover:bg-ctp-sapphire"
               >
                 View My Work
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
-              </button>
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+              </motion.button>
 
-              <button
-                onClick={() => {
-                  const link = document.createElement("a");
-                  link.href = "/resume.pdf";
-                  link.download = "Sharif_Md_Yousuf_Resume.pdf";
-                  link.click();
-                }}
-                className="px-6 py-2.5 bg-transparent text-ctp-text font-semibold rounded-lg border border-ctp-surface1 hover:border-ctp-blue hover:bg-ctp-blue/5 transition-all flex items-center gap-2"
+              <motion.a
+                href="/resume.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                whileHover={{ y: -3, scale: 1.02 }}
+                whileTap={{ scale: 0.97 }}
+                transition={springTransition}
+                className="flex items-center gap-2 rounded-xl border border-ctp-surface1 bg-transparent px-6 py-2.5 font-body font-semibold text-ctp-text transition-all hover:border-ctp-blue hover:bg-ctp-blue/5"
               >
-                <Download className="w-4 h-4" />
+                <FileText className="h-4 w-4" />
                 Resume
-              </button>
+              </motion.a>
             </motion.div>
 
             <motion.div
               variants={itemVariants}
-              className="flex items-center justify-center lg:justify-start gap-4 pt-2"
+              className="flex items-center justify-center gap-4 pt-2 lg:justify-start"
             >
               {socialLinks.map((social) => (
-                <a
+                <motion.a
                   key={social.label}
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-ctp-overlay0 hover:text-ctp-blue transition-colors"
+                  whileHover={{ y: -3, scale: 1.08 }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={springTransition}
+                  className="text-ctp-overlay0 transition-colors hover:text-ctp-blue"
                   aria-label={social.label}
                 >
-                  <social.icon className="w-5 h-5" />
-                </a>
+                  <social.icon className="h-5 w-5" />
+                </motion.a>
               ))}
             </motion.div>
           </div>
-
-          {/* Right Column: Image */}
-          <motion.div
-            className="flex-1 flex justify-center lg:justify-end"
-            variants={itemVariants}
-          >
-            <div className="relative w-64 h-64 sm:w-80 sm:h-80 lg:w-96 lg:h-96">
-              {/* Subtle glow behind image */}
-              <div className="absolute -inset-4 bg-ctp-blue/10 rounded-full blur-3xl" />
-
-              {/* Image */}
-              <div className="relative w-full h-full rounded-full overflow-hidden ring-2 ring-ctp-surface1 shadow-2xl">
-                <Image
-                  src="/profile.jpg"
-                  alt="Sharif Md. Yousuf"
-                  fill
-                  className="object-cover"
-                  priority
-                />
-              </div>
-            </div>
-          </motion.div>
         </motion.div>
       </div>
 
       {/* Scroll Indicator */}
       <motion.div
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 hidden md:flex flex-col items-center gap-2 cursor-pointer"
+        className="absolute bottom-16 left-1/2 hidden -translate-x-1/2 cursor-pointer flex-col items-center gap-2 md:flex"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1, duration: 0.6 }}
+        transition={{ delay: 1, duration: 0.6, ease }}
         onClick={() =>
           document
             .getElementById("about")
             ?.scrollIntoView({ behavior: "smooth" })
         }
       >
-        <div className="w-5 h-8 border border-ctp-surface1 rounded-full flex justify-center pt-1.5">
+        <div className="flex h-8 w-5 justify-center rounded-full border border-ctp-surface1 pt-1.5">
           <motion.div
-            className="w-1 h-1 bg-ctp-blue rounded-full"
+            className="h-1 w-1 rounded-full bg-ctp-blue"
             animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity }}
+            transition={{ duration: 1.5, repeat: Infinity, ease }}
           />
         </div>
       </motion.div>

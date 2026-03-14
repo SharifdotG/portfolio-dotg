@@ -4,6 +4,7 @@ import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import Header from "@/components/shared/Header";
 import Footer from "@/components/shared/Footer";
 import ScrollToTop from "@/components/shared/ScrollToTop";
+import FloatingThemeToggle from "@/components/shared/FloatingThemeToggle";
 import SmoothScroll from "@/components/shared/SmoothScroll";
 import Chatbot from "@/components/features/chatbot/Chatbot";
 import FloatingStats from "@/components/features/stats/FloatingStats";
@@ -104,6 +105,7 @@ export default function RootLayout({
           <main className="min-h-screen">{children}</main>
           <Footer />
           <ScrollToTop />
+          <FloatingThemeToggle />
           <SmoothScroll />
           <FloatingStats />
           <Chatbot />
