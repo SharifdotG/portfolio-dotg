@@ -44,6 +44,22 @@ const itemVariants = {
   },
 };
 
+const ctaVariants = {
+  hidden: { opacity: 0, y: 22, scale: 0.94, filter: "blur(4px)" },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    filter: "blur(0px)",
+    transition: {
+      type: "spring" as const,
+      stiffness: 125,
+      damping: 16,
+      mass: 0.9,
+    },
+  },
+};
+
 const imageVariants = {
   hidden: { opacity: 0, y: 30, scale: 0.9, rotate: 2, filter: "blur(8px)" },
   visible: {
@@ -74,7 +90,7 @@ export default function Hero() {
   return (
     <section
       id="hero"
-      className="relative min-h-screen overflow-hidden bg-ctp-base pt-20 pb-10"
+      className="relative flex min-h-svh items-center overflow-hidden bg-ctp-base pt-20 pb-10 md:min-h-screen md:py-0"
     >
       {/* Layered ambient background */}
       <div className="absolute inset-0 pointer-events-none">
@@ -83,7 +99,7 @@ export default function Hero() {
         <div className="absolute inset-0 bg-linear-to-b from-transparent via-ctp-base/20 to-ctp-base/85" />
       </div>
 
-      <div className="relative z-10 mx-auto flex min-h-[calc(100vh-5rem)] w-full max-w-7xl items-center px-4 sm:px-6 lg:px-8">
+      <div className="relative z-10 mx-auto flex w-full max-w-7xl items-center px-4 sm:px-6 lg:px-8">
         <motion.div
           className="grid w-full grid-cols-1 items-center gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16"
           variants={containerVariants}
@@ -131,7 +147,8 @@ export default function Hero() {
               variants={itemVariants}
               className="font-display text-5xl font-bold tracking-tight sm:text-6xl lg:text-7xl"
             >
-              <span className="gradient-text">Sharif</span> <br />
+              <span className="inline-block animate-text-gradient">Sharif</span>{" "}
+              <br />
               <span className="text-ctp-text">Md. Yousuf</span>
             </motion.h1>
 
@@ -165,7 +182,7 @@ export default function Hero() {
             </motion.div>
 
             <motion.div
-              variants={itemVariants}
+              variants={ctaVariants}
               className="flex flex-wrap items-center justify-center gap-3 pt-2 lg:justify-start"
             >
               <motion.button
@@ -174,26 +191,41 @@ export default function Hero() {
                     .getElementById("projects")
                     ?.scrollIntoView({ behavior: "smooth" })
                 }
-                whileHover={{ y: -3, scale: 1.02 }}
+                whileHover={{
+                  y: -4,
+                  scale: 1.03,
+                  boxShadow: "0 20px 42px -22px rgba(137,180,250,0.95)",
+                }}
                 whileTap={{ scale: 0.97 }}
                 transition={springTransition}
-                className="group flex items-center gap-2 rounded-xl bg-ctp-blue px-6 py-2.5 font-body font-semibold text-ctp-crust transition-colors hover:bg-ctp-sapphire"
+                className="group relative overflow-hidden rounded-xl bg-ctp-blue px-6 py-2.5 font-body font-semibold text-ctp-crust transition-colors hover:bg-ctp-sapphire"
               >
-                View My Work
-                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                <span className="pointer-events-none absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-ctp-surface0/35 to-transparent transition-transform duration-600 group-hover:translate-x-full" />
+                <span className="relative z-10 flex items-center gap-2">
+                  View My Work
+                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </span>
               </motion.button>
 
               <motion.a
                 href="/resume.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
-                whileHover={{ y: -3, scale: 1.02 }}
+                whileHover={{
+                  y: -4,
+                  scale: 1.03,
+                  borderColor: "rgba(137,180,250,0.8)",
+                  boxShadow: "0 16px 36px -24px rgba(137,180,250,0.9)",
+                }}
                 whileTap={{ scale: 0.97 }}
                 transition={springTransition}
-                className="flex items-center gap-2 rounded-xl border border-ctp-surface1 bg-transparent px-6 py-2.5 font-body font-semibold text-ctp-text transition-all hover:border-ctp-blue hover:bg-ctp-blue/5"
+                className="group relative overflow-hidden rounded-xl border border-ctp-surface1 bg-transparent px-6 py-2.5 font-body font-semibold text-ctp-text transition-all hover:border-ctp-blue hover:bg-ctp-blue/5"
               >
-                <FileText className="h-4 w-4" />
-                Resume
+                <span className="pointer-events-none absolute inset-0 scale-95 rounded-xl bg-ctp-blue/0 opacity-0 blur-md transition-all duration-400 group-hover:scale-100 group-hover:bg-ctp-blue/10 group-hover:opacity-100" />
+                <span className="relative z-10 flex items-center gap-2">
+                  <FileText className="h-4 w-4" />
+                  Resume
+                </span>
               </motion.a>
             </motion.div>
 

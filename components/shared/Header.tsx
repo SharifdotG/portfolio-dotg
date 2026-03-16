@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 import {
+  Moon,
+  Sun,
   Home,
   User,
   Briefcase,
@@ -10,7 +12,8 @@ import {
   Trophy,
   Mail,
 } from "lucide-react";
-import { motion } from "framer-motion";
+import { useTheme } from "@/components/providers/ThemeProvider";
+import { AnimatePresence, motion } from "framer-motion";
 
 const navigation = [
   { name: "Home", href: "#hero", icon: Home },
@@ -25,6 +28,7 @@ const navigation = [
 export default function Header() {
   const [activeSection, setActiveSection] = useState("hero");
   const [isScrolled, setIsScrolled] = useState(false);
+  const { theme, toggleTheme } = useTheme();
 
   const springTransition = {
     type: "spring" as const,
@@ -118,6 +122,41 @@ export default function Header() {
               </motion.a>
             );
           })}
+
+          <div className="mx-1 h-5 w-px bg-ctp-surface0/50" />
+
+          <motion.button
+            onClick={toggleTheme}
+            whileHover={{ y: -1, scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            transition={springTransition}
+            className="rounded-full p-2 text-ctp-subtext0 transition-colors hover:bg-ctp-surface0/55 hover:text-ctp-text"
+            aria-label="Toggle theme"
+          >
+            <AnimatePresence mode="wait">
+              {theme === "dark" ? (
+                <motion.div
+                  key="sun"
+                  initial={{ rotate: -90, opacity: 0 }}
+                  animate={{ rotate: 0, opacity: 1 }}
+                  exit={{ rotate: 90, opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <Sun className="h-4 w-4" />
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="moon"
+                  initial={{ rotate: 90, opacity: 0 }}
+                  animate={{ rotate: 0, opacity: 1 }}
+                  exit={{ rotate: -90, opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <Moon className="h-4 w-4" />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.button>
         </nav>
       </motion.header>
 

@@ -44,7 +44,7 @@ export default function FloatingStats() {
     <>
       {/* Floating Button — clears mobile bottom nav */}
       <motion.div
-        className="fixed bottom-40 right-4 z-40"
+        className="fixed bottom-40 right-4 z-40 md:bottom-24 md:right-6"
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ delay: 1, type: "spring", stiffness: 260, damping: 20 }}
@@ -78,7 +78,7 @@ export default function FloatingStats() {
             />
 
             <motion.div
-              className="fixed bottom-24 right-4 z-50 max-h-[70vh] w-[calc(100vw-1rem)] max-w-2xl overflow-y-auto rounded-2xl border border-ctp-surface0/60 bg-ctp-base/80 p-5 shadow-2xl backdrop-blur-xl"
+              className="fixed bottom-24 right-4 z-50 max-h-[70vh] w-[calc(100vw-1rem)] max-w-2xl overflow-y-auto rounded-2xl border border-ctp-surface0/60 bg-ctp-base/80 p-5 shadow-2xl backdrop-blur-xl md:bottom-7 md:right-6"
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
