@@ -10,9 +10,9 @@ import {
   Facebook,
   Instagram,
 } from "lucide-react";
-import { SiDiscord } from "@icons-pack/react-simple-icons";
 import Image from "next/image";
 import { PERSONAL_INFO } from "@/lib/constants";
+import DiscordIcon from "@/components/ui/DiscordIcon";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -84,7 +84,7 @@ export default function Hero() {
     { icon: Twitter, href: PERSONAL_INFO.twitterUrl, label: "Twitter" },
     { icon: Facebook, href: PERSONAL_INFO.facebookUrl, label: "Facebook" },
     { icon: Instagram, href: PERSONAL_INFO.instagramUrl, label: "Instagram" },
-    { icon: SiDiscord, href: PERSONAL_INFO.discordUrl, label: "Discord" },
+    { icon: DiscordIcon, href: PERSONAL_INFO.discordUrl, label: "Discord" },
   ];
 
   return (

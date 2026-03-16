@@ -16,10 +16,10 @@ import {
   CheckCircle2,
   X,
 } from "lucide-react";
-import { SiDiscord } from "@icons-pack/react-simple-icons";
 import Section from "@/components/ui/Section";
 import SectionTitle from "@/components/ui/SectionTitle";
 import { PERSONAL_INFO } from "@/lib/constants";
+import DiscordIcon from "@/components/ui/DiscordIcon";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -50,7 +50,7 @@ const socialLinks = [
   { icon: Twitter, href: PERSONAL_INFO.twitterUrl, label: "Twitter" },
   { icon: Facebook, href: PERSONAL_INFO.facebookUrl, label: "Facebook" },
   { icon: Instagram, href: PERSONAL_INFO.instagramUrl, label: "Instagram" },
-  { icon: SiDiscord, href: PERSONAL_INFO.discordUrl, label: "Discord" },
+  { icon: DiscordIcon, href: PERSONAL_INFO.discordUrl, label: "Discord" },
   { icon: Code2, href: PERSONAL_INFO.codeforcesUrl, label: "Codeforces" },
   { icon: Code2, href: PERSONAL_INFO.leetcodeUrl, label: "LeetCode" },
 ];

@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { getCodeforcesUser, type CodeforcesUser } from "@/lib/api/codeforces";
 import { getLeetCodeStats, type LeetCodeStats } from "@/lib/api/leetcode";
+import { PERSONAL_INFO } from "@/lib/constants";
 
 export default function FloatingStats() {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -23,21 +24,28 @@ export default function FloatingStats() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let isActive = true;
+
     async function fetchData() {
       try {
         const [codeforces, leetcode] = await Promise.all([
-          getCodeforcesUser("SharifdotG"),
-          getLeetCodeStats("SharifdotG"),
+          getCodeforcesUser(PERSONAL_INFO.codeforcesHandle),
+          getLeetCodeStats(PERSONAL_INFO.leetcodeHandle),
         ]);
+        if (!isActive) return;
         setCodeforcesData(codeforces);
         setLeetcodeData(leetcode);
       } catch (error) {
         console.error("Error fetching competitive programming data:", error);
       } finally {
-        setLoading(false);
+        if (isActive) setLoading(false);
       }
     }
     fetchData();
+
+    return () => {
+      isActive = false;
+    };
   }, []);
 
   return (
@@ -120,7 +128,7 @@ export default function FloatingStats() {
                         Codeforces
                       </h4>
                       <a
-                        href="https://codeforces.com/profile/SharifdotG"
+                        href={PERSONAL_INFO.codeforcesUrl}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-xs text-ctp-blue hover:text-ctp-sapphire transition-colors flex items-center gap-1"
@@ -180,7 +188,7 @@ export default function FloatingStats() {
                         LeetCode
                       </h4>
                       <a
-                        href="https://leetcode.com/SharifdotG"
+                        href={PERSONAL_INFO.leetcodeUrl}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-xs text-ctp-blue hover:text-ctp-sapphire transition-colors flex items-center gap-1"

@@ -15,7 +15,6 @@ import Image from "next/image";
 import Section from "@/components/ui/Section";
 import SectionTitle from "@/components/ui/SectionTitle";
 import { PROJECTS } from "@/lib/constants";
-import { getGitHubRepo } from "@/lib/api/github";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -30,44 +29,47 @@ export default function Projects() {
   const [filter, setFilter] = useState<"all" | "featured">("featured");
   const [projectStats, setProjectStats] = useState<
     Record<string, ProjectStats>
-  >({});
+  >(() =>
+    PROJECTS.reduce<Record<string, ProjectStats>>((acc, project) => {
+      acc[project.title] = { stars: 0, forks: 0, language: "" };
+      return acc;
+    }, {}),
+  );
 
   const filteredProjects =
     filter === "featured" ? PROJECTS.filter((p) => p.featured) : PROJECTS;
 
   useEffect(() => {
+    const controller = new AbortController();
+
     const fetchStats = async () => {
-      const stats: Record<string, ProjectStats> = {};
+      try {
+        const response = await fetch("/api/projects-stats", {
+          signal: controller.signal,
+          cache: "force-cache",
+        });
 
-      for (const project of PROJECTS) {
-        if (project.githubRepo) {
-          const [owner, repo] = project.githubRepo.split("/");
-          const repoData = await getGitHubRepo(owner, repo);
-
-          if (repoData) {
-            stats[project.title] = {
-              stars: repoData.stargazers_count,
-              forks: repoData.forks_count,
-              language: repoData.language,
-            };
-          }
+        if (!response.ok) {
+          throw new Error(`Failed to fetch project stats: ${response.status}`);
         }
 
-        if (project.extensionId === "SharifdotG.catppuccin-dark-pro") {
-          if (stats[project.title]) {
-            stats[project.title].downloads = 4800;
-          }
+        const data = (await response.json()) as Record<string, ProjectStats>;
+        setProjectStats((prev) => ({ ...prev, ...data }));
+      } catch (error) {
+        if (error instanceof DOMException && error.name === "AbortError") {
+          return;
         }
+        console.error("Error fetching project stats:", error);
       }
-
-      setProjectStats(stats);
     };
 
-    fetchStats();
+    void fetchStats();
+
+    return () => controller.abort();
   }, []);
 
   return (
-    <Section id="projects">
+    <Section id="projects" className="relative overflow-hidden">
       <SectionTitle
         badge="Portfolio"
         title="Featured Projects"
@@ -128,6 +130,8 @@ export default function Projects() {
                   src={project.image}
                   alt={project.title}
                   fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  loading="lazy"
                   className="object-cover group-hover:scale-105 transition-transform duration-500"
                 />
                 {project.featured && (

@@ -11,6 +11,7 @@ import {
   ExternalLink,
   FileImage,
   X,
+  ChevronDown,
 } from "lucide-react";
 import Section from "@/components/ui/Section";
 import SectionTitle from "@/components/ui/SectionTitle";
@@ -41,13 +42,19 @@ const fallbackStyle = {
   bg: "bg-ctp-mauve/10",
 };
 
+const INITIAL_VISIBLE_ACHIEVEMENTS = 9;
+
 export default function Achievements() {
   const [selectedCertificate, setSelectedCertificate] = useState<string | null>(
     null,
   );
+  const [showMoreAchievements, setShowMoreAchievements] = useState(false);
+
+  const primaryAchievements = ACHIEVEMENTS.slice(0, INITIAL_VISIBLE_ACHIEVEMENTS);
+  const additionalAchievements = ACHIEVEMENTS.slice(INITIAL_VISIBLE_ACHIEVEMENTS);
 
   return (
-    <Section id="achievements">
+    <Section id="achievements" className="relative overflow-hidden">
       <SectionTitle
         badge="Milestones"
         title="Achievements & Recognition"
@@ -62,7 +69,7 @@ export default function Achievements() {
         viewport={{ once: true, margin: "-60px" }}
         transition={{ staggerChildren: 0.04 }}
       >
-        {ACHIEVEMENTS.map((achievement) => {
+        {primaryAchievements.map((achievement) => {
           const style = typeStyles[achievement.type] ?? fallbackStyle;
           const Icon = style.icon;
 
@@ -123,6 +130,92 @@ export default function Achievements() {
           );
         })}
       </motion.div>
+
+      {additionalAchievements.length > 0 && (
+        <div className="max-w-6xl mx-auto mt-8">
+          <button
+            onClick={() => setShowMoreAchievements(!showMoreAchievements)}
+            className="flex items-center gap-2 text-sm font-medium text-ctp-subtext0 hover:text-ctp-text transition-colors mx-auto"
+          >
+            More Achievements ({additionalAchievements.length})
+            <ChevronDown
+              className={`w-4 h-4 transition-transform duration-200 ${showMoreAchievements ? "rotate-180" : ""}`}
+            />
+          </button>
+
+          <AnimatePresence>
+            {showMoreAchievements && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.3, ease }}
+                className="overflow-hidden"
+              >
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
+                  {additionalAchievements.map((achievement, index) => {
+                    const style = typeStyles[achievement.type] ?? fallbackStyle;
+                    const Icon = style.icon;
+
+                    return (
+                      <motion.div
+                        key={achievement.title}
+                        initial={{ opacity: 0, y: 12 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.04, duration: 0.3 }}
+                        className="rounded-2xl border border-ctp-surface0/60 bg-ctp-surface0/30 backdrop-blur-sm p-5 hover:border-ctp-surface1 transition-colors"
+                      >
+                        <div className="flex items-start gap-3">
+                          <div className={`p-2 rounded-lg ${style.bg} shrink-0`}>
+                            <Icon className={`w-4 h-4 ${style.color}`} />
+                          </div>
+                          <div className="min-w-0">
+                            <h3 className="text-sm font-semibold text-ctp-text leading-snug mb-1 line-clamp-2">
+                              {achievement.title}
+                            </h3>
+                            <p className="text-xs text-ctp-subtext0 mb-1">
+                              {achievement.organization}
+                            </p>
+                            <span className="flex items-center gap-1 text-xs text-ctp-overlay0">
+                              <Calendar className="w-3 h-3" />
+                              {achievement.date}
+                            </span>
+
+                            {achievement.viewType === "link" && achievement.link && (
+                              <a
+                                href={achievement.link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-1 mt-2 text-xs text-ctp-blue hover:text-ctp-sapphire transition-colors"
+                              >
+                                View <ExternalLink className="w-3 h-3" />
+                              </a>
+                            )}
+
+                            {achievement.viewType === "image" &&
+                              achievement.certificateImage && (
+                                <button
+                                  onClick={() =>
+                                    setSelectedCertificate(
+                                      achievement.certificateImage,
+                                    )
+                                  }
+                                  className="inline-flex items-center gap-1 mt-2 text-xs text-ctp-blue hover:text-ctp-sapphire transition-colors"
+                                >
+                                  Certificate <FileImage className="w-3 h-3" />
+                                </button>
+                              )}
+                          </div>
+                        </div>
+                      </motion.div>
+                    );
+                  })}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      )}
 
       {/* Certificate Modal */}
       <AnimatePresence>

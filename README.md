@@ -25,7 +25,7 @@
 ## Tech Stack
 
 | Category | Technologies |
-|----------|--------------|
+| --- | --- |
 | **Framework** | Next.js 16 (App Router, React Server Components) |
 | **Frontend** | React 19, TypeScript 5.7+ |
 | **Styling** | Tailwind CSS v4, Custom CSS Variables |
@@ -39,7 +39,7 @@
 
 ### Prerequisites
 
-- Node.js 18+ and npm/yarn/pnpm
+- Node.js 18+ and pnpm (or Corepack)
 - OpenRouter API key ([Get one free](https://openrouter.ai/keys))
 
 ### Installation
@@ -50,7 +50,7 @@ git clone https://github.com/SharifdotG/portfolio-dotg.git
 cd portfolio-dotg
 
 # Install dependencies
-npm install
+pnpm install
 
 # Set up environment variables
 cp .env.local.example .env.local
@@ -71,7 +71,7 @@ GITHUB_TOKEN=ghp_your_token_here
 ### Development
 
 ```bash
-npm run dev
+pnpm dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
@@ -79,7 +79,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 ## Sections
 
 | Section | Description |
-|---------|-------------|
+| --- | --- |
 | **Hero** | Animated terminal with typewriter effect |
 | **About** | Personal story, education, and fun facts |
 | **Experience** | Timeline of education and teaching roles |
@@ -138,10 +138,10 @@ const systemPrompt = `You are an AI assistant representing...`;
 ## Scripts
 
 ```bash
-npm run dev      # Start development server (Turbopack)
-npm run build    # Build for production
-npm run start    # Start production server
-npm run lint     # Run ESLint
+pnpm dev      # Start development server (Turbopack)
+pnpm build    # Build for production
+pnpm start    # Start production server
+pnpm lint     # Run ESLint
 ```
 
 ## Contributing
@@ -177,10 +177,6 @@ This project is open source and available under the [MIT License](LICENSE).
 
 ---
 
-<div align="center">
-
 **Built with 💝 by [Sharif Md. Yousuf](https://github.com/SharifdotG)**
 
 Star this repo if you found it helpful!
-
-</div>

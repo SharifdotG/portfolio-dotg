@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import Image from "next/image";
 import Section from "@/components/ui/Section";
 import SectionTitle from "@/components/ui/SectionTitle";
@@ -73,6 +73,7 @@ const techLogos = [
 
 function InfiniteScrollingLogos() {
   const { theme } = useTheme();
+  const prefersReducedMotion = useReducedMotion();
   const isDark = theme === "dark";
   const [failedImages, setFailedImages] = useState<Set<number>>(new Set());
 
@@ -91,15 +92,23 @@ function InfiniteScrollingLogos() {
       <div className="flex gap-12">
         <motion.div
           className="flex gap-12 shrink-0"
-          animate={{ x: [0, -100 * techLogos.length * 0.45] }}
-          transition={{
-            x: {
-              repeat: Infinity,
-              repeatType: "loop",
-              duration: 30,
-              ease: "linear",
-            },
-          }}
+          animate={
+            prefersReducedMotion
+              ? undefined
+              : { x: [0, -100 * techLogos.length * 0.45] }
+          }
+          transition={
+            prefersReducedMotion
+              ? undefined
+              : {
+                  x: {
+                    repeat: Infinity,
+                    repeatType: "loop",
+                    duration: 30,
+                    ease: "linear",
+                  },
+                }
+          }
         >
           {[...techLogos, ...techLogos, ...techLogos].map((tech, index) => (
             <div key={`logo-${index}`} className="shrink-0 group relative">
@@ -114,6 +123,8 @@ function InfiniteScrollingLogos() {
                     alt={tech.name}
                     width={64}
                     height={64}
+                    loading="lazy"
+                    sizes="64px"
                     className="w-full h-full object-contain opacity-50 group-hover:opacity-100 transition-opacity duration-300"
                     onError={() =>
                       setFailedImages((prev) =>
@@ -136,7 +147,7 @@ function InfiniteScrollingLogos() {
 
 export default function CodeSkills() {
   return (
-    <Section id="skills">
+    <Section id="skills" className="relative overflow-hidden">
       <SectionTitle
         badge="Tech Stack"
         title="Skills & Technologies"

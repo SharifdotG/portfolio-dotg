@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Lenis from "lenis";
 
 export default function SmoothScroll() {
   const [isMobile, setIsMobile] = useState(false);
@@ -16,24 +15,39 @@ export default function SmoothScroll() {
   useEffect(() => {
     if (isMobile) return;
 
-    const lenis = new Lenis({
-      duration: 1.0,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      orientation: "vertical",
-      gestureOrientation: "vertical",
-      smoothWheel: true,
-      touchMultiplier: 1.5,
-    });
+    let rafId = 0;
+    let lenisInstance: { raf: (time: number) => void; destroy: () => void } | null = null;
+    let cancelled = false;
 
-    function raf(time: number) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
-    }
+    const initLenis = async () => {
+      const { default: Lenis } = await import("lenis");
+      if (cancelled) return;
 
-    requestAnimationFrame(raf);
+      const lenis = new Lenis({
+        duration: 1.0,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        orientation: "vertical",
+        gestureOrientation: "vertical",
+        smoothWheel: true,
+        touchMultiplier: 1.5,
+      });
+
+      lenisInstance = lenis;
+
+      const raf = (time: number) => {
+        lenis.raf(time);
+        rafId = requestAnimationFrame(raf);
+      };
+
+      rafId = requestAnimationFrame(raf);
+    };
+
+    void initLenis();
 
     return () => {
-      lenis.destroy();
+      cancelled = true;
+      if (rafId) cancelAnimationFrame(rafId);
+      lenisInstance?.destroy();
     };
   }, [isMobile]);
 
