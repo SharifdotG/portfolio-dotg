@@ -195,6 +195,28 @@ export interface SkillLogo {
   lightPath?: string;
 }
 
+export type ProjectStatusKey =
+  | "active"
+  | "stable"
+  | "prototype"
+  | "research";
+
+export interface Project {
+  title: string;
+  description: string;
+  techStack: string[];
+  githubUrl: string;
+  githubRepo: string;
+  liveUrl: string | null;
+  featured: boolean;
+  image: string;
+  category: string;
+  extensionId?: string;
+  status?: ProjectStatusKey;
+  tags?: string[];
+  highlight?: string;
+}
+
 export const SKILL_LOGOS: SkillLogo[] = [
   { name: "C", path: "/tech-logos/c.svg" },
   { name: "C++", path: "/tech-logos/cpp.svg" },
@@ -224,7 +246,7 @@ export const SKILL_LOGOS: SkillLogo[] = [
   { name: "Java", path: "/tech-logos/java.svg" },
 ];
 
-export const PROJECTS = [
+export const PROJECTS: Project[] = [
   {
     title: "DevStudy AI Suite",
     description:
@@ -243,6 +265,9 @@ export const PROJECTS = [
     featured: true,
     image: "/projects/devstudy-ai.png",
     category: "Web Development",
+    status: "active",
+    tags: ["AI Assistant", "Productivity", "Student-first"],
+    highlight: "All-in-one AI learning platform",
   },
   {
     title: "TechReform BD 2",
@@ -255,6 +280,9 @@ export const PROJECTS = [
     featured: true,
     image: "/projects/techreform.png",
     category: "Web Development",
+    status: "stable",
+    tags: ["E-commerce", "Admin", "PC Builder"],
+    highlight: "Commerce workflow from catalog to checkout",
   },
   {
     title: "SharifdotG's CodeVault",
@@ -267,6 +295,9 @@ export const PROJECTS = [
     featured: true,
     image: "/projects/codevault.png",
     category: "Competitive Programming",
+    status: "active",
+    tags: ["2000+ Solutions", "Competitive", "Algorithms"],
+    highlight: "Large indexed competitive programming archive",
   },
   {
     title: "Catppuccin Dark Pro",
@@ -281,6 +312,9 @@ export const PROJECTS = [
     featured: true,
     image: "/projects/catppuccin-dark-pro.png",
     category: "Tools & Extensions",
+    status: "stable",
+    tags: ["VS Code", "Theme", "Developer Experience"],
+    highlight: "4800+ installs on Marketplace",
   },
   {
     title: "BlogsdotG",
@@ -300,6 +334,9 @@ export const PROJECTS = [
     featured: true,
     image: "/projects/blogsdotg.png",
     category: "Web Development",
+    status: "prototype",
+    tags: ["Blogging", "Real-time", "Rich Text"],
+    highlight: "Modern editor with real-time syncing",
   },
   {
     title: "dotG Mono",
@@ -312,6 +349,9 @@ export const PROJECTS = [
     featured: true,
     image: "/projects/dotg-mono.png",
     category: "Tools & Extensions",
+    status: "prototype",
+    tags: ["Typography", "Developer Tooling", "Open Source"],
+    highlight: "Readability-first coding font",
   },
   {
     title: "Handwritten Digit Recognition",
@@ -325,6 +365,9 @@ export const PROJECTS = [
     featured: false,
     image: "/projects/handwritten-digit-recognition.png",
     category: "Machine Learning",
+    status: "research",
+    tags: ["Deep Learning", "Computer Vision", "MNIST"],
+    highlight: "CNN benchmark on handwritten digits",
   },
   {
     title: "Quantum Tunnels AI Game",
@@ -337,6 +380,9 @@ export const PROJECTS = [
     featured: false,
     image: "/projects/quantum-tunnels-ai-game.png",
     category: "Game Development",
+    status: "research",
+    tags: ["Pathfinding", "Game AI", "Puzzle"],
+    highlight: "Algorithmic gameplay in a TUI setting",
   },
   {
     title: "A* Algorithm Search",
@@ -349,6 +395,9 @@ export const PROJECTS = [
     featured: false,
     image: "/projects/a-star-algorithm-search.png",
     category: "Algorithms",
+    status: "research",
+    tags: ["A*", "Visualization", "Pathfinding"],
+    highlight: "Interactive shortest-path visualization",
   },
   {
     title: "COD Weapon Knowledgebase",
@@ -362,6 +411,9 @@ export const PROJECTS = [
     featured: false,
     image: "/projects/cod-weapon-knowledgebase.png",
     category: "AI & Logic",
+    status: "research",
+    tags: ["Prolog", "Expert System", "Inference"],
+    highlight: "Rule-based recommendation engine",
   },
 ];
 
