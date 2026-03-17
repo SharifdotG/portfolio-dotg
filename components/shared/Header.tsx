@@ -15,7 +15,7 @@ import {
 import { useTheme } from "@/components/providers/ThemeProvider";
 import { AnimatePresence, motion } from "framer-motion";
 
-const navigation = [
+export const navigation = [
   { name: "Home", href: "#hero", icon: Home },
   { name: "About", href: "#about", icon: User },
   { name: "Experience", href: "#experience", icon: Briefcase },

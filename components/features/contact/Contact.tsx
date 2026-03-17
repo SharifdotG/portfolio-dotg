@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
   Mail,
   MapPin,
@@ -22,6 +22,63 @@ import { PERSONAL_INFO } from "@/lib/constants";
 import DiscordIcon from "@/components/ui/DiscordIcon";
 
 const ease = [0.22, 1, 0.36, 1] as const;
+
+const getColumnVariants = (reducedMotion: boolean) => ({
+  hidden: {
+    opacity: 0,
+    y: reducedMotion ? 0 : 24,
+    filter: reducedMotion ? "none" : "blur(6px)",
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+    transition: {
+      duration: reducedMotion ? 0.28 : 0.48,
+      ease,
+    },
+  },
+});
+
+const getGroupVariants = (reducedMotion: boolean) => ({
+  hidden: {},
+  visible: {
+    transition: {
+      delayChildren: reducedMotion ? 0 : 0.06,
+      staggerChildren: reducedMotion ? 0.04 : 0.07,
+    },
+  },
+});
+
+const getItemVariants = (reducedMotion: boolean) => ({
+  hidden: {
+    opacity: 0,
+    y: reducedMotion ? 0 : 12,
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: reducedMotion ? 0.2 : 0.35,
+      ease,
+    },
+  },
+});
+
+const statusVariants = {
+  hidden: { opacity: 0, y: -8, scale: 0.98 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: { duration: 0.22, ease },
+  },
+  exit: {
+    opacity: 0,
+    y: -4,
+    transition: { duration: 0.18, ease },
+  },
+};
 
 const contactInfo = [
   {
@@ -56,6 +113,8 @@ const socialLinks = [
 ];
 
 export default function Contact() {
+  const prefersReducedMotion = useReducedMotion();
+  const reducedMotion = Boolean(prefersReducedMotion);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -108,69 +167,109 @@ export default function Contact() {
         subtitle="Have a project in mind? Send me a message or find me on socials."
       />
 
+      <div className="pointer-events-none absolute inset-0 -z-10">
+        <div className="absolute -top-12 left-0 h-56 w-56 rounded-full bg-ctp-blue/10 blur-3xl" />
+        <div className="absolute bottom-0 right-0 h-56 w-56 rounded-full bg-ctp-mauve/10 blur-3xl" />
+      </div>
+
       <div className="grid lg:grid-cols-2 gap-10 max-w-5xl mx-auto">
         {/* Left: Info & Socials */}
         <motion.div
           className="space-y-6"
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, ease }}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-60px" }}
+          variants={getColumnVariants(reducedMotion)}
         >
           {/* Contact methods */}
-          <div className="space-y-3">
+          <motion.div
+            className="space-y-3"
+            variants={getGroupVariants(reducedMotion)}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-60px" }}
+          >
             {contactInfo.map((c) => (
-              <a
+              <motion.a
                 key={c.label}
                 href={c.href}
                 target={c.href.startsWith("http") ? "_blank" : undefined}
                 rel="noopener noreferrer"
-                className="flex items-center gap-4 p-4 rounded-xl border border-ctp-surface0/60 bg-ctp-surface0/30 hover:border-ctp-surface1 transition-colors"
+                variants={getItemVariants(reducedMotion)}
+                whileHover={
+                  reducedMotion
+                    ? undefined
+                    : {
+                        y: -2,
+                        scale: 1.005,
+                      }
+                }
+                transition={{ duration: 0.22, ease }}
+                className="group flex items-center gap-4 p-4 rounded-xl border border-ctp-surface0/60 bg-ctp-surface0/30 hover:border-ctp-surface1 hover:bg-ctp-surface0/45 hover:shadow-md hover:shadow-ctp-blue/10 transition-[transform,border-color,background-color,box-shadow]"
               >
-                <div className="p-2 rounded-lg bg-ctp-blue/10">
+                <div className="p-2 rounded-lg bg-ctp-blue/10 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:scale-105">
                   <c.icon className="w-5 h-5 text-ctp-blue" />
                 </div>
                 <div>
                   <p className="text-xs text-ctp-overlay0">{c.label}</p>
                   <p className="text-sm font-medium text-ctp-text">{c.value}</p>
                 </div>
-              </a>
+              </motion.a>
             ))}
-          </div>
+          </motion.div>
 
           {/* Social links */}
           <div>
             <h4 className="text-sm font-semibold text-ctp-text mb-3">
               Social Profiles
             </h4>
-            <div className="flex flex-wrap gap-2">
+            <motion.div
+              className="flex flex-wrap gap-2 md:gap-2.5"
+              variants={getGroupVariants(reducedMotion)}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-60px" }}
+            >
               {socialLinks.map((s) => (
-                <a
+                <motion.a
                   key={s.label}
                   href={s.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group p-2.5 rounded-lg bg-ctp-surface0/30 border border-ctp-surface0/60 hover:border-ctp-surface1 transition-colors"
+                  variants={getItemVariants(reducedMotion)}
+                  whileHover={
+                    reducedMotion
+                      ? undefined
+                      : {
+                          y: -2,
+                          scale: 1.04,
+                        }
+                  }
+                  whileTap={reducedMotion ? undefined : { scale: 0.97 }}
+                  transition={{ duration: 0.2, ease }}
+                  className="group p-2.5 rounded-lg bg-ctp-surface0/30 border border-ctp-surface0/60 hover:border-ctp-surface1 hover:bg-ctp-surface0/45 hover:shadow-sm hover:shadow-ctp-blue/10 transition-[transform,border-color,background-color,box-shadow]"
                   aria-label={s.label}
                   title={s.label}
                 >
-                  <s.icon className="w-5 h-5 text-ctp-overlay0 group-hover:text-ctp-blue transition-colors" />
-                </a>
+                  <s.icon className="w-5 h-5 text-ctp-overlay0 group-hover:text-ctp-blue transition-colors duration-300" />
+                </motion.a>
               ))}
-            </div>
+            </motion.div>
           </div>
         </motion.div>
 
         {/* Right: Form */}
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.1, ease }}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-60px" }}
+          variants={getColumnVariants(reducedMotion)}
+          transition={{ delay: reducedMotion ? 0 : 0.08 }}
         >
           <form
             onSubmit={handleSubmit}
-            className="space-y-4 rounded-2xl border border-ctp-surface0/60 bg-ctp-surface0/30 backdrop-blur-sm p-6"
+            className="space-y-4 rounded-2xl border border-ctp-surface0/60 bg-ctp-surface0/30 backdrop-blur-sm p-6 transition-[border-color,box-shadow] hover:border-ctp-surface1 hover:shadow-md hover:shadow-ctp-blue/10"
+            aria-busy={status === "loading"}
           >
             <h3 className="text-lg font-display font-semibold text-ctp-text flex items-center gap-2 mb-2">
               <Send className="w-4 h-4 text-ctp-blue" />
@@ -191,7 +290,7 @@ export default function Contact() {
                 value={formData.name}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-2.5 bg-ctp-base border border-ctp-surface1 rounded-lg text-ctp-text placeholder-ctp-overlay0 focus:outline-none focus:ring-2 focus:ring-ctp-blue/50 focus:border-ctp-blue transition-all text-sm"
+                className="w-full px-4 py-2.5 bg-ctp-base border border-ctp-surface1 rounded-lg text-ctp-text placeholder-ctp-overlay1 focus:outline-none focus:ring-2 focus:ring-ctp-blue/40 focus:border-ctp-blue focus:shadow-[0_0_0_3px_rgba(137,180,250,0.12)] transition-[border-color,box-shadow] text-sm"
                 placeholder="John Doe"
               />
             </div>
@@ -210,7 +309,7 @@ export default function Contact() {
                 value={formData.email}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-2.5 bg-ctp-base border border-ctp-surface1 rounded-lg text-ctp-text placeholder-ctp-overlay0 focus:outline-none focus:ring-2 focus:ring-ctp-blue/50 focus:border-ctp-blue transition-all text-sm"
+                className="w-full px-4 py-2.5 bg-ctp-base border border-ctp-surface1 rounded-lg text-ctp-text placeholder-ctp-overlay1 focus:outline-none focus:ring-2 focus:ring-ctp-blue/40 focus:border-ctp-blue focus:shadow-[0_0_0_3px_rgba(137,180,250,0.12)] transition-[border-color,box-shadow] text-sm"
                 placeholder="john@example.com"
               />
             </div>
@@ -229,29 +328,52 @@ export default function Contact() {
                 onChange={handleChange}
                 required
                 rows={4}
-                className="w-full px-4 py-2.5 bg-ctp-base border border-ctp-surface1 rounded-lg text-ctp-text placeholder-ctp-overlay0 focus:outline-none focus:ring-2 focus:ring-ctp-blue/50 focus:border-ctp-blue transition-all resize-none text-sm"
+                className="w-full px-4 py-2.5 bg-ctp-base border border-ctp-surface1 rounded-lg text-ctp-text placeholder-ctp-overlay1 focus:outline-none focus:ring-2 focus:ring-ctp-blue/40 focus:border-ctp-blue focus:shadow-[0_0_0_3px_rgba(137,180,250,0.12)] transition-[border-color,box-shadow] resize-none text-sm"
                 placeholder="Tell me about your project..."
               />
             </div>
 
-            {status === "success" && (
-              <div className="flex items-center gap-2 p-3 bg-ctp-green/10 text-ctp-green rounded-lg text-sm">
-                <CheckCircle2 className="w-4 h-4" />
-                Message sent!
-              </div>
-            )}
+            <AnimatePresence mode="wait">
+              {status === "success" && (
+                <motion.div
+                  key="success"
+                  variants={statusVariants}
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+                  className="flex items-center gap-2 p-3 bg-ctp-green/10 text-ctp-green rounded-lg text-sm"
+                  role="status"
+                  aria-live="polite"
+                >
+                  <CheckCircle2 className="w-4 h-4" />
+                  Message sent!
+                </motion.div>
+              )}
 
-            {status === "error" && (
-              <div className="flex items-center gap-2 p-3 bg-ctp-red/10 text-ctp-red rounded-lg text-sm">
-                <X className="w-4 h-4" />
-                Failed to send. Please try again.
-              </div>
-            )}
+              {status === "error" && (
+                <motion.div
+                  key="error"
+                  variants={statusVariants}
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+                  className="flex items-center gap-2 p-3 bg-ctp-red/10 text-ctp-red rounded-lg text-sm"
+                  role="status"
+                  aria-live="polite"
+                >
+                  <X className="w-4 h-4" />
+                  Failed to send. Please try again.
+                </motion.div>
+              )}
+            </AnimatePresence>
 
-            <button
+            <motion.button
               type="submit"
               disabled={status === "loading"}
-              className="w-full px-6 py-2.5 bg-ctp-blue hover:bg-ctp-sapphire text-ctp-crust font-semibold rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+              whileTap={reducedMotion ? undefined : { scale: 0.985 }}
+              transition={{ duration: 0.15, ease }}
+              className="w-full px-6 py-2.5 bg-ctp-blue hover:bg-ctp-sapphire text-ctp-crust font-semibold rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              aria-busy={status === "loading"}
             >
               {status === "loading" ? (
                 <>
@@ -264,7 +386,7 @@ export default function Contact() {
                   Send Message
                 </>
               )}
-            </button>
+            </motion.button>
           </form>
         </motion.div>
       </div>
