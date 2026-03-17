@@ -15,7 +15,7 @@ export default function FloatingThemeToggle() {
 
   return (
     <motion.div
-      className="fixed bottom-56 right-4 z-40 md:hidden"
+      className="fixed bottom-56 right-4 z-40 lg:hidden"
       initial={{ scale: 0, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
       transition={{ delay: 1, type: "spring", stiffness: 260, damping: 20 }}

@@ -1,11 +1,20 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { ArrowUp } from "lucide-react";
 
 export default function ScrollToTop() {
   const [isVisible, setIsVisible] = useState(false);
+  const prefersReducedMotion = useReducedMotion();
+  const reducedMotion = Boolean(prefersReducedMotion);
+
+  const ease = [0.22, 1, 0.36, 1] as const;
+  const springTransition = {
+    type: "spring" as const,
+    stiffness: 250,
+    damping: 20,
+  };
 
   useEffect(() => {
     const toggleVisibility = () => {
@@ -16,7 +25,7 @@ export default function ScrollToTop() {
       }
     };
 
-    window.addEventListener("scroll", toggleVisibility);
+    window.addEventListener("scroll", toggleVisibility, { passive: true });
     return () => window.removeEventListener("scroll", toggleVisibility);
   }, []);
 
@@ -31,11 +40,16 @@ export default function ScrollToTop() {
     <AnimatePresence>
       {isVisible && (
         <motion.button
-          initial={{ opacity: 0, scale: 0 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0 }}
+          initial={reducedMotion ? { opacity: 0 } : { opacity: 0, scale: 0.88, y: 12 }}
+          animate={reducedMotion ? { opacity: 1 } : { opacity: 1, scale: 1, y: 0 }}
+          exit={reducedMotion ? { opacity: 0 } : { opacity: 0, scale: 0.9, y: 10 }}
+          transition={
+            reducedMotion ? { duration: 0.2, ease } : { ...springTransition, duration: 0.35 }
+          }
+          whileHover={reducedMotion ? undefined : { y: -2, scale: 1.04 }}
+          whileTap={reducedMotion ? { scale: 1 } : { scale: 0.94 }}
           onClick={scrollToTop}
-          className="fixed bottom-24 left-4 z-40 rounded-full border border-ctp-surface1 bg-ctp-surface0 p-3 text-ctp-text shadow-lg transition-all hover:scale-110 hover:bg-ctp-surface1 active:scale-95"
+          className="fixed bottom-24 left-4 z-40 rounded-full border border-ctp-surface0/60 bg-ctp-base/60 p-3 text-ctp-text shadow-lg shadow-ctp-crust/25 backdrop-blur-xl transition-colors hover:border-ctp-surface1 hover:bg-ctp-base/75 lg:bottom-7 lg:left-6"
           aria-label="Scroll to top"
         >
           <ArrowUp className="w-5 h-5" />

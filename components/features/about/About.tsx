@@ -145,7 +145,7 @@ export default function About() {
   const glowClasses = reducedMotion ? "opacity-0" : "group-hover:opacity-100";
 
   return (
-    <Section id="about" className="relative overflow-hidden">
+    <Section id="about" className="relative overflow-x-clip">
       <div className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute -top-10 left-0 h-52 w-52 rounded-full bg-ctp-blue/10 blur-3xl" />
         <div className="absolute -bottom-8 right-6 h-56 w-56 rounded-full bg-ctp-mauve/10 blur-3xl" />

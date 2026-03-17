@@ -13,7 +13,7 @@ import {
   Mail,
 } from "lucide-react";
 import { useTheme } from "@/components/providers/ThemeProvider";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 
 export const navigation = [
   { name: "Home", href: "#hero", icon: Home },
@@ -29,12 +29,19 @@ export default function Header() {
   const [activeSection, setActiveSection] = useState("hero");
   const [isScrolled, setIsScrolled] = useState(false);
   const { theme, toggleTheme } = useTheme();
+  const prefersReducedMotion = useReducedMotion();
+  const reducedMotion = Boolean(prefersReducedMotion);
+
+  const ease = [0.22, 1, 0.36, 1] as const;
 
   const springTransition = {
     type: "spring" as const,
-    stiffness: 360,
-    damping: 28,
+    stiffness: 320,
+    damping: 26,
   };
+
+  const hoverMotion = reducedMotion ? undefined : { y: -2, scale: 1.02 };
+  const tapMotion = reducedMotion ? { scale: 1 } : { scale: 0.96 };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -78,124 +85,136 @@ export default function Header() {
     <>
       {/* Desktop Navbar — Floating centered pill */}
       <motion.header
-        className={`fixed top-6 left-1/2 -translate-x-1/2 z-50 hidden md:block transition-shadow duration-300 ${
-          isScrolled ? "shadow-lg shadow-ctp-crust/20" : ""
+        className={`fixed left-1/2 top-5 z-50 hidden -translate-x-1/2 transition-shadow duration-300 lg:block ${
+          isScrolled ? "shadow-[0_20px_46px_-28px_rgba(17,17,27,0.9)]" : ""
         }`}
-        initial={{ y: -100, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ type: "spring", stiffness: 180, damping: 20 }}
+        initial={reducedMotion ? { opacity: 0 } : { y: -20, opacity: 0, scale: 0.97 }}
+        animate={reducedMotion ? { opacity: 1 } : { y: 0, opacity: 1, scale: 1 }}
+        transition={
+          reducedMotion
+            ? { duration: 0.2, ease }
+            : { type: "spring", stiffness: 220, damping: 22, delay: 0.1 }
+        }
       >
-        <nav className="isolate flex items-center gap-1 overflow-hidden rounded-full border border-ctp-surface0/35 bg-ctp-base/65 px-2 py-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)] backdrop-blur-2xl">
-          <a
-            href="#hero"
-            className="px-3 py-1.5 text-sm font-display font-bold text-ctp-blue hover:text-ctp-sapphire transition-colors"
-          >
-            SharifdotG
-          </a>
+        <div className="rounded-[999px] bg-linear-to-r from-ctp-surface1/55 via-ctp-surface0/15 to-ctp-surface1/55 p-px">
+          <nav className="isolate flex items-center gap-1 rounded-[999px] bg-ctp-base/55 px-2 py-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.07)] backdrop-blur-2xl">
+            <a
+              href="#hero"
+              className="rounded-full px-3 py-1.5 text-sm font-display font-bold text-ctp-blue transition-colors hover:text-ctp-sapphire"
+            >
+              SharifdotG
+            </a>
 
-          <div className="w-px h-5 bg-ctp-surface0/50 mx-1" />
+            <div className="mx-1 h-5 w-px bg-ctp-surface0/40" />
 
-          {navigation.map((item) => {
-            const isActive = activeSection === item.href.replace("#", "");
-            return (
-              <motion.a
-                key={item.name}
-                href={item.href}
-                aria-label={item.name}
-                whileHover={{ y: -1, scale: 1.02 }}
-                whileTap={{ scale: 0.97 }}
-                transition={springTransition}
-                className={`relative px-3 py-1.5 text-sm font-medium rounded-full transition-colors ${
-                  isActive
-                    ? "text-ctp-blue"
-                    : "text-ctp-subtext0 hover:text-ctp-text"
-                }`}
-              >
-                {isActive && (
+            {navigation.map((item) => {
+              const isActive = activeSection === item.href.replace("#", "");
+              return (
+                <motion.a
+                  key={item.name}
+                  href={item.href}
+                  aria-label={item.name}
+                  whileHover={hoverMotion}
+                  whileTap={tapMotion}
+                  transition={springTransition}
+                  className={`relative rounded-full px-3 py-1.5 text-sm font-medium transition-colors ${
+                    isActive
+                      ? "text-ctp-blue"
+                      : "text-ctp-subtext0 hover:text-ctp-text"
+                  }`}
+                >
+                  {isActive && (
+                    <motion.div
+                      layoutId="activeNavDesktop"
+                      className="absolute inset-0.5 rounded-full border border-ctp-blue/25 bg-ctp-blue/12"
+                      transition={springTransition}
+                    />
+                  )}
+                  <span className="relative z-10">{item.name}</span>
+                </motion.a>
+              );
+            })}
+
+            <div className="mx-1 h-5 w-px bg-ctp-surface0/40" />
+
+            <motion.button
+              onClick={toggleTheme}
+              whileHover={reducedMotion ? undefined : { y: -2, scale: 1.04 }}
+              whileTap={tapMotion}
+              transition={springTransition}
+              className="rounded-full p-2 text-ctp-subtext0 transition-colors hover:bg-ctp-surface0/55 hover:text-ctp-text"
+              aria-label="Toggle theme"
+            >
+              <AnimatePresence mode="wait">
+                {theme === "dark" ? (
                   <motion.div
-                    layoutId="activeNavDesktop"
-                    className="absolute inset-0.5 rounded-full bg-ctp-blue/12"
-                    transition={springTransition}
-                  />
+                    key="sun"
+                    initial={{ rotate: -90, opacity: 0 }}
+                    animate={{ rotate: 0, opacity: 1 }}
+                    exit={{ rotate: 90, opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <Sun className="h-4 w-4" />
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="moon"
+                    initial={{ rotate: 90, opacity: 0 }}
+                    animate={{ rotate: 0, opacity: 1 }}
+                    exit={{ rotate: -90, opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <Moon className="h-4 w-4" />
+                  </motion.div>
                 )}
-                <span className="relative z-10">{item.name}</span>
-              </motion.a>
-            );
-          })}
-
-          <div className="mx-1 h-5 w-px bg-ctp-surface0/50" />
-
-          <motion.button
-            onClick={toggleTheme}
-            whileHover={{ y: -1, scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            transition={springTransition}
-            className="rounded-full p-2 text-ctp-subtext0 transition-colors hover:bg-ctp-surface0/55 hover:text-ctp-text"
-            aria-label="Toggle theme"
-          >
-            <AnimatePresence mode="wait">
-              {theme === "dark" ? (
-                <motion.div
-                  key="sun"
-                  initial={{ rotate: -90, opacity: 0 }}
-                  animate={{ rotate: 0, opacity: 1 }}
-                  exit={{ rotate: 90, opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <Sun className="h-4 w-4" />
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="moon"
-                  initial={{ rotate: 90, opacity: 0 }}
-                  animate={{ rotate: 0, opacity: 1 }}
-                  exit={{ rotate: -90, opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <Moon className="h-4 w-4" />
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </motion.button>
-        </nav>
+              </AnimatePresence>
+            </motion.button>
+          </nav>
+        </div>
       </motion.header>
 
       {/* Mobile Navbar — Bottom-docked icon-only pill */}
       <motion.nav
-        className="fixed bottom-3 left-1/2 z-50 w-[calc(100vw-1rem)] max-w-sm -translate-x-1/2 px-1 md:hidden"
-        initial={{ y: 40, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ type: "spring", stiffness: 220, damping: 24, delay: 0.15 }}
+        className="fixed bottom-3 left-1/2 z-50 w-[calc(100vw-1rem)] max-w-sm -translate-x-1/2 px-1 md:max-w-md lg:hidden"
+        initial={reducedMotion ? { opacity: 0 } : { y: 30, opacity: 0, scale: 0.98 }}
+        animate={reducedMotion ? { opacity: 1 } : { y: 0, opacity: 1, scale: 1 }}
+        transition={
+          reducedMotion
+            ? { duration: 0.2, ease }
+            : { type: "spring", stiffness: 220, damping: 24, delay: 0.2 }
+        }
       >
-        <div className="flex items-center justify-between overflow-hidden rounded-full border border-ctp-surface0/35 bg-ctp-base/75 px-2 py-2 shadow-lg shadow-ctp-crust/25 backdrop-blur-2xl">
-          {navigation.map((item) => {
-            const isActive = activeSection === item.href.replace("#", "");
-            const Icon = item.icon;
-            return (
-              <motion.a
-                key={item.name}
-                href={item.href}
-                whileHover={{ y: -2, scale: 1.05 }}
-                whileTap={{ scale: 0.94 }}
-                transition={springTransition}
-                className={`relative p-2 rounded-full transition-colors ${
-                  isActive
-                    ? "text-ctp-blue"
-                    : "text-ctp-subtext0 hover:text-ctp-text"
-                }`}
-                aria-label={item.name}
-              >
-                {isActive && (
-                  <motion.div
-                    layoutId="activeNavMobile"
-                    className="absolute inset-0.5 rounded-full bg-ctp-blue/12"
-                    transition={springTransition}
-                  />
-                )}
-                <Icon className="w-4 h-4 relative z-10" />
-              </motion.a>
-            );
-          })}
+        <div className="rounded-[999px] bg-linear-to-r from-ctp-surface1/55 via-ctp-surface0/15 to-ctp-surface1/55 p-px">
+          <div className="flex items-center justify-between rounded-[999px] bg-ctp-base/70 px-2 py-2 shadow-[0_14px_30px_-22px_rgba(17,17,27,0.95)] backdrop-blur-2xl">
+            {navigation.map((item) => {
+              const isActive = activeSection === item.href.replace("#", "");
+              const Icon = item.icon;
+              return (
+                <motion.a
+                  key={item.name}
+                  href={item.href}
+                  whileHover={reducedMotion ? undefined : { y: -2, scale: 1.04 }}
+                  whileTap={tapMotion}
+                  transition={springTransition}
+                  className={`relative rounded-full p-2 transition-colors ${
+                    isActive
+                      ? "text-ctp-blue"
+                      : "text-ctp-subtext0 hover:text-ctp-text"
+                  }`}
+                  aria-label={item.name}
+                >
+                  {isActive && (
+                    <motion.div
+                      layoutId="activeNavMobile"
+                      className="absolute inset-0.5 rounded-full border border-ctp-blue/25 bg-ctp-blue/12"
+                      transition={springTransition}
+                    />
+                  )}
+                  <Icon className="relative z-10 h-4 w-4" />
+                </motion.a>
+              );
+            })}
+          </div>
         </div>
       </motion.nav>
     </>

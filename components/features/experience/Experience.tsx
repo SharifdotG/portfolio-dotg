@@ -176,7 +176,7 @@ export default function Experience() {
   const FeaturedIcon = featuredConfig.icon;
 
   return (
-    <Section id="experience" className="relative overflow-hidden">
+    <Section id="experience" className="relative overflow-x-clip">
       <div className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute left-1/2 top-8 h-56 w-56 -translate-x-1/2 rounded-full bg-ctp-blue/10 blur-3xl" />
         <div className="absolute -bottom-12 right-8 h-48 w-48 rounded-full bg-ctp-mauve/10 blur-3xl" />

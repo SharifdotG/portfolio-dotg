@@ -299,7 +299,7 @@ export default function Achievements() {
   }, [selectedAchievement]);
 
   return (
-    <Section id="achievements" className="relative overflow-hidden">
+    <Section id="achievements" className="relative overflow-x-clip">
       <div className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute -top-10 right-0 h-52 w-52 rounded-full bg-ctp-yellow/10 blur-3xl" />
         <div className="absolute -bottom-12 left-6 h-56 w-56 rounded-full bg-ctp-blue/10 blur-3xl" />

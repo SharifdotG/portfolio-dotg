@@ -159,7 +159,7 @@ export default function Contact() {
   };
 
   return (
-    <Section id="contact" className="relative overflow-hidden">
+    <Section id="contact" className="relative overflow-x-clip">
       <SectionTitle
         badge="Get in Touch"
         title="Let's Work Together"

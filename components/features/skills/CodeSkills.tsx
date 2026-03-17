@@ -291,7 +291,7 @@ export default function CodeSkills() {
   const cardVariants = getCardVariants(reducedMotion);
 
   return (
-    <Section id="skills" className="relative overflow-hidden">
+    <Section id="skills" className="relative overflow-x-clip">
       <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
         <div className="absolute -left-10 top-10 h-56 w-56 rounded-full bg-ctp-blue/8 blur-3xl" />
         <div className="absolute -right-8 bottom-0 h-60 w-60 rounded-full bg-ctp-green/8 blur-3xl" />
