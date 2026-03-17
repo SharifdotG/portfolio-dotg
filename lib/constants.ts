@@ -417,7 +417,30 @@ export const PROJECTS: Project[] = [
   },
 ];
 
-export const ACHIEVEMENTS = [
+export type AchievementType =
+  | "competition"
+  | "scholarship"
+  | "academic"
+  | "rating"
+  | "certification"
+  | "training"
+  | "volunteer";
+
+export type AchievementViewType = "link" | "image";
+
+export interface Achievement {
+  title: string;
+  organization: string;
+  date: string;
+  description: string;
+  link: string | null;
+  certificateImage: string | null;
+  type: AchievementType;
+  viewType: AchievementViewType;
+  featured?: boolean;
+}
+
+export const ACHIEVEMENTS: Achievement[] = [
   {
     title: "ICPC Dhaka Regionalist 2024",
     organization: "ICPC",
@@ -428,6 +451,7 @@ export const ACHIEVEMENTS = [
     certificateImage: "/certificates/icpc-dhaka-2024.jpg",
     type: "competition",
     viewType: "image",
+    featured: true,
   },
   {
     title: "KUET BITFEST 2025",
@@ -493,6 +517,7 @@ export const ACHIEVEMENTS = [
     certificateImage: "/certificates/jrc-scholarship.jpg",
     type: "scholarship",
     viewType: "image",
+    featured: true,
   },
   {
     title: "Vice Chancellor Awards (2x) & Dean's Awards (4x)",
@@ -504,6 +529,7 @@ export const ACHIEVEMENTS = [
     certificateImage: "/certificates/vc-deans-awards.jpg",
     type: "academic",
     viewType: "image",
+    featured: true,
   },
   {
     title: "Champion, Ekushey Intra Department Programming Contest 2023",
@@ -514,6 +540,7 @@ export const ACHIEVEMENTS = [
     certificateImage: "/certificates/ekushey-2023.jpg",
     type: "competition",
     viewType: "image",
+    featured: true,
   },
   {
     title: "Codeforces Specialist (Max Rating: 1438)",
@@ -525,6 +552,7 @@ export const ACHIEVEMENTS = [
     certificateImage: null,
     type: "rating",
     viewType: "link",
+    featured: true,
   },
   {
     title: "CodeChef 3 Stars (Max Rating: 1635)",
