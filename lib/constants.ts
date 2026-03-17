@@ -23,6 +23,135 @@ export const PERSONAL_INFO = {
   codechefUrl: "https://www.codechef.com/users/sharifdotg",
 };
 
+export type AboutCardIconKey =
+  | "code"
+  | "education"
+  | "competitive"
+  | "location"
+  | "current"
+  | "interests";
+
+export type AboutCardToneKey =
+  | "blue"
+  | "green"
+  | "yellow"
+  | "pink"
+  | "mauve"
+  | "red";
+
+export type AboutCardLayoutKey = "default" | "feature";
+
+export type AboutCardContent =
+  | {
+      kind: "paragraph";
+      text: string;
+    }
+  | {
+      kind: "list";
+      items: string[];
+    };
+
+export interface AboutCard {
+  id: string;
+  eyebrow: string;
+  label: string;
+  icon: AboutCardIconKey;
+  tone: AboutCardToneKey;
+  layout: AboutCardLayoutKey;
+  content: AboutCardContent;
+}
+
+export const ABOUT_CARDS: AboutCard[] = [
+  {
+    id: "bio",
+    eyebrow: "Profile",
+    label: "Bio",
+    icon: "code",
+    tone: "blue",
+    layout: "feature",
+    content: {
+      kind: "paragraph",
+      text: "A competitive programmer and full-stack developer from Bangladesh, focused on turning complex ideas into clean, efficient products, from ICPC problem solving to practical web applications.",
+    },
+  },
+  {
+    id: "education",
+    eyebrow: "Academic",
+    label: "Education",
+    icon: "education",
+    tone: "green",
+    layout: "default",
+    content: {
+      kind: "list",
+      items: [
+        PERSONAL_INFO.degree,
+        PERSONAL_INFO.university,
+        `CGPA ${PERSONAL_INFO.cgpa} - 7th Semester`,
+      ],
+    },
+  },
+  {
+    id: "competitive",
+    eyebrow: "Performance",
+    label: "Competitive Programming",
+    icon: "competitive",
+    tone: "yellow",
+    layout: "default",
+    content: {
+      kind: "list",
+      items: [
+        "ICPC Dhaka Regionalist 2024",
+        "Codeforces Specialist (1438)",
+        "CodeChef 3 Star (1635)",
+        "2,000+ problems solved",
+      ],
+    },
+  },
+  {
+    id: "location",
+    eyebrow: "Availability",
+    label: "Location",
+    icon: "location",
+    tone: "pink",
+    layout: "default",
+    content: {
+      kind: "list",
+      items: [
+        PERSONAL_INFO.location,
+        "Open to remote opportunities worldwide",
+      ],
+    },
+  },
+  {
+    id: "current",
+    eyebrow: "Now",
+    label: "Currently",
+    icon: "current",
+    tone: "mauve",
+    layout: "feature",
+    content: {
+      kind: "paragraph",
+      text: "Trainee Software Engineer (Intern) at Bangladesh Software Solution, building modern web applications with Next.js and React while refining engineering workflows.",
+    },
+  },
+  {
+    id: "interests",
+    eyebrow: "Focus",
+    label: "Interests",
+    icon: "interests",
+    tone: "red",
+    layout: "default",
+    content: {
+      kind: "list",
+      items: [
+        "AI/ML and systems design",
+        "Open-source and developer tooling",
+        "Teaching and problem solving",
+      ],
+    },
+  },
+];
+
 export const SKILLS = {
   languages: [
     { name: "C", level: "Advanced", category: "Programming Language" },

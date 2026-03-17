@@ -1,89 +1,156 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import {
-  GraduationCap,
-  MapPin,
   Briefcase,
   Code2,
+  GraduationCap,
   Heart,
+  MapPin,
   Trophy,
+  type LucideIcon,
 } from "lucide-react";
 import Section from "@/components/ui/Section";
 import SectionTitle from "@/components/ui/SectionTitle";
+import {
+  ABOUT_CARDS,
+  type AboutCardIconKey,
+  type AboutCardLayoutKey,
+  type AboutCardToneKey,
+} from "@/lib/constants";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
-const cardVariants = {
-  hidden: { opacity: 0, y: 24 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease } },
+const iconMap: Record<AboutCardIconKey, LucideIcon> = {
+  code: Code2,
+  education: GraduationCap,
+  competitive: Trophy,
+  location: MapPin,
+  current: Briefcase,
+  interests: Heart,
 };
 
-const bentoCards = [
+const toneMap: Record<
+  AboutCardToneKey,
   {
-    key: "bio",
-    icon: Code2,
-    label: "Bio",
-    color: "text-ctp-blue",
-    bg: "bg-ctp-blue/10",
-    content:
-      "A passionate competitive programmer and full-stack developer from Bangladesh. I love turning complex problems into elegant, efficient solutions — whether it's an ICPC contest, a developer tool, or a web application.",
-    span: "md:col-span-2",
+    icon: string;
+    badge: string;
+    dot: string;
+    accent: string;
+  }
+> = {
+  blue: {
+    icon: "text-ctp-blue",
+    badge: "bg-ctp-blue/10",
+    dot: "bg-ctp-blue",
+    accent: "bg-ctp-blue/70",
   },
-  {
-    key: "education",
-    icon: GraduationCap,
-    label: "Education",
-    color: "text-ctp-green",
-    bg: "bg-ctp-green/10",
-    content:
-      "BSc (Eng.) in CSE\nUniversity of Asia Pacific\nCGPA 3.81 / 4.00 · 7th Semester",
-    span: "",
+  green: {
+    icon: "text-ctp-green",
+    badge: "bg-ctp-green/10",
+    dot: "bg-ctp-green",
+    accent: "bg-ctp-green/70",
   },
-  {
-    key: "cp",
-    icon: Trophy,
-    label: "Competitive Programming",
-    color: "text-ctp-yellow",
-    bg: "bg-ctp-yellow/10",
-    content:
-      "ICPC Dhaka Regionalist 2024\nCodeforces Specialist (1438)\nCodeChef 3★ (1635)\n2,000+ problems solved",
-    span: "",
+  yellow: {
+    icon: "text-ctp-yellow",
+    badge: "bg-ctp-yellow/10",
+    dot: "bg-ctp-yellow",
+    accent: "bg-ctp-yellow/70",
   },
-  {
-    key: "location",
-    icon: MapPin,
-    label: "Location",
-    color: "text-ctp-pink",
-    bg: "bg-ctp-pink/10",
-    content: "Dhaka, Bangladesh 🇧🇩\nOpen to remote opportunities worldwide.",
-    span: "",
+  pink: {
+    icon: "text-ctp-pink",
+    badge: "bg-ctp-pink/10",
+    dot: "bg-ctp-pink",
+    accent: "bg-ctp-pink/70",
   },
-  {
-    key: "currently",
-    icon: Briefcase,
-    label: "Currently",
-    color: "text-ctp-mauve",
-    bg: "bg-ctp-mauve/10",
-    content:
-      "Trainee Software Engineer (Intern) at Bangladesh Software Solution. Building web apps with Next.js, React, and modern tooling.",
-    span: "md:col-span-2",
+  mauve: {
+    icon: "text-ctp-mauve",
+    badge: "bg-ctp-mauve/10",
+    dot: "bg-ctp-mauve",
+    accent: "bg-ctp-mauve/70",
   },
-  {
-    key: "interests",
-    icon: Heart,
-    label: "Interests",
-    color: "text-ctp-red",
-    bg: "bg-ctp-red/10",
-    content:
-      "AI/ML · Systems Design · Open-Source\nTeaching · Problem Solving · Developer Tooling",
-    span: "",
+  red: {
+    icon: "text-ctp-red",
+    badge: "bg-ctp-red/10",
+    dot: "bg-ctp-red",
+    accent: "bg-ctp-red/70",
   },
-];
+};
+
+const layoutMap: Record<AboutCardLayoutKey, string> = {
+  default: "",
+  feature: "md:col-span-2",
+};
+
+const cardOrder = [
+  "bio",
+  "education",
+  "competitive",
+  "location",
+  "interests",
+  "current",
+] as const;
+
+const getCardSpan = (id: string, layout: AboutCardLayoutKey) => {
+  if (id === "current") {
+    return "md:col-span-3";
+  }
+
+  return layoutMap[layout];
+};
+
+const getCardVariants = (reducedMotion: boolean) => ({
+  hidden: {
+    opacity: 0,
+    y: reducedMotion ? 0 : 24,
+    filter: reducedMotion ? "none" : "blur(6px)",
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+    transition: {
+      duration: reducedMotion ? 0.3 : 0.5,
+      ease,
+    },
+  },
+});
+
+const getContainerTransition = (reducedMotion: boolean) => ({
+  delayChildren: reducedMotion ? 0 : 0.06,
+  staggerChildren: reducedMotion ? 0.04 : 0.08,
+});
+
+const hoverTransition = {
+  duration: 0.25,
+  ease,
+};
 
 export default function About() {
+  const prefersReducedMotion = useReducedMotion();
+  const reducedMotion = Boolean(prefersReducedMotion);
+  const cardVariants = getCardVariants(reducedMotion);
+
+  const orderedCards = [...ABOUT_CARDS].sort((a, b) => {
+    const aIndex = cardOrder.indexOf(a.id as (typeof cardOrder)[number]);
+    const bIndex = cardOrder.indexOf(b.id as (typeof cardOrder)[number]);
+
+    return (aIndex === -1 ? 99 : aIndex) - (bIndex === -1 ? 99 : bIndex);
+  });
+
+  const iconHoverClasses = reducedMotion
+    ? ""
+    : "group-hover:-translate-y-0.5 group-hover:scale-105";
+  const iconRotateClasses = reducedMotion ? "" : "group-hover:rotate-6";
+  const glowClasses = reducedMotion ? "opacity-0" : "group-hover:opacity-100";
+
   return (
     <Section id="about" className="relative overflow-hidden">
+      <div className="pointer-events-none absolute inset-0 -z-10">
+        <div className="absolute -top-10 left-0 h-52 w-52 rounded-full bg-ctp-blue/10 blur-3xl" />
+        <div className="absolute -bottom-8 right-6 h-56 w-56 rounded-full bg-ctp-mauve/10 blur-3xl" />
+      </div>
+
       <SectionTitle
         badge="About Me"
         title="Get to Know Me"
@@ -92,31 +159,71 @@ export default function About() {
       />
 
       <motion.div
-        className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-5xl mx-auto"
+        className="mx-auto grid max-w-5xl grid-cols-1 gap-3 sm:gap-4 md:grid-cols-3 md:gap-5"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "-80px" }}
-        transition={{ staggerChildren: 0.08 }}
+        transition={getContainerTransition(reducedMotion)}
       >
-        {bentoCards.map((card) => (
-          <motion.div
-            key={card.key}
-            variants={cardVariants}
-            className={`group rounded-2xl border border-ctp-surface0/60 bg-ctp-surface0/30 backdrop-blur-sm p-6 hover:border-ctp-surface1 transition-colors ${card.span}`}
-          >
-            <div className="flex items-center gap-3 mb-4">
-              <div className={`p-2 rounded-lg ${card.bg}`}>
-                <card.icon className={`w-5 h-5 ${card.color}`} />
+        {orderedCards.map((card) => {
+          const Icon = iconMap[card.icon];
+          const tone = toneMap[card.tone];
+
+          return (
+            <motion.div
+              key={card.id}
+              variants={cardVariants}
+              whileHover={
+                reducedMotion
+                  ? undefined
+                  : {
+                      y: -3,
+                    }
+              }
+              transition={hoverTransition}
+              className={`group relative overflow-hidden rounded-2xl border border-ctp-surface0/70 bg-ctp-surface0/35 p-4 backdrop-blur-sm transition-[border-color,background-color,box-shadow] duration-300 hover:border-ctp-surface1 hover:bg-ctp-surface0/45 sm:p-5 ${getCardSpan(card.id, card.layout)}`}
+            >
+              <div
+                className={`pointer-events-none absolute -right-16 -top-16 h-36 w-36 rounded-full ${tone.badge} opacity-0 blur-3xl transition-opacity duration-300 ${glowClasses}`}
+              />
+              <div className={`absolute inset-x-0 top-0 h-px ${tone.accent}`} />
+
+              <div className="mb-3 flex items-center gap-3 sm:mb-4">
+                <div
+                  className={`flex h-10 w-10 items-center justify-center rounded-xl transition-transform duration-300 ${tone.badge} ${iconHoverClasses}`}
+                >
+                  <Icon
+                    className={`h-5 w-5 transition-transform duration-300 ${tone.icon} ${iconRotateClasses}`}
+                  />
+                </div>
+
+                <h3 className="font-display text-lg font-semibold text-ctp-text">
+                  {card.label}
+                </h3>
               </div>
-              <h3 className="font-display font-semibold text-ctp-text">
-                {card.label}
-              </h3>
-            </div>
-            <p className="text-sm text-ctp-subtext0 leading-relaxed whitespace-pre-line">
-              {card.content}
-            </p>
-          </motion.div>
-        ))}
+
+              {card.content.kind === "paragraph" ? (
+                <p className="text-sm leading-relaxed text-ctp-subtext0 md:text-[0.95rem]">
+                  {card.content.text}
+                </p>
+              ) : (
+                <ul className="space-y-2">
+                  {card.content.items.map((item) => (
+                    <li
+                      key={item}
+                      className="flex items-start gap-2 text-sm leading-relaxed text-ctp-subtext0"
+                    >
+                      <span
+                        className={`mt-[0.42rem] h-1.5 w-1.5 shrink-0 rounded-full ${tone.dot}`}
+                      />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </motion.div>
+          );
+        })}
       </motion.div>
     </Section>
   );
