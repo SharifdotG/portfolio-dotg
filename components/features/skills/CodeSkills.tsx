@@ -25,7 +25,6 @@ const categories = [
     icon: Code2,
     color: "text-ctp-blue",
     bg: "bg-ctp-blue/10",
-    accent: "bg-ctp-blue/70",
   },
   {
     key: "frameworks" as const,
@@ -33,7 +32,6 @@ const categories = [
     icon: Globe,
     color: "text-ctp-mauve",
     bg: "bg-ctp-mauve/10",
-    accent: "bg-ctp-mauve/70",
   },
   {
     key: "tools" as const,
@@ -41,7 +39,6 @@ const categories = [
     icon: Wrench,
     color: "text-ctp-green",
     bg: "bg-ctp-green/10",
-    accent: "bg-ctp-green/70",
   },
   {
     key: "fundamentals" as const,
@@ -49,7 +46,6 @@ const categories = [
     icon: BookOpen,
     color: "text-ctp-yellow",
     bg: "bg-ctp-yellow/10",
-    accent: "bg-ctp-yellow/70",
   },
 ];
 
@@ -167,10 +163,6 @@ function InfiniteScrollingLogos() {
         role="region"
         aria-label="Featured technologies"
       >
-        <div className="pointer-events-none absolute inset-0 -z-10">
-          <div className="absolute left-10 top-2 h-20 w-20 rounded-full bg-ctp-blue/8 blur-3xl" />
-          <div className="absolute bottom-0 right-12 h-24 w-24 rounded-full bg-ctp-mauve/8 blur-3xl" />
-        </div>
         <div
           className="absolute bottom-0 left-0 top-0 z-10 w-24 bg-linear-to-r from-ctp-base to-transparent pointer-events-none"
           aria-hidden="true"
@@ -229,7 +221,7 @@ function InfiniteScrollingLogos() {
                           className={`h-full w-full object-contain transition-opacity duration-200 ${
                             isActive
                               ? "opacity-100"
-                              : "opacity-55 group-hover:opacity-100 group-focus-visible:opacity-100"
+                              : "opacity-85 group-hover:opacity-100 group-focus-visible:opacity-100"
                           }`}
                           onError={() =>
                             setFailedImages((prev) => new Set(prev).add(logoKey))
@@ -325,7 +317,6 @@ export default function CodeSkills() {
                 transition={{ duration: 0.25, ease }}
                 className="group relative overflow-hidden rounded-2xl border border-ctp-surface0/60 bg-ctp-surface0/30 p-6 backdrop-blur-sm transition-[border-color,background-color,box-shadow] duration-300 hover:border-ctp-surface1 hover:bg-ctp-surface0/40 hover:shadow-xl hover:shadow-ctp-crust/20"
               >
-                <div className={`absolute inset-x-0 top-0 h-px ${cat.accent}`} />
                 <div
                   className={`pointer-events-none absolute -right-12 -top-12 h-28 w-28 rounded-full ${cat.bg} opacity-0 blur-3xl transition-opacity duration-300 group-hover:opacity-100`}
                 />

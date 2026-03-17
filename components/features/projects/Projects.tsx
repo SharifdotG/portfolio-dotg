@@ -135,12 +135,12 @@ const getMetaVariants = (reducedMotion: boolean): Variants => ({
 });
 
 const getCardLayout = (project: ProjectItem, index: number) => {
-  const prominent = project.featured && index % 3 === 0;
+  const prominent = Boolean(project.featured && (project.wide ?? index % 3 === 0));
 
   return {
     prominent,
     spanClass: prominent ? "md:col-span-2 lg:col-span-4" : "lg:col-span-2",
-    imageClass: prominent ? "h-52 sm:h-56" : "h-40 sm:h-44",
+    imageClass: "h-52 sm:h-56",
     descClampClass: prominent ? "line-clamp-3" : "line-clamp-2",
   };
 };
@@ -200,7 +200,7 @@ export default function Projects() {
         badge="Portfolio"
         title="Featured Projects"
         highlightWord="Projects"
-        subtitle="Building innovative solutions through code"
+        subtitle="Building innovative ideas through code"
       />
 
       {/* Filter */}

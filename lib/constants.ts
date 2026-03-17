@@ -71,7 +71,7 @@ export const ABOUT_CARDS: AboutCard[] = [
     layout: "feature",
     content: {
       kind: "paragraph",
-      text: "A competitive programmer and full-stack developer from Bangladesh, focused on turning complex ideas into clean, efficient products, from ICPC problem solving to practical web applications.",
+      text: "A full-stack developer and a competitive programmer from Bangladesh, focused on turning complex ideas into clean, efficient products, from ICPC problem solving to practical web applications.",
     },
   },
   {
@@ -101,9 +101,9 @@ export const ABOUT_CARDS: AboutCard[] = [
       kind: "list",
       items: [
         "ICPC Dhaka Regionalist 2024",
+        "Pariticipated in multiple IUPCs",
         "Codeforces Specialist (1438)",
         "CodeChef 3 Star (1635)",
-        "2,000+ problems solved",
       ],
     },
   },
@@ -118,7 +118,8 @@ export const ABOUT_CARDS: AboutCard[] = [
       kind: "list",
       items: [
         PERSONAL_INFO.location,
-        "Open to remote opportunities worldwide",
+        "Open to opportunities worldwide",
+        "Open to opportunities in Bangladesh",
       ],
     },
   },
@@ -131,7 +132,7 @@ export const ABOUT_CARDS: AboutCard[] = [
     layout: "feature",
     content: {
       kind: "paragraph",
-      text: "Trainee Software Engineer (Intern) at Bangladesh Software Solution, building modern web applications with Next.js and React while refining engineering workflows.",
+      text: "Trainee Software Engineer (Intern) at Bangladesh Software Solution, learning and building modern web applications for international clients while refining engineering workflows.",
     },
   },
   {
@@ -144,6 +145,7 @@ export const ABOUT_CARDS: AboutCard[] = [
     content: {
       kind: "list",
       items: [
+        "Agent Assisted Development and Agents",
         "AI/ML and systems design",
         "Open-source and developer tooling",
         "Teaching and problem solving",
@@ -209,6 +211,7 @@ export interface Project {
   githubRepo: string;
   liveUrl: string | null;
   featured: boolean;
+  wide?: boolean;
   image: string;
   category: string;
   extensionId?: string;
@@ -248,78 +251,9 @@ export const SKILL_LOGOS: SkillLogo[] = [
 
 export const PROJECTS: Project[] = [
   {
-    title: "DevStudy AI Suite",
-    description:
-      "Student-focused web application providing an AI chat assistant, file utilities, PDF summarization, and multiple developer tools.",
-    techStack: [
-      "Next.js 15",
-      "React 19",
-      "TypeScript",
-      "Tailwind CSS",
-      "Supabase",
-      "OpenRouter",
-    ],
-    githubUrl: "https://github.com/SharifdotG/DevStudy-AI-Suite-Web",
-    githubRepo: "SharifdotG/DevStudy-AI-Suite-Web",
-    liveUrl: "http://dev-study-ai-suite-web.vercel.app/",
-    featured: true,
-    image: "/projects/devstudy-ai.png",
-    category: "Web Development",
-    status: "active",
-    tags: ["AI Assistant", "Productivity", "Student-first"],
-    highlight: "All-in-one AI learning platform",
-  },
-  {
-    title: "TechReform BD 2",
-    description:
-      "PC-component e-commerce platform featuring a product catalog, CRUD operations, cart functionality, PC builder, and an admin panel.",
-    techStack: ["Django", "Python", "Tailwind CSS", "SQLite"],
-    githubUrl: "https://github.com/SharifdotG/TechReform-BD-2",
-    githubRepo: "SharifdotG/TechReform-BD-2",
-    liveUrl: null,
-    featured: true,
-    image: "/projects/techreform.png",
-    category: "Web Development",
-    status: "stable",
-    tags: ["E-commerce", "Admin", "PC Builder"],
-    highlight: "Commerce workflow from catalog to checkout",
-  },
-  {
-    title: "SharifdotG's CodeVault",
-    description:
-      "GitHub repository of 2,000+ competitive programming solutions from Codeforces, LeetCode, and 25+ other online judges.",
-    techStack: ["C", "C++", "Python", "Algorithms", "Data Structures"],
-    githubUrl: "https://github.com/SharifdotG/SharifdotG-s-CodeVault",
-    githubRepo: "SharifdotG/SharifdotG-s-CodeVault",
-    liveUrl: null,
-    featured: true,
-    image: "/projects/codevault.png",
-    category: "Competitive Programming",
-    status: "active",
-    tags: ["2000+ Solutions", "Competitive", "Algorithms"],
-    highlight: "Large indexed competitive programming archive",
-  },
-  {
-    title: "Catppuccin Dark Pro",
-    description:
-      "Developer-focused VSCode theme that combines the aesthetics of the Catppuccin Mocha theme and the syntax highlighting of the One Dark Pro theme. 4,800+ downloads.",
-    techStack: ["JSON", "VSCode Extension", "Theme Development"],
-    githubUrl: "https://github.com/SharifdotG/catppuccin-dark-pro",
-    githubRepo: "SharifdotG/catppuccin-dark-pro",
-    liveUrl:
-      "https://marketplace.visualstudio.com/items?itemName=SharifdotG.catppuccin-dark-pro",
-    extensionId: "SharifdotG.catppuccin-dark-pro",
-    featured: true,
-    image: "/projects/catppuccin-dark-pro.png",
-    category: "Tools & Extensions",
-    status: "stable",
-    tags: ["VS Code", "Theme", "Developer Experience"],
-    highlight: "4800+ installs on Marketplace",
-  },
-  {
     title: "BlogsdotG",
     description:
-      "A modern blogging platform with rich-text editing, real-time data sync, and light/dark theme support.",
+      "A Next.js 16 and React 19 powered personal blog featuring a hidden Convex CMS, Tiptap rich-text management, view tracking, and Framer Motion animations within a shadcn/ui light/dark interface.",
     techStack: [
       "Next.js 16",
       "React 19",
@@ -330,8 +264,9 @@ export const PROJECTS: Project[] = [
     ],
     githubUrl: "https://github.com/SharifdotG/BlogsdotG",
     githubRepo: "SharifdotG/BlogsdotG",
-    liveUrl: null,
+    liveUrl: "https://blogsdotg.vercel.app/",
     featured: true,
+    wide: true,
     image: "/projects/blogsdotg.png",
     category: "Web Development",
     status: "prototype",
@@ -352,6 +287,77 @@ export const PROJECTS: Project[] = [
     status: "prototype",
     tags: ["Typography", "Developer Tooling", "Open Source"],
     highlight: "Readability-first coding font",
+  },
+  {
+    title: "TechReform BD 2",
+    description:
+      "PC-component e-commerce platform featuring a product catalog, CRUD operations, cart functionality, PC builder, and an admin panel.",
+    techStack: ["Django", "Python", "Tailwind CSS", "SQLite"],
+    githubUrl: "https://github.com/SharifdotG/TechReform-BD-2",
+    githubRepo: "SharifdotG/TechReform-BD-2",
+    liveUrl: null,
+    featured: true,
+    image: "/projects/techreform.png",
+    category: "Web Development",
+    status: "stable",
+    tags: ["E-commerce", "Admin", "PC Builder"],
+    highlight: "Commerce workflow from catalog to checkout",
+  },
+  {
+    title: "DevStudy AI Suite",
+    description:
+      "Student-focused web application providing an AI chat assistant, file utilities, PDF summarization, and multiple developer tools.",
+    techStack: [
+      "Next.js 15",
+      "React 19",
+      "TypeScript",
+      "Tailwind CSS",
+      "Supabase",
+      "OpenRouter",
+    ],
+    githubUrl: "https://github.com/SharifdotG/DevStudy-AI-Suite-Web",
+    githubRepo: "SharifdotG/DevStudy-AI-Suite-Web",
+    liveUrl: "http://dev-study-ai-suite-web.vercel.app/",
+    featured: true,
+    wide: true,
+    image: "/projects/devstudy-ai.png",
+    category: "Web Development",
+    status: "active",
+    tags: ["AI Assistant", "Productivity", "Student-first"],
+    highlight: "All-in-one AI learning platform",
+  },
+  {
+    title: "Catppuccin Dark Pro",
+    description:
+      "Developer-focused VSCode theme that combines the aesthetics of the Catppuccin Mocha theme and the syntax highlighting of the One Dark Pro theme. 4,800+ downloads.",
+    techStack: ["JSON", "VSCode Extension", "Theme Development"],
+    githubUrl: "https://github.com/SharifdotG/catppuccin-dark-pro",
+    githubRepo: "SharifdotG/catppuccin-dark-pro",
+    liveUrl:
+      "https://marketplace.visualstudio.com/items?itemName=SharifdotG.catppuccin-dark-pro",
+    extensionId: "SharifdotG.catppuccin-dark-pro",
+    featured: true,
+    wide: true,
+    image: "/projects/catppuccin-dark-pro.png",
+    category: "Tools & Extensions",
+    status: "stable",
+    tags: ["VS Code", "Theme", "Developer Experience"],
+    highlight: "4800+ installs on Marketplace",
+  },
+  {
+    title: "SharifdotG's CodeVault",
+    description:
+      "GitHub repository of 2,000+ competitive programming solutions from Codeforces, LeetCode, and 25+ other online judges.",
+    techStack: ["C", "C++", "Python", "Algorithms", "Data Structures"],
+    githubUrl: "https://github.com/SharifdotG/SharifdotG-s-CodeVault",
+    githubRepo: "SharifdotG/SharifdotG-s-CodeVault",
+    liveUrl: null,
+    featured: true,
+    image: "/projects/codevault.png",
+    category: "Competitive Programming",
+    status: "active",
+    tags: ["2000+ Solutions", "Competitive", "Algorithms"],
+    highlight: "Large indexed competitive programming archive",
   },
   {
     title: "Handwritten Digit Recognition",
@@ -464,35 +470,13 @@ export const ACHIEVEMENTS: Achievement[] = [
     viewType: "image",
   },
   {
-    title: "BUBT BIUCPC 2025",
-    organization: "Bangladesh University of Business & Technology",
-    date: "November 29, 2025",
-    description:
-      "Participated in BUBT Inter University Collaborative Programming Contest",
-    link: null,
-    certificateImage: "/certificates/bubt-biucpc-2025.jpg",
-    type: "competition",
-    viewType: "image",
-  },
-  {
-    title: "KUET IUPC 2025",
-    organization: "Khulna University of Engineering & Technology",
-    date: "2025",
-    description:
-      "Participated in KUET Inter University Programming Contest 2025",
-    link: null,
-    certificateImage: "/certificates/kuet-iupc-2025.jpg",
-    type: "competition",
-    viewType: "image",
-  },
-  {
     title: "BUBT IUCPC 2025",
     organization: "Bangladesh University of Business & Technology",
     date: "2025",
     description:
       "Participated in BUBT Inter University Collaborative Programming Contest 2025",
     link: null,
-    certificateImage: "/certificates/bubt-iucpc-2025.jpg",
+    certificateImage: "/certificates/bubt-biucpc-2025.jpg",
     type: "competition",
     viewType: "image",
   },
@@ -681,8 +665,8 @@ export const EXPERIENCE = [
     title: "BSc (Eng.) in Computer Science and Engineering",
     organization: "University of Asia Pacific",
     location: "Dhaka, Bangladesh",
-    startDate: "2022",
-    endDate: "2026 (Expected)",
+    startDate: "July 2022",
+    endDate: "July 2026 (Expected)",
     description: [
       "CGPA: 3.81 / 4.00 (after 7 semesters)",
       "Received 2 Vice Chancellor Awards and 4 Dean's Awards",
@@ -697,9 +681,9 @@ export const EXPERIENCE = [
     startDate: "February 2026",
     endDate: "Present",
     description: [
-      "Working on full-stack web development projects",
-      "Learning industry-standard software engineering practices",
-      "Collaborating with cross-functional teams on client projects",
+      "Working on full-stack web development projects with an experienced team",
+      "Learning industry-standard software engineering practices from experienced mentors",
+      "Collaborating with cross-functional teams on international client projects",
     ],
     type: "work",
   },

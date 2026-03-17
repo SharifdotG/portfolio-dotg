@@ -185,7 +185,7 @@ export default function Experience() {
       <SectionTitle
         badge="Experience"
         title="Work & Education"
-        highlightWord="Education"
+        highlightWord="Work"
         subtitle="A journey through learning, building, and teaching"
       />
 
@@ -212,9 +212,6 @@ export default function Experience() {
             <div
               className={`pointer-events-none absolute -right-16 -top-16 h-36 w-36 rounded-full ${featuredConfig.bg} opacity-0 blur-3xl transition-opacity duration-300 group-hover:opacity-100`}
             />
-            <div
-              className={`absolute inset-x-0 top-0 h-px ${featuredConfig.rail}`}
-            />
 
             <div className="mb-4 flex flex-wrap items-center gap-2">
               <span
@@ -223,10 +220,7 @@ export default function Experience() {
                 <span
                   className={`h-1.5 w-1.5 rounded-full ${featuredConfig.marker}`}
                 />
-                Current Focus
-              </span>
-              <span className="inline-flex items-center rounded-full border border-ctp-surface1/60 bg-ctp-surface0/30 px-2.5 py-1 text-xs font-medium text-ctp-subtext0">
-                {featuredConfig.label}
+                Current Work
               </span>
             </div>
 
@@ -364,7 +358,7 @@ export default function Experience() {
         )}
       </motion.div>
 
-      <div className="max-w-3xl mx-auto mt-12">
+      <div className="max-w-3xl mx-auto mt-12 text-center">
         <button
           type="button"
           onClick={() => setShowOrganizing(!showOrganizing)}

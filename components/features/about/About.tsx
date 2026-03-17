@@ -83,12 +83,12 @@ const layoutMap: Record<AboutCardLayoutKey, string> = {
 };
 
 const cardOrder = [
+  "current",
   "bio",
   "education",
   "competitive",
   "location",
   "interests",
-  "current",
 ] as const;
 
 const getCardSpan = (id: string, layout: AboutCardLayoutKey) => {
@@ -154,7 +154,7 @@ export default function About() {
       <SectionTitle
         badge="About Me"
         title="Get to Know Me"
-        highlightWord="Know"
+        highlightWord="Know Me"
         subtitle="A snapshot of who I am and what I do"
       />
 
@@ -186,7 +186,6 @@ export default function About() {
               <div
                 className={`pointer-events-none absolute -right-16 -top-16 h-36 w-36 rounded-full ${tone.badge} opacity-0 blur-3xl transition-opacity duration-300 ${glowClasses}`}
               />
-              <div className={`absolute inset-x-0 top-0 h-px ${tone.accent}`} />
 
               <div className="mb-3 flex items-center gap-3 sm:mb-4">
                 <div

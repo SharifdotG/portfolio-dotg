@@ -186,7 +186,6 @@ function AchievementCard({
               : "opacity-0 group-hover:opacity-85"
         }`}
       />
-      <div className={`absolute inset-x-0 top-0 h-px ${style.accent}`} />
 
       <div className="mb-3 flex flex-wrap items-center gap-2">
         <span
@@ -308,7 +307,7 @@ export default function Achievements() {
       <SectionTitle
         badge="Milestones"
         title="Achievements & Recognition"
-        highlightWord="Recognition"
+        highlightWord="Achievements"
         subtitle="Milestones in competitive programming, academics, and community service"
       />
 
@@ -332,18 +331,20 @@ export default function Achievements() {
 
       {additionalAchievements.length > 0 && (
         <div className="max-w-6xl mx-auto mt-8">
-          <button
-            type="button"
-            onClick={() => setShowMoreAchievements((value) => !value)}
-            className="mx-auto flex items-center gap-2 text-sm font-medium text-ctp-subtext0 transition-colors hover:text-ctp-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ctp-blue/60 focus-visible:ring-offset-2 focus-visible:ring-offset-ctp-base rounded"
-            aria-expanded={showMoreAchievements}
-            aria-controls="more-achievements-panel"
-          >
-            More Achievements ({additionalAchievements.length})
-            <ChevronDown
-              className={`h-4 w-4 transition-transform duration-300 ${showMoreAchievements ? "rotate-180" : ""}`}
-            />
-          </button>
+          <div className="text-center">
+            <button
+              type="button"
+              onClick={() => setShowMoreAchievements((value) => !value)}
+              className="group mx-auto inline-flex items-center gap-2 rounded-full border border-ctp-surface0/60 bg-ctp-surface0/25 px-4 py-2 text-sm font-medium text-ctp-subtext0 transition-[color,border-color,background-color] duration-200 hover:border-ctp-surface1 hover:bg-ctp-surface0/40 hover:text-ctp-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ctp-blue/60 focus-visible:ring-offset-2 focus-visible:ring-offset-ctp-base"
+              aria-expanded={showMoreAchievements}
+              aria-controls="more-achievements-panel"
+            >
+              More Achievements ({additionalAchievements.length})
+              <ChevronDown
+                className={`h-4 w-4 transition-transform duration-300 ${showMoreAchievements ? "rotate-180" : ""}`}
+              />
+            </button>
+          </div>
 
           <AnimatePresence>
             {showMoreAchievements && (

@@ -34,7 +34,7 @@ export default function SectionTitle({
     return (
       <>
         {parts[0]}
-        <span className="gradient-text">{highlightWord}</span>
+        <span className="animate-text-gradient">{highlightWord}</span>
         {parts[1]}
       </>
     );
