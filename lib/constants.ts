@@ -188,6 +188,42 @@ export const SKILLS = {
   ],
 };
 
+export interface SkillLogo {
+  name: string;
+  path?: string;
+  darkPath?: string;
+  lightPath?: string;
+}
+
+export const SKILL_LOGOS: SkillLogo[] = [
+  { name: "C", path: "/tech-logos/c.svg" },
+  { name: "C++", path: "/tech-logos/cpp.svg" },
+  { name: "Python", path: "/tech-logos/python.svg" },
+  { name: "JavaScript", path: "/tech-logos/javascript.svg" },
+  { name: "TypeScript", path: "/tech-logos/typescript.svg" },
+  { name: "C#", path: "/tech-logos/csharp.svg" },
+  { name: "Next.js", path: "/tech-logos/nextjs.svg" },
+  {
+    name: "React",
+    darkPath: "/tech-logos/react-d.svg",
+    lightPath: "/tech-logos/react-l.svg",
+  },
+  { name: "Django", path: "/tech-logos/django.svg" },
+  { name: ".NET", path: "/tech-logos/dotnet.svg" },
+  { name: "Tailwind CSS", path: "/tech-logos/tailwindcss.svg" },
+  {
+    name: "MySQL",
+    darkPath: "/tech-logos/mysql-d.svg",
+    lightPath: "/tech-logos/mysql-l.svg",
+    path: "/tech-logos/mysql.svg",
+  },
+  { name: "PostgreSQL", path: "/tech-logos/postgresql.svg" },
+  { name: "Supabase", path: "/tech-logos/supabase.svg" },
+  { name: "Git", path: "/tech-logos/git.svg" },
+  { name: "Linux", path: "/tech-logos/linux.svg" },
+  { name: "Java", path: "/tech-logos/java.svg" },
+];
+
 export const PROJECTS = [
   {
     title: "DevStudy AI Suite",
