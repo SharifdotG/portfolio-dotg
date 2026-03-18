@@ -18,6 +18,12 @@ import Image from "next/image";
 import Section from "@/components/ui/Section";
 import SectionTitle from "@/components/ui/SectionTitle";
 import { PROJECTS, type ProjectStatusKey } from "@/lib/constants";
+import { useLanguage } from "@/components/providers/LanguageProvider";
+import {
+  getCopy,
+  translateDynamicText,
+  type Locale,
+} from "@/lib/i18n/translations";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -30,21 +36,26 @@ type ProjectStats = {
   downloads?: number;
 };
 
-const filterConfig: Record<
-  "featured" | "all",
-  { label: string; icon: LucideIcon }
-> = {
-  featured: {
-    label: "Featured",
-    icon: Sparkles,
-  },
-  all: {
-    label: "All Projects",
-    icon: Layers,
-  },
+const getFilterConfig = (
+  locale: Locale,
+): Record<"featured" | "all", { label: string; icon: LucideIcon }> => {
+  const copy = getCopy(locale);
+
+  return {
+    featured: {
+      label: copy.projects.featuredTab,
+      icon: Sparkles,
+    },
+    all: {
+      label: copy.projects.allTab,
+      icon: Layers,
+    },
+  };
 };
 
-const statusConfig: Record<
+const getStatusConfig = (
+  locale: Locale,
+): Record<
   ProjectStatusKey,
   {
     label: string;
@@ -54,39 +65,43 @@ const statusConfig: Record<
     rail: string;
     glow: string;
   }
-> = {
-  active: {
-    label: "Active",
-    badge: "bg-ctp-green/12",
-    dot: "bg-ctp-green",
-    text: "text-ctp-green",
-    rail: "bg-ctp-green/70",
-    glow: "bg-ctp-green/12",
-  },
-  stable: {
-    label: "Stable",
-    badge: "bg-ctp-blue/12",
-    dot: "bg-ctp-blue",
-    text: "text-ctp-blue",
-    rail: "bg-ctp-blue/70",
-    glow: "bg-ctp-blue/12",
-  },
-  prototype: {
-    label: "Prototype",
-    badge: "bg-ctp-mauve/12",
-    dot: "bg-ctp-mauve",
-    text: "text-ctp-mauve",
-    rail: "bg-ctp-mauve/70",
-    glow: "bg-ctp-mauve/12",
-  },
-  research: {
-    label: "Research",
-    badge: "bg-ctp-peach/14",
-    dot: "bg-ctp-peach",
-    text: "text-ctp-peach",
-    rail: "bg-ctp-peach/70",
-    glow: "bg-ctp-peach/14",
-  },
+> => {
+  const copy = getCopy(locale);
+
+  return {
+    active: {
+      label: copy.projects.active,
+      badge: "bg-ctp-green/12",
+      dot: "bg-ctp-green",
+      text: "text-ctp-green",
+      rail: "bg-ctp-green/70",
+      glow: "bg-ctp-green/12",
+    },
+    stable: {
+      label: copy.projects.stable,
+      badge: "bg-ctp-blue/12",
+      dot: "bg-ctp-blue",
+      text: "text-ctp-blue",
+      rail: "bg-ctp-blue/70",
+      glow: "bg-ctp-blue/12",
+    },
+    prototype: {
+      label: copy.projects.prototype,
+      badge: "bg-ctp-mauve/12",
+      dot: "bg-ctp-mauve",
+      text: "text-ctp-mauve",
+      rail: "bg-ctp-mauve/70",
+      glow: "bg-ctp-mauve/12",
+    },
+    research: {
+      label: copy.projects.research,
+      badge: "bg-ctp-peach/14",
+      dot: "bg-ctp-peach",
+      text: "text-ctp-peach",
+      rail: "bg-ctp-peach/70",
+      glow: "bg-ctp-peach/14",
+    },
+  };
 };
 
 const fallbackStatus: ProjectStatusKey = "active";
@@ -135,7 +150,9 @@ const getMetaVariants = (reducedMotion: boolean): Variants => ({
 });
 
 const getCardLayout = (project: ProjectItem, index: number) => {
-  const prominent = Boolean(project.featured && (project.wide ?? index % 3 === 0));
+  const prominent = Boolean(
+    project.featured && (project.wide ?? index % 3 === 0),
+  );
 
   return {
     prominent,
@@ -148,6 +165,10 @@ const getCardLayout = (project: ProjectItem, index: number) => {
 export default function Projects() {
   const prefersReducedMotion = useReducedMotion();
   const reducedMotion = Boolean(prefersReducedMotion);
+  const { locale } = useLanguage();
+  const copy = getCopy(locale);
+  const filterConfig = getFilterConfig(locale);
+  const statusConfig = getStatusConfig(locale);
   const [filter, setFilter] = useState<"all" | "featured">("featured");
   const [projectStats, setProjectStats] = useState<
     Record<string, ProjectStats>
@@ -160,6 +181,8 @@ export default function Projects() {
 
   const filteredProjects =
     filter === "featured" ? PROJECTS.filter((p) => p.featured) : PROJECTS;
+  const formatNumber = (value: number) =>
+    locale === "bn" ? value.toLocaleString("bn-BD") : value.toLocaleString();
 
   const gridVariants = getGridVariants(reducedMotion);
   const cardVariants = getCardVariants(reducedMotion);
@@ -197,10 +220,10 @@ export default function Projects() {
   return (
     <Section id="projects" className="relative overflow-hidden">
       <SectionTitle
-        badge="Portfolio"
-        title="Featured Projects"
-        highlightWord="Projects"
-        subtitle="Building innovative ideas through code"
+        badge={copy.projects.badge}
+        title={copy.projects.title}
+        highlightWord={locale === "bn" ? "প্রজেক্টস" : "Projects"}
+        subtitle={copy.projects.subtitle}
       />
 
       {/* Filter */}
@@ -210,19 +233,19 @@ export default function Projects() {
           const Icon = config.icon;
 
           return (
-          <button
-            key={f}
-            onClick={() => setFilter(f)}
-            aria-pressed={filter === f}
-            className={`flex items-center gap-2 rounded-lg px-5 py-2 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-ctp-blue focus-visible:ring-offset-2 focus-visible:ring-offset-ctp-base ${
-              filter === f
-                ? "bg-ctp-blue text-ctp-crust"
-                : "text-ctp-subtext0 hover:text-ctp-text bg-ctp-surface0/30"
-            }`}
-          >
-            <Icon className="w-4 h-4" />
-            {config.label}
-          </button>
+            <button
+              key={f}
+              onClick={() => setFilter(f)}
+              aria-pressed={filter === f}
+              className={`flex items-center gap-2 rounded-lg px-5 py-2 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-ctp-blue focus-visible:ring-offset-2 focus-visible:ring-offset-ctp-base ${
+                filter === f
+                  ? "bg-ctp-blue text-ctp-crust"
+                  : "text-ctp-subtext0 hover:text-ctp-text bg-ctp-surface0/30"
+              }`}
+            >
+              <Icon className="w-4 h-4" />
+              {config.label}
+            </button>
           );
         })}
       </div>
@@ -273,7 +296,9 @@ export default function Projects() {
               />
 
               {/* Image */}
-              <div className={`relative overflow-hidden bg-ctp-mantle ${layout.imageClass}`}>
+              <div
+                className={`relative overflow-hidden bg-ctp-mantle ${layout.imageClass}`}
+              >
                 <Image
                   src={project.image}
                   alt={project.title}
@@ -290,12 +315,12 @@ export default function Projects() {
                 {project.featured && (
                   <span className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-ctp-yellow/90 px-2 py-0.5 text-xs font-medium text-ctp-crust">
                     <Star className="w-3 h-3 fill-current" />
-                    Featured
+                    {copy.projects.featuredBadge}
                   </span>
                 )}
                 {project.highlight && (
                   <span className="absolute bottom-3 left-3 rounded-full border border-ctp-surface1/60 bg-ctp-base/70 px-2.5 py-1 text-[11px] font-medium text-ctp-subtext1 backdrop-blur-sm">
-                    {project.highlight}
+                    {translateDynamicText(locale, project.highlight)}
                   </span>
                 )}
               </div>
@@ -304,12 +329,14 @@ export default function Projects() {
               <div className="flex flex-1 flex-col p-5 sm:p-6">
                 <div className="mb-2.5 flex items-center justify-between gap-2">
                   <span className="text-xs text-ctp-overlay0 font-mono">
-                    {project.category}
+                    {translateDynamicText(locale, project.category)}
                   </span>
                   <span
                     className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-medium ${status.badge} ${status.text}`}
                   >
-                    <span className={`h-1.5 w-1.5 rounded-full ${status.dot}`} />
+                    <span
+                      className={`h-1.5 w-1.5 rounded-full ${status.dot}`}
+                    />
                     {status.label}
                   </span>
                 </div>
@@ -322,7 +349,7 @@ export default function Projects() {
                 <p
                   className={`mb-4 flex-1 text-sm leading-relaxed text-ctp-subtext0 ${layout.descClampClass}`}
                 >
-                  {project.description}
+                  {translateDynamicText(locale, project.description)}
                 </p>
 
                 {/* Stats */}
@@ -334,24 +361,24 @@ export default function Projects() {
                     {stats.stars > 0 ? (
                       <span className="flex items-center gap-1.5">
                         <Star className="h-3.5 w-3.5 text-ctp-yellow" />
-                        {stats.stars}
+                        {formatNumber(stats.stars)}
                       </span>
                     ) : (
                       <span className="flex items-center gap-1.5">
                         <CircleDot className="h-3.5 w-3.5 text-ctp-overlay1" />
-                        Live Repo
+                        {copy.projects.liveRepo}
                       </span>
                     )}
                     {stats.forks > 0 && (
                       <span className="flex items-center gap-1.5">
                         <GitFork className="h-3.5 w-3.5 text-ctp-blue" />
-                        {stats.forks}
+                        {formatNumber(stats.forks)}
                       </span>
                     )}
                     {stats.downloads != null && stats.downloads > 0 && (
                       <span className="flex items-center gap-1.5">
                         <Download className="h-3.5 w-3.5 text-ctp-green" />
-                        {stats.downloads.toLocaleString()}
+                        {formatNumber(stats.downloads)}
                       </span>
                     )}
                     {stats.language && (
@@ -371,18 +398,19 @@ export default function Projects() {
                   {renderedTags
                     .slice(0, layout.prominent ? 4 : 3)
                     .map((tag) => (
-                    <span
-                      key={tag}
-                      className="rounded-md border border-ctp-surface1/30 bg-ctp-surface0/60 px-2 py-0.5 text-xs text-ctp-subtext0"
-                    >
-                      {tag}
-                    </span>
-                  ))}
+                      <span
+                        key={tag}
+                        className="rounded-md border border-ctp-surface1/30 bg-ctp-surface0/60 px-2 py-0.5 text-xs text-ctp-subtext0"
+                      >
+                        {tag}
+                      </span>
+                    ))}
                   {project.techStack.length > (layout.prominent ? 4 : 3) && (
                     <span className="text-xs text-ctp-overlay0">
                       +
-                      {project.techStack.length -
-                        (layout.prominent ? 4 : 3)}
+                      {formatNumber(
+                        project.techStack.length - (layout.prominent ? 4 : 3),
+                      )}
                     </span>
                   )}
                 </motion.div>
@@ -396,7 +424,7 @@ export default function Projects() {
                     className="group/link flex flex-1 items-center justify-center gap-2 rounded-lg border border-ctp-surface1/50 bg-ctp-surface0/50 px-3 py-2 text-sm font-medium text-ctp-text transition-colors hover:bg-ctp-surface0 focus-visible:ring-2 focus-visible:ring-ctp-blue focus-visible:ring-offset-2 focus-visible:ring-offset-ctp-base"
                   >
                     <Github className="h-4 w-4 transition-transform duration-200 group-hover/link:scale-110" />
-                    Code
+                    {copy.projects.code}
                   </a>
                   {project.liveUrl && (
                     <a
@@ -406,7 +434,7 @@ export default function Projects() {
                       className="group/live flex flex-1 items-center justify-center gap-2 rounded-lg bg-ctp-blue px-3 py-2 text-sm font-medium text-ctp-crust transition-colors hover:bg-ctp-sapphire focus-visible:ring-2 focus-visible:ring-ctp-blue focus-visible:ring-offset-2 focus-visible:ring-offset-ctp-base"
                     >
                       <ExternalLink className="h-4 w-4 transition-transform duration-200 group-hover/live:-translate-y-0.5 group-hover/live:scale-105" />
-                      Live
+                      {copy.projects.live}
                     </a>
                   )}
                 </div>
@@ -430,7 +458,7 @@ export default function Projects() {
           className="inline-flex items-center gap-2 rounded-lg border border-ctp-surface0/60 bg-ctp-surface0/30 px-6 py-2.5 text-sm font-medium text-ctp-text transition-colors hover:border-ctp-surface1 focus-visible:ring-2 focus-visible:ring-ctp-blue focus-visible:ring-offset-2 focus-visible:ring-offset-ctp-base"
         >
           <Github className="h-4 w-4" />
-          View All Repositories
+          {copy.projects.viewAllRepos}
           <ArrowUpRight className="h-4 w-4" />
         </a>
       </motion.div>

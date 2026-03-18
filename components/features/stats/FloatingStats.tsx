@@ -14,6 +14,8 @@ import {
 import { getCodeforcesUser, type CodeforcesUser } from "@/lib/api/codeforces";
 import { getLeetCodeStats, type LeetCodeStats } from "@/lib/api/leetcode";
 import { PERSONAL_INFO } from "@/lib/constants";
+import { useLanguage } from "@/components/providers/LanguageProvider";
+import { getCopy } from "@/lib/i18n/translations";
 
 export default function FloatingStats() {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -24,6 +26,8 @@ export default function FloatingStats() {
   const [loading, setLoading] = useState(true);
   const prefersReducedMotion = useReducedMotion();
   const reducedMotion = Boolean(prefersReducedMotion);
+  const { locale } = useLanguage();
+  const copy = getCopy(locale);
 
   const ease = [0.22, 1, 0.36, 1] as const;
   const springTransition = {
@@ -35,26 +39,26 @@ export default function FloatingStats() {
   const codeforcesStats = [
     {
       icon: TrendingUp,
-      label: "Rating",
+      label: copy.stats.rating,
       value: codeforcesData?.rating || 0,
       color: "text-ctp-blue",
     },
     {
       icon: Award,
-      label: "Max Rating",
+      label: copy.stats.maxRating,
       value: codeforcesData?.maxRating || 0,
       color: "text-ctp-yellow",
     },
     {
       icon: Trophy,
-      label: "Rank",
-      value: codeforcesData?.rank || "Unrated",
+      label: copy.stats.rank,
+      value: codeforcesData?.rank || copy.stats.unrated,
       color: "text-ctp-green",
     },
     {
       icon: Target,
-      label: "Max Rank",
-      value: codeforcesData?.maxRank || "Unrated",
+      label: copy.stats.maxRank,
+      value: codeforcesData?.maxRank || copy.stats.unrated,
       color: "text-ctp-mauve",
     },
   ];
@@ -62,13 +66,13 @@ export default function FloatingStats() {
   const leetCodeStatsCards = [
     {
       icon: Code2,
-      label: "Solved",
+      label: copy.stats.solved,
       value: leetcodeData?.totalSolved || 0,
       color: "text-ctp-blue",
     },
     {
       icon: Trophy,
-      label: "Ranking",
+      label: copy.stats.ranking,
       value: leetcodeData?.ranking
         ? `#${leetcodeData.ranking.toLocaleString()}`
         : "N/A",
@@ -106,8 +110,12 @@ export default function FloatingStats() {
       {/* Floating Button — clears mobile bottom nav */}
       <motion.div
         className="fixed bottom-40 right-4 z-40 lg:bottom-24 lg:right-6"
-        initial={reducedMotion ? { opacity: 0 } : { scale: 0.88, opacity: 0, y: 10 }}
-        animate={reducedMotion ? { opacity: 1 } : { scale: 1, opacity: 1, y: 0 }}
+        initial={
+          reducedMotion ? { opacity: 0 } : { scale: 0.88, opacity: 0, y: 10 }
+        }
+        animate={
+          reducedMotion ? { opacity: 1 } : { scale: 1, opacity: 1, y: 0 }
+        }
         transition={
           reducedMotion
             ? { duration: 0.2, ease }
@@ -123,7 +131,7 @@ export default function FloatingStats() {
               whileHover={reducedMotion ? undefined : { y: -3, scale: 1.05 }}
               whileTap={reducedMotion ? { scale: 1 } : { scale: 0.94 }}
               transition={springTransition}
-              aria-label="View competitive programming stats"
+              aria-label={copy.stats.openStatsAria}
             >
               <Code2 className="h-5 w-5 transition-transform duration-300 group-hover:-translate-y-0.5" />
             </motion.button>
@@ -146,9 +154,19 @@ export default function FloatingStats() {
 
             <motion.div
               className="fixed bottom-24 right-4 z-50 max-h-[70vh] w-[calc(100vw-1rem)] max-w-2xl overflow-y-auto rounded-2xl border border-ctp-surface0/60 bg-ctp-base/78 p-5 shadow-2xl shadow-ctp-crust/35 backdrop-blur-xl lg:bottom-7 lg:right-6"
-              initial={reducedMotion ? { opacity: 0 } : { opacity: 0, scale: 0.95, y: 18 }}
-              animate={reducedMotion ? { opacity: 1 } : { opacity: 1, scale: 1, y: 0 }}
-              exit={reducedMotion ? { opacity: 0 } : { opacity: 0, scale: 0.97, y: 14 }}
+              initial={
+                reducedMotion
+                  ? { opacity: 0 }
+                  : { opacity: 0, scale: 0.95, y: 18 }
+              }
+              animate={
+                reducedMotion ? { opacity: 1 } : { opacity: 1, scale: 1, y: 0 }
+              }
+              exit={
+                reducedMotion
+                  ? { opacity: 0 }
+                  : { opacity: 0, scale: 0.97, y: 14 }
+              }
               transition={{ duration: 0.28, ease }}
             >
               {/* Header */}
@@ -159,15 +177,17 @@ export default function FloatingStats() {
                   </div>
                   <div>
                     <h3 className="text-base font-display font-bold text-ctp-text">
-                      Competitive Programming
+                      {copy.stats.heading}
                     </h3>
-                    <p className="text-xs text-ctp-overlay0">Live Stats</p>
+                    <p className="text-xs text-ctp-overlay0">
+                      {copy.stats.liveStats}
+                    </p>
                   </div>
                 </div>
                 <button
                   onClick={() => setIsExpanded(false)}
                   className="p-1.5 hover:bg-ctp-surface0/60 rounded-lg transition-colors"
-                  aria-label="Close stats"
+                  aria-label={copy.stats.closeStatsAria}
                 >
                   <X className="w-4 h-4 text-ctp-overlay0" />
                 </button>
@@ -176,7 +196,7 @@ export default function FloatingStats() {
               {loading ? (
                 <div className="text-center py-6 text-ctp-overlay0 text-sm">
                   <div className="w-8 h-8 border-2 border-ctp-surface1 border-t-ctp-blue rounded-full mx-auto mb-2 animate-spin" />
-                  Loading stats...
+                  {copy.stats.loading}
                 </div>
               ) : (
                 <div className="space-y-5">
@@ -192,7 +212,8 @@ export default function FloatingStats() {
                         rel="noopener noreferrer"
                         className="text-xs text-ctp-blue hover:text-ctp-sapphire transition-colors flex items-center gap-1"
                       >
-                        Profile <ExternalLink className="w-3 h-3" />
+                        {copy.stats.profile}{" "}
+                        <ExternalLink className="w-3 h-3" />
                       </a>
                     </div>
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
@@ -200,10 +221,14 @@ export default function FloatingStats() {
                         <motion.div
                           key={s.label}
                           initial={
-                            reducedMotion ? { opacity: 0 } : { opacity: 0, y: 8 }
+                            reducedMotion
+                              ? { opacity: 0 }
+                              : { opacity: 0, y: 8 }
                           }
                           animate={
-                            reducedMotion ? { opacity: 1 } : { opacity: 1, y: 0 }
+                            reducedMotion
+                              ? { opacity: 1 }
+                              : { opacity: 1, y: 0 }
                           }
                           transition={{
                             duration: 0.2,
@@ -238,7 +263,8 @@ export default function FloatingStats() {
                         rel="noopener noreferrer"
                         className="text-xs text-ctp-blue hover:text-ctp-sapphire transition-colors flex items-center gap-1"
                       >
-                        Profile <ExternalLink className="w-3 h-3" />
+                        {copy.stats.profile}{" "}
+                        <ExternalLink className="w-3 h-3" />
                       </a>
                     </div>
                     <div className="grid grid-cols-2 gap-2">
@@ -246,10 +272,14 @@ export default function FloatingStats() {
                         <motion.div
                           key={item.label}
                           initial={
-                            reducedMotion ? { opacity: 0 } : { opacity: 0, y: 8 }
+                            reducedMotion
+                              ? { opacity: 0 }
+                              : { opacity: 0, y: 8 }
                           }
                           animate={
-                            reducedMotion ? { opacity: 1 } : { opacity: 1, y: 0 }
+                            reducedMotion
+                              ? { opacity: 1 }
+                              : { opacity: 1, y: 0 }
                           }
                           transition={{
                             duration: 0.2,
@@ -259,7 +289,9 @@ export default function FloatingStats() {
                           className="rounded-lg border border-ctp-surface0/60 bg-ctp-surface0/30 p-3"
                         >
                           <div className="mb-1 flex items-center gap-1.5">
-                            <item.icon className={`h-3.5 w-3.5 ${item.color}`} />
+                            <item.icon
+                              className={`h-3.5 w-3.5 ${item.color}`}
+                            />
                             <span className="text-xs text-ctp-overlay0">
                               {item.label}
                             </span>

@@ -1,5 +1,6 @@
 import { createOpenRouter } from "@openrouter/ai-sdk-provider";
-import { streamText, convertToModelMessages } from "ai";
+import { streamText, convertToModelMessages, type UIMessage } from "ai";
+import { resolveLocale } from "@/lib/i18n/translations";
 
 // OpenRouter client using official provider
 const openrouter = createOpenRouter({
@@ -8,10 +9,28 @@ const openrouter = createOpenRouter({
 
 export async function POST(req: Request) {
   try {
-    const { messages } = await req.json();
+    const body = (await req.json()) as {
+      messages?: UIMessage[];
+      locale?: string;
+    };
+
+    if (!Array.isArray(body.messages)) {
+      return Response.json(
+        { error: "Invalid request payload. 'messages' must be an array." },
+        { status: 400 },
+      );
+    }
+
+    const locale = resolveLocale(body.locale);
+    const responseLanguageInstruction =
+      locale === "bn"
+        ? "Respond in Bengali. Keep technical terms and proper nouns (e.g., Next.js, React, Codeforces) in English when that is clearer."
+        : "Respond in English unless the user explicitly asks for another language.";
 
     // System prompt with full context about me
-    const systemPrompt = `You are an AI assistant for Sharif Md. Yousuf. Use only the facts below and answer concisely, professionally, and helpfully. If unsure, say you do not have that information.
+    const systemPrompt = `${responseLanguageInstruction}
+
+You are an AI assistant for Sharif Md. Yousuf. Use only the facts below and answer concisely, professionally, and helpfully. If unsure, say you do not have that information.
 
   Identity
   - Name: Sharif Md. Yousuf (aka SharifdotG)
@@ -91,7 +110,7 @@ export async function POST(req: Request) {
   `;
 
     // Convert UIMessages to ModelMessages
-    const modelMessages = await convertToModelMessages(messages);
+    const modelMessages = await convertToModelMessages(body.messages);
 
     const result = streamText({
       model: openrouter("arcee-ai/trinity-large-preview:free"),
@@ -103,6 +122,9 @@ export async function POST(req: Request) {
     return result.toUIMessageStreamResponse();
   } catch (error) {
     console.error("Chat API Error:", error);
-    return new Response("Error processing chat request", { status: 500 });
+    return Response.json(
+      { error: "Error processing chat request" },
+      { status: 500 },
+    );
   }
 }

@@ -6,13 +6,18 @@ interface CardProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 const Card = forwardRef<HTMLDivElement, CardProps>(
-  ({ children, variant = "default", hover = false, className = "", ...props }, ref) => {
+  (
+    { children, variant = "default", hover = false, className = "", ...props },
+    ref,
+  ) => {
     const baseStyles = "rounded-xl transition-all duration-300";
 
     const variants = {
       default: "bg-ctp-surface0/50 backdrop-blur-sm",
-      bordered: "bg-ctp-surface0/30 border border-ctp-surface1/50 backdrop-blur-sm",
-      elevated: "bg-ctp-surface0/80 shadow-lg shadow-ctp-crust/50 backdrop-blur-sm",
+      bordered:
+        "bg-ctp-surface0/30 border border-ctp-surface1/50 backdrop-blur-sm",
+      elevated:
+        "bg-ctp-surface0/80 shadow-lg shadow-ctp-crust/50 backdrop-blur-sm",
     };
 
     const hoverStyles = hover
@@ -28,7 +33,7 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
         {children}
       </div>
     );
-  }
+  },
 );
 
 Card.displayName = "Card";

@@ -14,7 +14,7 @@ const FALLBACK_DATA: LeetCodeStats = {
 };
 
 export async function getLeetCodeStats(
-  username: string
+  username: string,
 ): Promise<LeetCodeStats | null> {
   try {
     const response = await fetch(`${LEETCODE_API_BASE}/${username}/solved`, {

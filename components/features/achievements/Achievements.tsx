@@ -25,10 +25,18 @@ import {
   type Achievement,
   type AchievementType,
 } from "@/lib/constants";
+import { useLanguage } from "@/components/providers/LanguageProvider";
+import {
+  getCopy,
+  translateDynamicText,
+  type Locale,
+} from "@/lib/i18n/translations";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
-const typeStyles: Record<
+const getTypeStyles = (
+  locale: Locale,
+): Record<
   AchievementType,
   {
     icon: LucideIcon;
@@ -38,63 +46,67 @@ const typeStyles: Record<
     glow: string;
     label: string;
   }
-> = {
-  competition: {
-    icon: Trophy,
-    color: "text-ctp-yellow",
-    bg: "bg-ctp-yellow/10",
-    accent: "bg-ctp-yellow/70",
-    glow: "bg-ctp-yellow/15",
-    label: "Competition",
-  },
-  scholarship: {
-    icon: Medal,
-    color: "text-ctp-blue",
-    bg: "bg-ctp-blue/10",
-    accent: "bg-ctp-blue/70",
-    glow: "bg-ctp-blue/15",
-    label: "Scholarship",
-  },
-  academic: {
-    icon: GraduationCap,
-    color: "text-ctp-mauve",
-    bg: "bg-ctp-mauve/10",
-    accent: "bg-ctp-mauve/70",
-    glow: "bg-ctp-mauve/15",
-    label: "Academic",
-  },
-  rating: {
-    icon: Star,
-    color: "text-ctp-green",
-    bg: "bg-ctp-green/10",
-    accent: "bg-ctp-green/70",
-    glow: "bg-ctp-green/15",
-    label: "Rating",
-  },
-  certification: {
-    icon: BadgeCheck,
-    color: "text-ctp-teal",
-    bg: "bg-ctp-teal/10",
-    accent: "bg-ctp-teal/70",
-    glow: "bg-ctp-teal/15",
-    label: "Certification",
-  },
-  training: {
-    icon: BookOpen,
-    color: "text-ctp-sapphire",
-    bg: "bg-ctp-sapphire/10",
-    accent: "bg-ctp-sapphire/70",
-    glow: "bg-ctp-sapphire/15",
-    label: "Training",
-  },
-  volunteer: {
-    icon: Heart,
-    color: "text-ctp-pink",
-    bg: "bg-ctp-pink/10",
-    accent: "bg-ctp-pink/70",
-    glow: "bg-ctp-pink/15",
-    label: "Volunteer",
-  },
+> => {
+  const copy = getCopy(locale);
+
+  return {
+    competition: {
+      icon: Trophy,
+      color: "text-ctp-yellow",
+      bg: "bg-ctp-yellow/10",
+      accent: "bg-ctp-yellow/70",
+      glow: "bg-ctp-yellow/15",
+      label: copy.achievements.competition,
+    },
+    scholarship: {
+      icon: Medal,
+      color: "text-ctp-blue",
+      bg: "bg-ctp-blue/10",
+      accent: "bg-ctp-blue/70",
+      glow: "bg-ctp-blue/15",
+      label: copy.achievements.scholarship,
+    },
+    academic: {
+      icon: GraduationCap,
+      color: "text-ctp-mauve",
+      bg: "bg-ctp-mauve/10",
+      accent: "bg-ctp-mauve/70",
+      glow: "bg-ctp-mauve/15",
+      label: copy.achievements.academic,
+    },
+    rating: {
+      icon: Star,
+      color: "text-ctp-green",
+      bg: "bg-ctp-green/10",
+      accent: "bg-ctp-green/70",
+      glow: "bg-ctp-green/15",
+      label: copy.achievements.rating,
+    },
+    certification: {
+      icon: BadgeCheck,
+      color: "text-ctp-teal",
+      bg: "bg-ctp-teal/10",
+      accent: "bg-ctp-teal/70",
+      glow: "bg-ctp-teal/15",
+      label: copy.achievements.certification,
+    },
+    training: {
+      icon: BookOpen,
+      color: "text-ctp-sapphire",
+      bg: "bg-ctp-sapphire/10",
+      accent: "bg-ctp-sapphire/70",
+      glow: "bg-ctp-sapphire/15",
+      label: copy.achievements.training,
+    },
+    volunteer: {
+      icon: Heart,
+      color: "text-ctp-pink",
+      bg: "bg-ctp-pink/10",
+      accent: "bg-ctp-pink/70",
+      glow: "bg-ctp-pink/15",
+      label: copy.achievements.volunteer,
+    },
+  };
 };
 
 const INITIAL_VISIBLE_ACHIEVEMENTS = 9;
@@ -136,6 +148,7 @@ interface AchievementCardProps {
   achievement: Achievement;
   reducedMotion: boolean;
   index: number;
+  locale: Locale;
   onOpenCertificate: (achievement: Achievement) => void;
 }
 
@@ -143,9 +156,11 @@ function AchievementCard({
   achievement,
   reducedMotion,
   index,
+  locale,
   onOpenCertificate,
 }: AchievementCardProps) {
-  const style = typeStyles[achievement.type];
+  const copy = getCopy(locale);
+  const style = getTypeStyles(locale)[achievement.type];
   const Icon = style.icon;
   const isFeatured = Boolean(achievement.featured);
 
@@ -153,7 +168,9 @@ function AchievementCard({
     ? ""
     : "group-hover:-translate-y-0.5 group-hover:scale-105";
   const iconRotateClasses =
-    reducedMotion || achievement.type === "volunteer" || achievement.type === "training"
+    reducedMotion ||
+    achievement.type === "volunteer" ||
+    achievement.type === "training"
       ? ""
       : "group-hover:rotate-6";
 
@@ -197,7 +214,7 @@ function AchievementCard({
 
         {isFeatured && (
           <span className="inline-flex items-center rounded-full border border-ctp-surface1/60 bg-ctp-surface0/50 px-2.5 py-1 text-[11px] font-medium text-ctp-subtext0">
-            Featured
+            {copy.achievements.featured}
           </span>
         )}
       </div>
@@ -215,15 +232,17 @@ function AchievementCard({
           <h3 className="text-sm font-semibold leading-snug text-ctp-text line-clamp-2">
             {achievement.title}
           </h3>
-          <p className="mt-1 text-xs text-ctp-subtext0">{achievement.organization}</p>
+          <p className="mt-1 text-xs text-ctp-subtext0">
+            {translateDynamicText(locale, achievement.organization)}
+          </p>
           <span className="mt-1 flex items-center gap-1 text-xs text-ctp-overlay0">
             <Calendar className="h-3 w-3" />
-            {achievement.date}
+            {translateDynamicText(locale, achievement.date)}
           </span>
 
           {isFeatured && (
             <p className="mt-2 text-xs leading-relaxed text-ctp-subtext1 line-clamp-2">
-              {achievement.description}
+              {translateDynamicText(locale, achievement.description)}
             </p>
           )}
 
@@ -235,22 +254,23 @@ function AchievementCard({
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1 text-xs text-ctp-blue transition-colors hover:text-ctp-sapphire focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ctp-blue/60 focus-visible:ring-offset-2 focus-visible:ring-offset-ctp-base rounded"
               >
-                View
+                {copy.achievements.view}
                 <ExternalLink className="h-3 w-3" />
               </a>
             )}
 
-            {achievement.viewType === "image" && achievement.certificateImage && (
-              <button
-                type="button"
-                onClick={() => onOpenCertificate(achievement)}
-                className="inline-flex items-center gap-1 text-xs text-ctp-blue transition-colors hover:text-ctp-sapphire focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ctp-blue/60 focus-visible:ring-offset-2 focus-visible:ring-offset-ctp-base rounded"
-                aria-label={`View certificate for ${achievement.title}`}
-              >
-                Certificate
-                <FileImage className="h-3 w-3" />
-              </button>
-            )}
+            {achievement.viewType === "image" &&
+              achievement.certificateImage && (
+                <button
+                  type="button"
+                  onClick={() => onOpenCertificate(achievement)}
+                  className="inline-flex items-center gap-1 text-xs text-ctp-blue transition-colors hover:text-ctp-sapphire focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ctp-blue/60 focus-visible:ring-offset-2 focus-visible:ring-offset-ctp-base rounded"
+                  aria-label={`${copy.achievements.viewCertificateFor} ${achievement.title}`}
+                >
+                  {copy.achievements.certificate}
+                  <FileImage className="h-3 w-3" />
+                </button>
+              )}
           </div>
         </div>
       </div>
@@ -261,6 +281,8 @@ function AchievementCard({
 export default function Achievements() {
   const prefersReducedMotion = useReducedMotion();
   const reducedMotion = Boolean(prefersReducedMotion);
+  const { locale } = useLanguage();
+  const copy = getCopy(locale);
 
   const [selectedAchievement, setSelectedAchievement] =
     useState<Achievement | null>(null);
@@ -305,10 +327,10 @@ export default function Achievements() {
       </div>
 
       <SectionTitle
-        badge="Milestones"
-        title="Achievements & Recognition"
-        highlightWord="Achievements"
-        subtitle="Milestones in competitive programming, academics, and community service"
+        badge={copy.achievements.badge}
+        title={copy.achievements.title}
+        highlightWord={locale === "bn" ? "অর্জন" : "Achievements"}
+        subtitle={copy.achievements.subtitle}
       />
 
       <motion.div
@@ -324,6 +346,7 @@ export default function Achievements() {
             achievement={achievement}
             reducedMotion={reducedMotion}
             index={index}
+            locale={locale}
             onOpenCertificate={setSelectedAchievement}
           />
         ))}
@@ -339,7 +362,11 @@ export default function Achievements() {
               aria-expanded={showMoreAchievements}
               aria-controls="more-achievements-panel"
             >
-              More Achievements ({additionalAchievements.length})
+              {copy.achievements.moreAchievements} (
+              {locale === "bn"
+                ? additionalAchievements.length.toLocaleString("bn-BD")
+                : additionalAchievements.length}
+              )
               <ChevronDown
                 className={`h-4 w-4 transition-transform duration-300 ${showMoreAchievements ? "rotate-180" : ""}`}
               />
@@ -377,6 +404,7 @@ export default function Achievements() {
                           achievement={achievement}
                           reducedMotion={reducedMotion}
                           index={index}
+                          locale={locale}
                           onOpenCertificate={setSelectedAchievement}
                         />
                       </motion.div>
@@ -417,13 +445,13 @@ export default function Achievements() {
               onClick={(e) => e.stopPropagation()}
               role="dialog"
               aria-modal="true"
-              aria-label={`Certificate for ${selectedAchievement.title}`}
+              aria-label={`${copy.achievements.certificateFor} ${selectedAchievement.title}`}
             >
               <button
                 type="button"
                 onClick={() => setSelectedAchievement(null)}
                 className="absolute right-4 top-4 z-10 rounded-full bg-ctp-surface0 p-2 text-ctp-text transition-colors hover:bg-ctp-surface1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ctp-blue/60 focus-visible:ring-offset-2 focus-visible:ring-offset-ctp-base"
-                aria-label="Close certificate"
+                aria-label={copy.achievements.closeCertificate}
               >
                 <X className="h-5 w-5" />
               </button>
@@ -433,7 +461,11 @@ export default function Achievements() {
                   {selectedAchievement.title}
                 </p>
                 <p className="mt-1 text-xs text-ctp-subtext0">
-                  {selectedAchievement.organization} · {selectedAchievement.date}
+                  {translateDynamicText(
+                    locale,
+                    selectedAchievement.organization,
+                  )}{" "}
+                  · {translateDynamicText(locale, selectedAchievement.date)}
                 </p>
               </div>
 

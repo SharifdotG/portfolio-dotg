@@ -41,11 +41,11 @@ export interface CodeforcesUser {
 
 // Fetch functions
 export async function getCodeforcesRating(
-  handle: string
+  handle: string,
 ): Promise<CodeforcesRating[]> {
   try {
     const response = await fetch(
-      `https://codeforces.com/api/user.rating?handle=${handle}`
+      `https://codeforces.com/api/user.rating?handle=${handle}`,
     );
     const data = await response.json();
 
@@ -60,11 +60,11 @@ export async function getCodeforcesRating(
 }
 
 export async function getCodeforcesSubmissions(
-  handle: string
+  handle: string,
 ): Promise<CodeforcesSubmission[]> {
   try {
     const response = await fetch(
-      `https://codeforces.com/api/user.status?handle=${handle}&from=1&count=1000`
+      `https://codeforces.com/api/user.status?handle=${handle}&from=1&count=1000`,
     );
     const data = await response.json();
 
@@ -79,11 +79,11 @@ export async function getCodeforcesSubmissions(
 }
 
 export async function getCodeforcesUser(
-  handle: string
+  handle: string,
 ): Promise<CodeforcesUser | null> {
   try {
     const response = await fetch(
-      `https://codeforces.com/api/user.info?handles=${handle}`
+      `https://codeforces.com/api/user.info?handles=${handle}`,
     );
     const data = await response.json();
 

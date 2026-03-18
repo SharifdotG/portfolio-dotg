@@ -12,16 +12,19 @@ export interface GitHubRepo {
   updated_at: string;
 }
 
-export async function getGitHubRepo(owner: string, repo: string): Promise<GitHubRepo | null> {
+export async function getGitHubRepo(
+  owner: string,
+  repo: string,
+): Promise<GitHubRepo | null> {
   try {
     const headers: HeadersInit = {
-      'Accept': 'application/vnd.github.v3+json',
-      'User-Agent': 'Portfolio-Website',
+      Accept: "application/vnd.github.v3+json",
+      "User-Agent": "Portfolio-Website",
     };
 
     // Add authentication if available (optional)
     if (process.env.GITHUB_TOKEN) {
-      headers['Authorization'] = `Bearer ${process.env.GITHUB_TOKEN}`;
+      headers["Authorization"] = `Bearer ${process.env.GITHUB_TOKEN}`;
     }
 
     const response = await fetch(
@@ -29,18 +32,24 @@ export async function getGitHubRepo(owner: string, repo: string): Promise<GitHub
       {
         next: { revalidate: 3600 }, // Cache for 1 hour
         headers,
-      }
+      },
     );
 
     if (!response.ok) {
       // Check if rate limited
       if (response.status === 403 || response.status === 429) {
-        console.warn(`GitHub API rate limit reached for ${owner}/${repo}. Using fallback data.`);
+        console.warn(
+          `GitHub API rate limit reached for ${owner}/${repo}. Using fallback data.`,
+        );
         return null;
       }
 
       // Log error but don't throw
-      console.error(`GitHub API error for ${owner}/${repo}:`, response.status, response.statusText);
+      console.error(
+        `GitHub API error for ${owner}/${repo}:`,
+        response.status,
+        response.statusText,
+      );
       return null;
     }
 
@@ -57,10 +66,10 @@ export async function getVSCodeExtensionStats(extensionId: string) {
     const response = await fetch(
       `https://marketplace.visualstudio.com/_apis/public/gallery/extensionquery`,
       {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json;api-version=3.0-preview.1',
+          "Content-Type": "application/json",
+          Accept: "application/json;api-version=3.0-preview.1",
         },
         body: JSON.stringify({
           filters: [
@@ -76,11 +85,11 @@ export async function getVSCodeExtensionStats(extensionId: string) {
           flags: 914,
         }),
         next: { revalidate: 3600 },
-      }
+      },
     );
 
     if (!response.ok) {
-      console.error('VS Code Marketplace API error:', response.status);
+      console.error("VS Code Marketplace API error:", response.status);
       return null;
     }
 
@@ -95,16 +104,22 @@ export async function getVSCodeExtensionStats(extensionId: string) {
     };
 
     const downloadStat = extension.statistics?.find(
-      (stat: ExtensionStat) => stat.statisticName === 'install'
+      (stat: ExtensionStat) => stat.statisticName === "install",
     );
 
     return {
       downloads: downloadStat?.value || 0,
-      rating: extension.statistics?.find((stat: ExtensionStat) => stat.statisticName === 'averagerating')?.value || 0,
-      ratingCount: extension.statistics?.find((stat: ExtensionStat) => stat.statisticName === 'ratingcount')?.value || 0,
+      rating:
+        extension.statistics?.find(
+          (stat: ExtensionStat) => stat.statisticName === "averagerating",
+        )?.value || 0,
+      ratingCount:
+        extension.statistics?.find(
+          (stat: ExtensionStat) => stat.statisticName === "ratingcount",
+        )?.value || 0,
     };
   } catch (error) {
-    console.error('Error fetching VS Code extension stats:', error);
+    console.error("Error fetching VS Code extension stats:", error);
     return null;
   }
 }

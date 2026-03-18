@@ -8,15 +8,18 @@ export default function SmoothScroll() {
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 1024);
     checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
   useEffect(() => {
     if (isMobile) return;
 
     let rafId = 0;
-    let lenisInstance: { raf: (time: number) => void; destroy: () => void } | null = null;
+    let lenisInstance: {
+      raf: (time: number) => void;
+      destroy: () => void;
+    } | null = null;
     let cancelled = false;
 
     const initLenis = async () => {

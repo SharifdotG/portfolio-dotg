@@ -1,13 +1,21 @@
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 import { Bricolage_Grotesque, DM_Sans, Cascadia_Code } from "next/font/google";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
+import { LanguageProvider } from "@/components/providers/LanguageProvider";
 import Header from "@/components/shared/Header";
 import Footer from "@/components/shared/Footer";
 import ScrollToTop from "@/components/shared/ScrollToTop";
 import FloatingThemeToggle from "@/components/shared/FloatingThemeToggle";
+import FloatingLanguageToggle from "@/components/shared/FloatingLanguageToggle";
 import SmoothScroll from "@/components/shared/SmoothScroll";
 import Chatbot from "@/components/features/chatbot/Chatbot";
 import FloatingStats from "@/components/features/stats/FloatingStats";
+import {
+  getCopy,
+  LOCALE_COOKIE_NAME,
+  resolveLocale,
+} from "@/lib/i18n/translations";
 import "./globals.css";
 
 // Display Font - Bricolage Grotesque for headings
@@ -34,81 +42,97 @@ const cascadiaCode = Cascadia_Code({
   weight: ["400", "500", "600", "700"],
 });
 
-export const metadata: Metadata = {
-  metadataBase: new URL('https://www.sharifdotg.me'),
-  title: "Sharif Md. Yousuf - Competitive Programmer & Software Developer",
-  description: "Portfolio of Sharif Md. Yousuf, a competitive programmer and CSE student at University of Asia Pacific. ICPC Dhaka Regionalist 2024, showcasing web development projects and programming achievements.",
-  keywords: [
-    "Sharif Md. Yousuf",
-    "SharifdotG",
-    "competitive programming",
-    "ICPC",
-    "Codeforces",
-    "web development",
-    "Next.js",
-    "React",
-    "TypeScript",
-    "University of Asia Pacific",
-    "Bangladesh",
-  ],
-  authors: [{ name: "Sharif Md. Yousuf", url: "https://github.com/SharifdotG" }],
-  creator: "Sharif Md. Yousuf",
-  openGraph: {
-    type: "website",
-    locale: "en_US",
-    url: "https://www.sharifdotg.me",
-    title: "Sharif Md. Yousuf - Competitive Programmer & Software Developer",
-    description: "ICPC Dhaka Regionalist 2024 | CSE Student at UAP | Full-Stack Developer",
-    siteName: "Sharif's Portfolio",
-    images: [
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "Sharif Md. Yousuf Portfolio",
-      },
+export async function generateMetadata(): Promise<Metadata> {
+  const cookieStore = await cookies();
+  const locale = resolveLocale(cookieStore.get(LOCALE_COOKIE_NAME)?.value);
+  const copy = getCopy(locale);
+
+  return {
+    metadataBase: new URL("https://www.sharifdotg.me"),
+    title: copy.metadata.title,
+    description: copy.metadata.description,
+    keywords: [
+      "Sharif Md. Yousuf",
+      "SharifdotG",
+      "competitive programming",
+      "ICPC",
+      "Codeforces",
+      "web development",
+      "Next.js",
+      "React",
+      "TypeScript",
+      "University of Asia Pacific",
+      "Bangladesh",
     ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Sharif Md. Yousuf - Competitive Programmer & Software Developer",
-    description: "ICPC Dhaka Regionalist 2024 | CSE Student at UAP | Full-Stack Developer",
-    images: ["/og-image.png"],
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
+    authors: [
+      { name: "Sharif Md. Yousuf", url: "https://github.com/SharifdotG" },
+    ],
+    creator: "Sharif Md. Yousuf",
+    openGraph: {
+      type: "website",
+      locale: locale === "bn" ? "bn_BD" : "en_US",
+      url: "https://www.sharifdotg.me",
+      title: copy.metadata.title,
+      description: copy.metadata.ogDescription,
+      siteName: "Sharif's Portfolio",
+      images: [
+        {
+          url: "/og-image.png",
+          width: 1200,
+          height: 630,
+          alt: "Sharif Md. Yousuf Portfolio",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: copy.metadata.title,
+      description: copy.metadata.ogDescription,
+      images: ["/og-image.png"],
+    },
+    robots: {
       index: true,
       follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-video-preview": -1,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+      },
     },
-  },
-};
+  };
+}
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = await cookies();
+  const initialLocale = resolveLocale(
+    cookieStore.get(LOCALE_COOKIE_NAME)?.value,
+  );
+
   return (
     <html
-      lang="en"
+      lang={initialLocale}
       suppressHydrationWarning
-      className={`${bricolage.variable} ${dmSans.variable} ${cascadiaCode.variable}`}
+      className={`${bricolage.variable} ${dmSans.variable} ${cascadiaCode.variable} ${initialLocale === "bn" ? "locale-bn" : ""}`}
     >
       <body className={`${dmSans.className} antialiased`}>
         <ThemeProvider>
-          <Header />
-          <main className="min-h-screen">{children}</main>
-          <Footer />
-          <ScrollToTop />
-          <FloatingThemeToggle />
-          <SmoothScroll />
-          <FloatingStats />
-          <Chatbot />
+          <LanguageProvider initialLocale={initialLocale}>
+            <Header />
+            <main className="min-h-screen">{children}</main>
+            <Footer />
+            <ScrollToTop />
+            <FloatingThemeToggle />
+            <FloatingLanguageToggle />
+            <SmoothScroll />
+            <FloatingStats />
+            <Chatbot />
+          </LanguageProvider>
         </ThemeProvider>
       </body>
     </html>

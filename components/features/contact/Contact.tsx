@@ -20,6 +20,8 @@ import Section from "@/components/ui/Section";
 import SectionTitle from "@/components/ui/SectionTitle";
 import { PERSONAL_INFO } from "@/lib/constants";
 import DiscordIcon from "@/components/ui/DiscordIcon";
+import { useLanguage } from "@/components/providers/LanguageProvider";
+import { getCopy, translateDynamicText } from "@/lib/i18n/translations";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -80,27 +82,6 @@ const statusVariants = {
   },
 };
 
-const contactInfo = [
-  {
-    icon: Mail,
-    label: "Email",
-    value: PERSONAL_INFO.email,
-    href: `mailto:${PERSONAL_INFO.email}`,
-  },
-  {
-    icon: Phone,
-    label: "Phone",
-    value: PERSONAL_INFO.phone,
-    href: `tel:${PERSONAL_INFO.phone}`,
-  },
-  {
-    icon: MapPin,
-    label: "Location",
-    value: PERSONAL_INFO.location,
-    href: `https://maps.google.com/?q=${encodeURIComponent(PERSONAL_INFO.location)}`,
-  },
-];
-
 const socialLinks = [
   { icon: Github, href: PERSONAL_INFO.githubUrl, label: "GitHub" },
   { icon: Linkedin, href: PERSONAL_INFO.linkedinUrl, label: "LinkedIn" },
@@ -115,6 +96,33 @@ const socialLinks = [
 export default function Contact() {
   const prefersReducedMotion = useReducedMotion();
   const reducedMotion = Boolean(prefersReducedMotion);
+  const { locale } = useLanguage();
+  const copy = getCopy(locale);
+
+  const contactInfo = [
+    {
+      id: "email",
+      icon: Mail,
+      label: copy.contact.email,
+      value: PERSONAL_INFO.email,
+      href: `mailto:${PERSONAL_INFO.email}`,
+    },
+    {
+      id: "phone",
+      icon: Phone,
+      label: locale === "bn" ? "ফোন" : "Phone",
+      value: translateDynamicText(locale, PERSONAL_INFO.phone),
+      href: `tel:${PERSONAL_INFO.phone}`,
+    },
+    {
+      id: "location",
+      icon: MapPin,
+      label: locale === "bn" ? "অবস্থান" : "Location",
+      value: translateDynamicText(locale, PERSONAL_INFO.location),
+      href: `https://maps.google.com/?q=${encodeURIComponent(PERSONAL_INFO.location)}`,
+    },
+  ];
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -161,10 +169,10 @@ export default function Contact() {
   return (
     <Section id="contact" className="relative overflow-x-clip">
       <SectionTitle
-        badge="Get in Touch"
-        title="Let's Work Together"
-        highlightWord="Together"
-        subtitle="Have a project in mind? Send me a message or find me on socials."
+        badge={copy.contact.badge}
+        title={copy.contact.title}
+        highlightWord={locale === "bn" ? "একসাথে" : "Together"}
+        subtitle={copy.contact.subtitle}
       />
 
       <div className="pointer-events-none absolute inset-0 -z-10">
@@ -191,7 +199,7 @@ export default function Contact() {
           >
             {contactInfo.map((c) => (
               <motion.a
-                key={c.label}
+                key={c.id}
                 href={c.href}
                 target={c.href.startsWith("http") ? "_blank" : undefined}
                 rel="noopener noreferrer"
@@ -221,7 +229,7 @@ export default function Contact() {
           {/* Social links */}
           <div>
             <h4 className="text-sm font-semibold text-ctp-text mb-3">
-              Social Profiles
+              {copy.contact.socialProfiles}
             </h4>
             <motion.div
               className="flex flex-wrap gap-2 md:gap-2.5"
@@ -273,7 +281,7 @@ export default function Contact() {
           >
             <h3 className="text-lg font-display font-semibold text-ctp-text flex items-center gap-2 mb-2">
               <Send className="w-4 h-4 text-ctp-blue" />
-              Send a Message
+              {copy.contact.sendMessageTitle}
             </h3>
 
             <div>
@@ -281,7 +289,7 @@ export default function Contact() {
                 htmlFor="name"
                 className="block text-sm text-ctp-subtext0 mb-1.5"
               >
-                Name
+                {copy.contact.name}
               </label>
               <input
                 type="text"
@@ -291,7 +299,7 @@ export default function Contact() {
                 onChange={handleChange}
                 required
                 className="w-full px-4 py-2.5 bg-ctp-base border border-ctp-surface1 rounded-lg text-ctp-text placeholder-ctp-overlay1 focus:outline-none focus:ring-2 focus:ring-ctp-blue/40 focus:border-ctp-blue focus:shadow-[0_0_0_3px_rgba(137,180,250,0.12)] transition-[border-color,box-shadow] text-sm"
-                placeholder="John Doe"
+                placeholder={copy.contact.namePlaceholder}
               />
             </div>
 
@@ -300,7 +308,7 @@ export default function Contact() {
                 htmlFor="email"
                 className="block text-sm text-ctp-subtext0 mb-1.5"
               >
-                Email
+                {copy.contact.email}
               </label>
               <input
                 type="email"
@@ -310,7 +318,7 @@ export default function Contact() {
                 onChange={handleChange}
                 required
                 className="w-full px-4 py-2.5 bg-ctp-base border border-ctp-surface1 rounded-lg text-ctp-text placeholder-ctp-overlay1 focus:outline-none focus:ring-2 focus:ring-ctp-blue/40 focus:border-ctp-blue focus:shadow-[0_0_0_3px_rgba(137,180,250,0.12)] transition-[border-color,box-shadow] text-sm"
-                placeholder="john@example.com"
+                placeholder={copy.contact.emailPlaceholder}
               />
             </div>
 
@@ -319,7 +327,7 @@ export default function Contact() {
                 htmlFor="message"
                 className="block text-sm text-ctp-subtext0 mb-1.5"
               >
-                Message
+                {copy.contact.message}
               </label>
               <textarea
                 id="message"
@@ -329,7 +337,7 @@ export default function Contact() {
                 required
                 rows={4}
                 className="w-full px-4 py-2.5 bg-ctp-base border border-ctp-surface1 rounded-lg text-ctp-text placeholder-ctp-overlay1 focus:outline-none focus:ring-2 focus:ring-ctp-blue/40 focus:border-ctp-blue focus:shadow-[0_0_0_3px_rgba(137,180,250,0.12)] transition-[border-color,box-shadow] resize-none text-sm"
-                placeholder="Tell me about your project..."
+                placeholder={copy.contact.messagePlaceholder}
               />
             </div>
 
@@ -346,7 +354,7 @@ export default function Contact() {
                   aria-live="polite"
                 >
                   <CheckCircle2 className="w-4 h-4" />
-                  Message sent!
+                  {copy.contact.sent}
                 </motion.div>
               )}
 
@@ -362,7 +370,7 @@ export default function Contact() {
                   aria-live="polite"
                 >
                   <X className="w-4 h-4" />
-                  Failed to send. Please try again.
+                  {copy.contact.sendFailed}
                 </motion.div>
               )}
             </AnimatePresence>
@@ -378,12 +386,12 @@ export default function Contact() {
               {status === "loading" ? (
                 <>
                   <div className="w-4 h-4 border-2 border-ctp-crust border-t-transparent rounded-full animate-spin" />
-                  Sending...
+                  {copy.contact.sending}
                 </>
               ) : (
                 <>
                   <Send className="w-4 h-4" />
-                  Send Message
+                  {copy.contact.sendMessageButton}
                 </>
               )}
             </motion.button>

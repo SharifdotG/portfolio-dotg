@@ -18,6 +18,8 @@ import {
   type AboutCardLayoutKey,
   type AboutCardToneKey,
 } from "@/lib/constants";
+import { useLanguage } from "@/components/providers/LanguageProvider";
+import { getCopy, translateDynamicText } from "@/lib/i18n/translations";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -129,6 +131,8 @@ const hoverTransition = {
 export default function About() {
   const prefersReducedMotion = useReducedMotion();
   const reducedMotion = Boolean(prefersReducedMotion);
+  const { locale } = useLanguage();
+  const copy = getCopy(locale);
   const cardVariants = getCardVariants(reducedMotion);
 
   const orderedCards = [...ABOUT_CARDS].sort((a, b) => {
@@ -152,10 +156,10 @@ export default function About() {
       </div>
 
       <SectionTitle
-        badge="About Me"
-        title="Get to Know Me"
-        highlightWord="Know Me"
-        subtitle="A snapshot of who I am and what I do"
+        badge={copy.about.badge}
+        title={copy.about.title}
+        highlightWord={locale === "bn" ? "জানুন" : "Know Me"}
+        subtitle={copy.about.subtitle}
       />
 
       <motion.div
@@ -197,13 +201,13 @@ export default function About() {
                 </div>
 
                 <h3 className="font-display text-lg font-semibold text-ctp-text">
-                  {card.label}
+                  {translateDynamicText(locale, card.label)}
                 </h3>
               </div>
 
               {card.content.kind === "paragraph" ? (
                 <p className="text-sm leading-relaxed text-ctp-subtext0 md:text-[0.95rem]">
-                  {card.content.text}
+                  {translateDynamicText(locale, card.content.text)}
                 </p>
               ) : (
                 <ul className="space-y-2">
@@ -215,7 +219,7 @@ export default function About() {
                       <span
                         className={`mt-[0.42rem] h-1.5 w-1.5 shrink-0 rounded-full ${tone.dot}`}
                       />
-                      <span>{item}</span>
+                      <span>{translateDynamicText(locale, item)}</span>
                     </li>
                   ))}
                 </ul>

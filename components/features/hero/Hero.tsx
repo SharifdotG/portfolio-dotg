@@ -13,6 +13,8 @@ import {
 import Image from "next/image";
 import { PERSONAL_INFO } from "@/lib/constants";
 import DiscordIcon from "@/components/ui/DiscordIcon";
+import { useLanguage } from "@/components/providers/LanguageProvider";
+import { getCopy } from "@/lib/i18n/translations";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -78,6 +80,13 @@ const imageVariants = {
 };
 
 export default function Hero() {
+  const { locale } = useLanguage();
+  const copy = getCopy(locale);
+  const heroName =
+    locale === "bn"
+      ? { first: "শরীফ", second: "মো. ইউসুফ" }
+      : { first: "Sharif", second: "Md. Yousuf" };
+
   const socialLinks = [
     { icon: Github, href: PERSONAL_INFO.githubUrl, label: "GitHub" },
     { icon: Linkedin, href: PERSONAL_INFO.linkedinUrl, label: "LinkedIn" },
@@ -124,7 +133,11 @@ export default function Hero() {
                 <div className="relative h-full w-full overflow-hidden rounded-full border border-ctp-surface0/80">
                   <Image
                     src="/profile.jpg"
-                    alt="Sharif Md. Yousuf"
+                    alt={
+                      locale === "bn"
+                        ? PERSONAL_INFO.nameBn
+                        : PERSONAL_INFO.name
+                    }
                     fill
                     className="object-cover object-top"
                     priority
@@ -140,24 +153,29 @@ export default function Hero() {
               variants={itemVariants}
               className="inline-flex items-center gap-2 rounded-full border border-ctp-surface0/80 bg-ctp-surface0/35 px-4 py-2 text-sm backdrop-blur-sm"
             >
-              <span className="font-mono text-ctp-blue">Hello, I&apos;m</span>
+              <span className="font-mono text-ctp-blue">{copy.hero.hello}</span>
             </motion.div>
 
             <motion.h1
               variants={itemVariants}
-              className="font-display text-5xl font-bold tracking-tight sm:text-6xl lg:text-7xl"
+              className="font-display text-5xl font-bold tracking-tight sm:text-6xl lg:text-7xl leading-[1.35]"
             >
-              <span className="inline-block animate-text-gradient">Sharif</span>{" "}
+              <span
+                className={`inline-block animate-text-gradient ${
+                  locale === "bn" ? "translate-y-[0.04em]" : ""
+                }`}
+              >
+                {heroName.first}
+              </span>{" "}
               <br />
-              <span className="text-ctp-text">Md. Yousuf</span>
+              <span className="text-ctp-text">{heroName.second}</span>
             </motion.h1>
 
             <motion.p
               variants={itemVariants}
               className="mx-auto max-w-xl font-body text-lg leading-relaxed text-ctp-subtext0 lg:mx-0"
             >
-              Trainee Software Engineer Intern • Competitive Programmer •
-              Computer Science Student
+              {copy.hero.roleLine}
             </motion.p>
 
             <motion.div
@@ -178,7 +196,7 @@ export default function Hero() {
                   <circle cx="460" cy="400" r="200" fill="#f42a41" />
                 </svg>
               </span>
-              <span>Dhaka, Bangladesh</span>
+              <span>{copy.hero.location}</span>
             </motion.div>
 
             <motion.div
@@ -202,7 +220,7 @@ export default function Hero() {
               >
                 <span className="pointer-events-none absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-ctp-surface0/35 to-transparent transition-transform duration-600 group-hover:translate-x-full" />
                 <span className="relative z-10 flex items-center gap-2">
-                  View My Work
+                  {copy.hero.viewWork}
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </span>
               </motion.button>
@@ -224,7 +242,7 @@ export default function Hero() {
                 <span className="pointer-events-none absolute inset-0 scale-95 rounded-xl bg-ctp-blue/0 opacity-0 blur-md transition-all duration-400 group-hover:scale-100 group-hover:bg-ctp-blue/10 group-hover:opacity-100" />
                 <span className="relative z-10 flex items-center gap-2">
                   <FileText className="h-4 w-4" />
-                  Resume
+                  {copy.hero.resume}
                 </span>
               </motion.a>
             </motion.div>

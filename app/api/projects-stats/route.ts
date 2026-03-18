@@ -40,7 +40,9 @@ export async function GET() {
         }
 
         if (project.extensionId) {
-          const extensionData = await getVSCodeExtensionStats(project.extensionId);
+          const extensionData = await getVSCodeExtensionStats(
+            project.extensionId,
+          );
           if (extensionData) {
             base.downloads = extensionData.downloads;
           }

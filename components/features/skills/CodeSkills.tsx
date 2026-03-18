@@ -13,41 +13,47 @@ import SectionTitle from "@/components/ui/SectionTitle";
 import { Code2, Globe, Wrench, BookOpen } from "lucide-react";
 import { SKILLS, SKILL_LOGOS, type SkillLogo } from "@/lib/constants";
 import { useTheme } from "@/components/providers/ThemeProvider";
+import { useLanguage } from "@/components/providers/LanguageProvider";
+import { getCopy, type Locale } from "@/lib/i18n/translations";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 const MARQUEE_SPEED_PX_PER_SECOND = 56;
 const TOUCH_TOOLTIP_DURATION_MS = 1200;
 
-const categories = [
-  {
-    key: "languages" as const,
-    label: "Languages",
-    icon: Code2,
-    color: "text-ctp-blue",
-    bg: "bg-ctp-blue/10",
-  },
-  {
-    key: "frameworks" as const,
-    label: "Frameworks",
-    icon: Globe,
-    color: "text-ctp-mauve",
-    bg: "bg-ctp-mauve/10",
-  },
-  {
-    key: "tools" as const,
-    label: "Tools & Databases",
-    icon: Wrench,
-    color: "text-ctp-green",
-    bg: "bg-ctp-green/10",
-  },
-  {
-    key: "fundamentals" as const,
-    label: "Fundamentals",
-    icon: BookOpen,
-    color: "text-ctp-yellow",
-    bg: "bg-ctp-yellow/10",
-  },
-];
+const getCategories = (locale: Locale) => {
+  const copy = getCopy(locale);
+
+  return [
+    {
+      key: "languages" as const,
+      label: copy.skills.languages,
+      icon: Code2,
+      color: "text-ctp-blue",
+      bg: "bg-ctp-blue/10",
+    },
+    {
+      key: "frameworks" as const,
+      label: copy.skills.frameworks,
+      icon: Globe,
+      color: "text-ctp-mauve",
+      bg: "bg-ctp-mauve/10",
+    },
+    {
+      key: "tools" as const,
+      label: copy.skills.tools,
+      icon: Wrench,
+      color: "text-ctp-green",
+      bg: "bg-ctp-green/10",
+    },
+    {
+      key: "fundamentals" as const,
+      label: copy.skills.fundamentals,
+      icon: BookOpen,
+      color: "text-ctp-yellow",
+      bg: "bg-ctp-yellow/10",
+    },
+  ];
+};
 
 const getLogoKey = (logo: SkillLogo) =>
   `${logo.name}-${logo.path ?? logo.darkPath ?? logo.lightPath ?? "fallback"}`;
@@ -66,7 +72,8 @@ function InfiniteScrollingLogos() {
   const [segmentWidth, setSegmentWidth] = useState(0);
   const marqueeX = useMotionValue(0);
 
-  const marqueePaused = reducedMotion || segmentWidth === 0 || hoverPaused || touchPaused;
+  const marqueePaused =
+    reducedMotion || segmentWidth === 0 || hoverPaused || touchPaused;
 
   useAnimationFrame((_time, delta) => {
     if (marqueePaused) {
@@ -224,7 +231,9 @@ function InfiniteScrollingLogos() {
                               : "opacity-85 group-hover:opacity-100 group-focus-visible:opacity-100"
                           }`}
                           onError={() =>
-                            setFailedImages((prev) => new Set(prev).add(logoKey))
+                            setFailedImages((prev) =>
+                              new Set(prev).add(logoKey),
+                            )
                           }
                         />
                       )}
@@ -235,9 +244,7 @@ function InfiniteScrollingLogos() {
                       role="tooltip"
                       initial={false}
                       animate={
-                        isActive
-                          ? { opacity: 1, y: 0 }
-                          : { opacity: 0, y: 6 }
+                        isActive ? { opacity: 1, y: 0 } : { opacity: 0, y: 6 }
                       }
                       transition={{ duration: 0.16, ease }}
                       className="pointer-events-none absolute -bottom-7 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md border border-ctp-surface0 bg-ctp-crust px-3 py-1 text-xs font-medium text-ctp-text"
@@ -280,20 +287,26 @@ const getContainerTransition = (reducedMotion: boolean) => ({
 export default function CodeSkills() {
   const prefersReducedMotion = useReducedMotion();
   const reducedMotion = Boolean(prefersReducedMotion);
+  const { locale } = useLanguage();
+  const copy = getCopy(locale);
+  const categories = getCategories(locale);
   const cardVariants = getCardVariants(reducedMotion);
 
   return (
     <Section id="skills" className="relative overflow-x-clip">
-      <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
+      <div
+        className="pointer-events-none absolute inset-0 -z-10"
+        aria-hidden="true"
+      >
         <div className="absolute -left-10 top-10 h-56 w-56 rounded-full bg-ctp-blue/8 blur-3xl" />
         <div className="absolute -right-8 bottom-0 h-60 w-60 rounded-full bg-ctp-green/8 blur-3xl" />
       </div>
 
       <SectionTitle
-        badge="Tech Stack"
-        title="Skills & Technologies"
-        highlightWord="Technologies"
-        subtitle="The stack I use to ship clean, reliable products"
+        badge={copy.skills.badge}
+        title={copy.skills.title}
+        highlightWord={locale === "bn" ? "টেকনোলজিস" : "Technologies"}
+        subtitle={copy.skills.subtitle}
       />
 
       <div className="mx-auto max-w-5xl">

@@ -19,7 +19,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       className = "",
       ...props
     },
-    ref
+    ref,
   ) => {
     const baseStyles =
       "inline-flex items-center justify-center gap-2 font-medium transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-ctp-blue focus-visible:ring-offset-2 focus-visible:ring-offset-ctp-base disabled:opacity-50 disabled:cursor-not-allowed";
@@ -31,8 +31,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         "bg-ctp-surface0 text-ctp-text hover:bg-ctp-surface1 active:scale-95",
       outline:
         "border-2 border-ctp-blue text-ctp-blue hover:bg-ctp-blue hover:text-ctp-crust active:scale-95",
-      ghost:
-        "text-ctp-subtext0 hover:text-ctp-text hover:bg-ctp-surface0/50",
+      ghost: "text-ctp-subtext0 hover:text-ctp-text hover:bg-ctp-surface0/50",
     };
 
     const sizes = {
@@ -52,7 +51,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         {Icon && iconPosition === "right" && <Icon className="w-5 h-5" />}
       </button>
     );
-  }
+  },
 );
 
 Button.displayName = "Button";

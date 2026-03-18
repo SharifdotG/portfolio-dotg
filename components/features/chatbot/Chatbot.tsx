@@ -8,6 +8,8 @@ import remarkGfm from "remark-gfm";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { MessageCircle, X, Send, Bot, User, Loader2 } from "lucide-react";
 import CodeBlock from "@/components/features/chatbot/CodeBlock";
+import { useLanguage } from "@/components/providers/LanguageProvider";
+import { getCopy } from "@/lib/i18n/translations";
 
 const readLanguage = (className?: string) => {
   const match = /language-([a-z0-9-]+)/i.exec(className ?? "");
@@ -37,6 +39,8 @@ export default function Chatbot() {
   const inputRef = useRef<HTMLInputElement>(null);
   const prefersReducedMotion = useReducedMotion();
   const reducedMotion = Boolean(prefersReducedMotion);
+  const { locale } = useLanguage();
+  const copy = getCopy(locale);
 
   const ease = [0.22, 1, 0.36, 1] as const;
   const springTransition = {
@@ -62,7 +66,7 @@ export default function Chatbot() {
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (input.trim() && !isLoading) {
-      sendMessage({ text: input });
+      sendMessage({ text: input }, { body: { locale } });
       setInput("");
     }
   };
@@ -72,8 +76,12 @@ export default function Chatbot() {
       {/* Floating Button — clears mobile bottom nav */}
       <motion.div
         className="fixed bottom-24 right-4 z-40 lg:bottom-7 lg:right-6"
-        initial={reducedMotion ? { opacity: 0 } : { scale: 0.88, opacity: 0, y: 10 }}
-        animate={reducedMotion ? { opacity: 1 } : { scale: 1, opacity: 1, y: 0 }}
+        initial={
+          reducedMotion ? { opacity: 0 } : { scale: 0.88, opacity: 0, y: 10 }
+        }
+        animate={
+          reducedMotion ? { opacity: 1 } : { scale: 1, opacity: 1, y: 0 }
+        }
         transition={
           reducedMotion
             ? { duration: 0.2, ease }
@@ -89,7 +97,7 @@ export default function Chatbot() {
               whileHover={reducedMotion ? undefined : { y: -3, scale: 1.05 }}
               whileTap={reducedMotion ? { scale: 1 } : { scale: 0.94 }}
               transition={springTransition}
-              aria-label="Open AI assistant"
+              aria-label={copy.chatbot.open}
             >
               <MessageCircle className="h-5 w-5 transition-transform duration-300 group-hover:-translate-y-0.5" />
               <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-ctp-red rounded-full" />
@@ -113,9 +121,19 @@ export default function Chatbot() {
 
             <motion.div
               className="fixed bottom-24 right-4 z-50 w-[90vw] max-w-md lg:bottom-7 lg:right-6"
-              initial={reducedMotion ? { opacity: 0 } : { opacity: 0, scale: 0.95, y: 18 }}
-              animate={reducedMotion ? { opacity: 1 } : { opacity: 1, scale: 1, y: 0 }}
-              exit={reducedMotion ? { opacity: 0 } : { opacity: 0, scale: 0.97, y: 14 }}
+              initial={
+                reducedMotion
+                  ? { opacity: 0 }
+                  : { opacity: 0, scale: 0.95, y: 18 }
+              }
+              animate={
+                reducedMotion ? { opacity: 1 } : { opacity: 1, scale: 1, y: 0 }
+              }
+              exit={
+                reducedMotion
+                  ? { opacity: 0 }
+                  : { opacity: 0, scale: 0.97, y: 14 }
+              }
               transition={{ duration: 0.28, ease }}
               onClick={(e) => e.stopPropagation()}
             >
@@ -128,17 +146,17 @@ export default function Chatbot() {
                     </div>
                     <div>
                       <h3 className="text-sm font-display font-semibold text-ctp-text">
-                        AI Assistant
+                        {copy.chatbot.title}
                       </h3>
                       <p className="text-[11px] text-ctp-overlay0">
-                        Ask me about Sharif
+                        {copy.chatbot.subtitle}
                       </p>
                     </div>
                   </div>
                   <button
                     onClick={() => setIsOpen(false)}
                     className="p-1.5 hover:bg-ctp-surface0/60 rounded-lg transition-colors"
-                    aria-label="Close chat"
+                    aria-label={copy.chatbot.close}
                   >
                     <X className="w-4 h-4 text-ctp-overlay0" />
                   </button>
@@ -154,11 +172,10 @@ export default function Chatbot() {
                     <div className="text-center mt-10">
                       <Bot className="w-10 h-10 mx-auto mb-2 text-ctp-mauve/60" />
                       <p className="text-sm text-ctp-text font-medium mb-1">
-                        Hi! I&apos;m SharifdotG&apos;s AI assistant
+                        {copy.chatbot.introTitle}
                       </p>
                       <p className="text-xs text-ctp-overlay0 max-w-xs mx-auto">
-                        Ask me about his skills, projects, experience, or
-                        anything else!
+                        {copy.chatbot.introSubtitle}
                       </p>
                     </div>
                   )}
@@ -194,13 +211,13 @@ export default function Chatbot() {
                                       return <>{children}</>;
                                     },
                                     code({ className, children }) {
-                                      const codeText = getTextFromNode(children).replace(
-                                        /\n$/,
-                                        "",
-                                      );
+                                      const codeText = getTextFromNode(
+                                        children,
+                                      ).replace(/\n$/, "");
                                       const language = readLanguage(className);
                                       const isBlock =
-                                        Boolean(language) || codeText.includes("\n");
+                                        Boolean(language) ||
+                                        codeText.includes("\n");
 
                                       if (isBlock) {
                                         return (
@@ -272,7 +289,7 @@ export default function Chatbot() {
                       type="text"
                       value={input}
                       onChange={(e) => setInput(e.target.value)}
-                      placeholder="Ask me anything..."
+                      placeholder={copy.chatbot.placeholder}
                       disabled={isLoading}
                       className="flex-1 px-3 py-2 bg-ctp-surface0/30 border border-ctp-surface0/60 rounded-lg text-ctp-text placeholder-ctp-overlay0 focus:outline-none focus:ring-2 focus:ring-ctp-mauve/50 focus:border-ctp-mauve transition-all text-sm disabled:opacity-50"
                     />
@@ -280,7 +297,7 @@ export default function Chatbot() {
                       type="submit"
                       disabled={isLoading || !input?.trim()}
                       className="shrink-0 p-2 bg-ctp-mauve hover:bg-ctp-pink text-ctp-crust rounded-lg transition-colors disabled:opacity-50"
-                      aria-label="Send message"
+                      aria-label={copy.chatbot.sendMessageAria}
                     >
                       {isLoading ? (
                         <Loader2 className="w-4 h-4 animate-spin" />

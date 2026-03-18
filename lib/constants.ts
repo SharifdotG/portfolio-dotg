@@ -1,5 +1,6 @@
 export const PERSONAL_INFO = {
   name: "Sharif Md. Yousuf",
+  nameBn: "শরীফ মো. ইউসুফ",
   username: "SharifdotG",
   title: "Competitive Programmer & Software Developer",
   location: "Dhaka, Bangladesh",
@@ -162,6 +163,7 @@ export const SKILLS = {
     { name: "JavaScript", level: "Beginner", category: "Programming Language" },
     { name: "TypeScript", level: "Beginner", category: "Programming Language" },
     { name: "C#", level: "Beginner", category: "Programming Language" },
+    { name: "Java", level: "Beginner", category: "Programming Language" },
   ],
   frameworks: [
     { name: "Next.js", level: "Intermediate", category: "Framework" },
@@ -173,14 +175,14 @@ export const SKILLS = {
     { name: "Bootstrap", level: "Intermediate", category: "Framework" },
   ],
   tools: [
-    { name: "SQL", level: "Intermediate", category: "Database" },
+    { name: "SQLite", level: "Intermediate", category: "Database" },
     { name: "MySQL", level: "Intermediate", category: "Database" },
     { name: "PostgreSQL", level: "Intermediate", category: "Database" },
+    { name: "Convex", level: "Beginner", category: "Database" },
     { name: "Supabase", level: "Intermediate", category: "Database" },
     { name: "Git", level: "Advanced", category: "Tool" },
     { name: "Linux", level: "Intermediate", category: "Tool" },
     { name: "Markdown", level: "Advanced", category: "Tool" },
-    { name: "Convex", level: "Beginner", category: "Database" },
   ],
   fundamentals: [
     { name: "OOP", level: "Advanced", category: "Fundamental" },
@@ -197,11 +199,7 @@ export interface SkillLogo {
   lightPath?: string;
 }
 
-export type ProjectStatusKey =
-  | "active"
-  | "stable"
-  | "prototype"
-  | "research";
+export type ProjectStatusKey = "active" | "stable" | "prototype" | "research";
 
 export interface Project {
   title: string;
@@ -227,6 +225,7 @@ export const SKILL_LOGOS: SkillLogo[] = [
   { name: "JavaScript", path: "/tech-logos/javascript.svg" },
   { name: "TypeScript", path: "/tech-logos/typescript.svg" },
   { name: "C#", path: "/tech-logos/csharp.svg" },
+  { name: "Java", path: "/tech-logos/java.svg" },
   { name: "Next.js", path: "/tech-logos/nextjs.svg" },
   {
     name: "React",
@@ -235,18 +234,25 @@ export const SKILL_LOGOS: SkillLogo[] = [
   },
   { name: "Django", path: "/tech-logos/django.svg" },
   { name: ".NET", path: "/tech-logos/dotnet.svg" },
+  { name: "Angular", path: "/tech-logos/angular.svg" },
   { name: "Tailwind CSS", path: "/tech-logos/tailwindcss.svg" },
+  { name: "Bootstrap", path: "/tech-logos/bootstrap.svg" },
+  { name: "SQLite", path: "/tech-logos/sqlite.svg" },
   {
     name: "MySQL",
     darkPath: "/tech-logos/mysql-d.svg",
     lightPath: "/tech-logos/mysql-l.svg",
-    path: "/tech-logos/mysql.svg",
   },
   { name: "PostgreSQL", path: "/tech-logos/postgresql.svg" },
+  { name: "Convex", path: "/tech-logos/convex.svg" },
   { name: "Supabase", path: "/tech-logos/supabase.svg" },
   { name: "Git", path: "/tech-logos/git.svg" },
   { name: "Linux", path: "/tech-logos/linux.svg" },
-  { name: "Java", path: "/tech-logos/java.svg" },
+  {
+    name: "Markdown",
+    darkPath: "/tech-logos/markdown-d.svg",
+    lightPath: "/tech-logos/markdown-l.svg",
+  },
 ];
 
 export const PROJECTS: Project[] = [
@@ -763,3 +769,94 @@ export const ORGANIZING_VOLUNTEERING = [
     category: "volunteer",
   },
 ];
+
+export const BENGALI_TERM_OVERRIDES: ReadonlyArray<readonly [string, string]> =
+  [
+    ["Agent Assisted Development", "এজেন্ট অ্যাসিস্টেড ডেভেলপমেন্ট"],
+    ["Competitive Programming", "কম্পিটিটিভ প্রোগ্রামিং"],
+    ["problem-solving", "প্রবলেম সলভিং"],
+    ["problem solving", "প্রবলেম সলভিং"],
+    ["Open-source", "ওপেন-সোর্স"],
+    ["opportunities", "অপরচুনিটিজ"],
+    ["opportunity", "অপরচুনিটি"],
+    ["featured", "ফিচার্ড"],
+    ["Featured", "ফিচার্ড"],
+    ["technologies", "টেকনোলজিস"],
+    ["Technologies", "টেকনোলজিস"],
+    ["skills", "স্কিলস"],
+    ["Skills", "স্কিলস"],
+    ["teaching", "টিচিং"],
+    ["Teaching", "টিচিং"],
+    ["training", "ট্রেনিং"],
+    ["Training", "ট্রেনিং"],
+    ["modern", "মডার্ন"],
+    ["Modern", "মডার্ন"],
+    ["real", "রিয়েল"],
+    ["Real", "রিয়েল"],
+    ["clean", "ক্লিন"],
+    ["Clean", "ক্লিন"],
+    ["efficient", "এফিশিয়েন্ট"],
+    ["Efficient", "এফিশিয়েন্ট"],
+    ["reliable", "রিলায়েবল"],
+    ["Reliable", "রিলায়েবল"],
+    ["complex", "কমপ্লেক্স"],
+    ["Complex", "কমপ্লেক্স"],
+    ["idea", "আইডিয়া"],
+    ["Idea", "আইডিয়া"],
+    ["development", "ডেভেলপমেন্ট"],
+    ["Development", "ডেভেলপমেন্ট"],
+    ["assisted", "অ্যাসিস্টেড"],
+    ["Assisted", "অ্যাসিস্টেড"],
+    ["resume", "রেজুমে"],
+    ["Resume", "রেজুমে"],
+    ["competitive", "কম্পিটিটিভ"],
+    ["Competitive", "কম্পিটিটিভ"],
+    ["open", "অপেন"],
+    ["Open", "অপেন"],
+    ["hidden", "হিডেন"],
+    ["Hidden", "হিডেন"],
+    ["experience", "এক্সপেরিয়েন্স"],
+    ["Experience", "এক্সপেরিয়েন্স"],
+    ["AI/ML", "এআই/এমএল"],
+    ["AI", "এআই"],
+    ["CGPA", "সিজিপিএ"],
+    ["cgpa", "সিজিপিএ"],
+    ["7th", "৭ম"],
+    ["Semester", "সেমিস্টার"],
+    ["semester", "সেমিস্টার"],
+    ["Dhaka", "ঢাকা"],
+    ["Bangladesh", "বাংলাদেশ"],
+    ["University of Asia Pacific", "ইউনিভার্সিটি অব এশিয়া প্যাসিফিক"],
+    [
+      "World Mathematics Team Championship",
+      "ওয়ার্ল্ড ম্যাথেমেটিক্স টিম চ্যাম্পিয়নশিপ",
+    ],
+    ["National Initiative", "জাতীয় ইনিশিয়েটিভ"],
+    ["January", "জানুয়ারি"],
+    ["February", "ফেব্রুয়ারি"],
+    ["March", "মার্চ"],
+    ["April", "এপ্রিল"],
+    ["May", "মে"],
+    ["June", "জুন"],
+    ["July", "জুলাই"],
+    ["August", "আগস্ট"],
+    ["September", "সেপ্টেম্বর"],
+    ["October", "অক্টোবর"],
+    ["November", "নভেম্বর"],
+    ["December", "ডিসেম্বর"],
+    ["Present", "বর্তমান"],
+    ["Expected", "প্রত্যাশিত"],
+  ];
+
+export const BENGALI_DIGIT_MAP: Readonly<Record<string, string>> = {
+  "0": "০",
+  "1": "১",
+  "2": "২",
+  "3": "৩",
+  "4": "৪",
+  "5": "৫",
+  "6": "৬",
+  "7": "৭",
+  "8": "৮",
+  "9": "৯",
+};

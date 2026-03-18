@@ -3,7 +3,9 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { Github, Linkedin, Mail } from "lucide-react";
 import { navigation } from "@/components/shared/Header";
+import { useLanguage } from "@/components/providers/LanguageProvider";
 import { PERSONAL_INFO } from "@/lib/constants";
+import { getCopy } from "@/lib/i18n/translations";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -36,6 +38,8 @@ const itemVariants = {
 export default function Footer() {
   const prefersReducedMotion = useReducedMotion();
   const reducedMotion = Boolean(prefersReducedMotion);
+  const { locale } = useLanguage();
+  const copy = getCopy(locale);
   const currentYear = new Date().getFullYear();
   const quickLinks = navigation;
 
@@ -80,7 +84,7 @@ export default function Footer() {
                     transition={{ duration: 0.2, ease }}
                     className="group text-sm text-ctp-subtext0 transition-colors hover:text-ctp-text"
                   >
-                    {item.name}
+                    {copy.nav[item.key]}
                     <span className="mt-1 block h-px origin-left scale-x-0 bg-ctp-blue transition-transform duration-300 group-hover:scale-x-100" />
                   </motion.a>
                 ))}
@@ -155,7 +159,7 @@ export default function Footer() {
               </div>
 
               <p className="text-center text-xs text-ctp-overlay0 sm:text-right">
-                Built with Next.js, Framer Motion, and Catppuccin
+                {copy.footer.builtWith}
               </p>
             </motion.div>
           </div>
