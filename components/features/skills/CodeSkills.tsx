@@ -132,6 +132,12 @@ function InfiniteScrollingLogos() {
     marqueeX.set(0);
   }, [marqueeX, segmentWidth]);
 
+  useEffect(() => {
+    if (!shouldLoop) {
+      marqueeX.set(0);
+    }
+  }, [marqueeX, shouldLoop]);
+
   useEffect(
     () => () => {
       if (touchTimerRef.current) {
@@ -185,7 +191,11 @@ function InfiniteScrollingLogos() {
       className="mb-10"
     >
       <div
-        className="relative overflow-hidden py-7 sm:py-8"
+        className={`relative py-7 sm:py-8 ${
+          shouldLoop
+            ? "overflow-hidden"
+            : "overflow-x-auto overscroll-x-contain [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+        }`}
         role="region"
         aria-label="Featured technologies"
       >
@@ -199,7 +209,9 @@ function InfiniteScrollingLogos() {
         />
 
         <motion.div
-          className="flex w-max"
+          className={`flex ${
+            shouldLoop ? "w-max" : "min-w-max snap-x snap-mandatory px-2"
+          }`}
           style={shouldLoop ? { x: marqueeX, willChange: "transform" } : {}}
           aria-live="off"
         >
@@ -207,7 +219,7 @@ function InfiniteScrollingLogos() {
             <div
               key={`segment-${segmentIndex}`}
               ref={segmentIndex === 0 ? segmentRef : undefined}
-              className="flex shrink-0 items-center gap-12 pr-12"
+              className="flex shrink-0 items-center gap-10 pr-10 sm:gap-12 sm:pr-12"
             >
               {SKILL_LOGOS.map((logo, logoIndex) => {
                 const logoKey = getLogoKey(logo);
@@ -218,7 +230,7 @@ function InfiniteScrollingLogos() {
                   <button
                     key={`${logoKey}-${segmentIndex}`}
                     type="button"
-                    className="group relative shrink-0 rounded-lg cursor-default focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ctp-blue focus-visible:ring-offset-2 focus-visible:ring-offset-ctp-base"
+                    className="group relative shrink-0 snap-start rounded-lg cursor-default focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ctp-blue focus-visible:ring-offset-2 focus-visible:ring-offset-ctp-base"
                     aria-label={`${logo.name} logo`}
                     aria-describedby={tooltipId}
                     onMouseEnter={() => handleLogoActivate(logoKey)}
