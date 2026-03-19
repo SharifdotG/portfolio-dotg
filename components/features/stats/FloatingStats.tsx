@@ -148,7 +148,7 @@ export default function FloatingStats() {
           {!isExpanded && (
             <motion.button
               onClick={() => setIsExpanded(true)}
-              className="group relative rounded-full border border-ctp-surface0/60 bg-ctp-base/60 p-3 text-ctp-mauve shadow-lg shadow-ctp-crust/25 backdrop-blur-xl transition-colors hover:border-ctp-surface1 hover:bg-ctp-base/75"
+              className="group relative rounded-full border border-ctp-surface0/60 bg-ctp-base/60 p-3 text-ctp-blue shadow-lg shadow-ctp-crust/25 backdrop-blur-xl transition-colors hover:border-ctp-surface1 hover:bg-ctp-base/75"
               exit={{ scale: 0, opacity: 0 }}
               whileHover={reducedMotion ? undefined : { y: -3, scale: 1.05 }}
               whileTap={reducedMotion ? { scale: 1 } : { scale: 0.94 }}
