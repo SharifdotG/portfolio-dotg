@@ -1,6 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import {
   Github,
   Linkedin,
@@ -37,22 +38,20 @@ const containerVariants = {
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 24, filter: "blur(6px)" },
+  hidden: { opacity: 0, y: 24 },
   visible: {
     opacity: 1,
     y: 0,
-    filter: "blur(0px)",
     transition: springTransition,
   },
 };
 
 const ctaVariants = {
-  hidden: { opacity: 0, y: 22, scale: 0.94, filter: "blur(4px)" },
+  hidden: { opacity: 0, y: 22, scale: 0.94 },
   visible: {
     opacity: 1,
     y: 0,
     scale: 1,
-    filter: "blur(0px)",
     transition: {
       type: "spring" as const,
       stiffness: 125,
@@ -63,13 +62,12 @@ const ctaVariants = {
 };
 
 const imageVariants = {
-  hidden: { opacity: 0, y: 30, scale: 0.9, rotate: 2, filter: "blur(8px)" },
+  hidden: { opacity: 0, y: 30, scale: 0.9, rotate: 2 },
   visible: {
     opacity: 1,
     y: 0,
     scale: 1,
     rotate: 0,
-    filter: "blur(0px)",
     transition: {
       type: "spring" as const,
       stiffness: 120,
@@ -80,8 +78,24 @@ const imageVariants = {
 };
 
 export default function Hero() {
+  const prefersReducedMotion = useReducedMotion();
+  const [isMobile, setIsMobile] = useState(false);
   const { locale } = useLanguage();
   const copy = getCopy(locale);
+  const reduceVisualEffects = Boolean(prefersReducedMotion) || isMobile;
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(max-width: 767px)");
+    const updateMobileState = () => setIsMobile(mediaQuery.matches);
+
+    updateMobileState();
+    mediaQuery.addEventListener("change", updateMobileState);
+
+    return () => {
+      mediaQuery.removeEventListener("change", updateMobileState);
+    };
+  }, []);
+
   const heroName =
     locale === "bn"
       ? { first: "শরীফ", second: "মো. ইউসুফ" }
@@ -119,15 +133,19 @@ export default function Hero() {
           <motion.div
             className="order-1 flex justify-center lg:order-2 lg:justify-end"
             variants={imageVariants}
-            whileHover={{ y: -4, scale: 1.015 }}
+            whileHover={reduceVisualEffects ? undefined : { y: -4, scale: 1.015 }}
             transition={springTransition}
           >
             <div className="relative w-[min(66vw,16rem)] sm:w-80 md:w-96 lg:w-100">
-              <motion.div
-                className="absolute -inset-6 rounded-[2.5rem] bg-ctp-blue/10 blur-2xl"
-                animate={{ scale: [1, 1.05, 1] }}
-                transition={{ duration: 4, repeat: Infinity, ease }}
-              />
+              {reduceVisualEffects ? (
+                <div className="absolute -inset-6 rounded-[2.5rem] bg-ctp-blue/10 blur-2xl" />
+              ) : (
+                <motion.div
+                  className="absolute -inset-6 rounded-[2.5rem] bg-ctp-blue/10 blur-2xl"
+                  animate={{ scale: [1, 1.05, 1] }}
+                  transition={{ duration: 4, repeat: Infinity, ease }}
+                />
+              )}
 
               <div className="relative aspect-square overflow-hidden rounded-full border border-ctp-surface1/70 bg-ctp-mantle/70 p-2 shadow-[0_20px_60px_rgba(0,0,0,0.28)] backdrop-blur-sm">
                 <div className="relative h-full w-full overflow-hidden rounded-full border border-ctp-surface0/80">
@@ -210,9 +228,13 @@ export default function Hero() {
                     ?.scrollIntoView({ behavior: "smooth" })
                 }
                 whileHover={{
-                  y: -4,
-                  scale: 1.03,
-                  boxShadow: "0 20px 42px -22px rgba(137,180,250,0.95)",
+                  ...(reduceVisualEffects
+                    ? {}
+                    : {
+                        y: -4,
+                        scale: 1.03,
+                        boxShadow: "0 20px 42px -22px rgba(137,180,250,0.95)",
+                      }),
                 }}
                 whileTap={{ scale: 0.97 }}
                 transition={springTransition}
@@ -230,10 +252,14 @@ export default function Hero() {
                 target="_blank"
                 rel="noopener noreferrer"
                 whileHover={{
-                  y: -4,
-                  scale: 1.03,
-                  borderColor: "rgba(137,180,250,0.8)",
-                  boxShadow: "0 16px 36px -24px rgba(137,180,250,0.9)",
+                  ...(reduceVisualEffects
+                    ? {}
+                    : {
+                        y: -4,
+                        scale: 1.03,
+                        borderColor: "rgba(137,180,250,0.8)",
+                        boxShadow: "0 16px 36px -24px rgba(137,180,250,0.9)",
+                      }),
                 }}
                 whileTap={{ scale: 0.97 }}
                 transition={springTransition}
@@ -257,7 +283,9 @@ export default function Hero() {
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  whileHover={{ y: -3, scale: 1.08 }}
+                  whileHover={
+                    reduceVisualEffects ? undefined : { y: -3, scale: 1.08 }
+                  }
                   whileTap={{ scale: 0.95 }}
                   transition={springTransition}
                   className="text-ctp-overlay0 transition-colors hover:text-ctp-blue"
@@ -286,8 +314,12 @@ export default function Hero() {
         <div className="flex h-8 w-5 justify-center rounded-full border border-ctp-surface1 pt-1.5">
           <motion.div
             className="h-1 w-1 rounded-full bg-ctp-blue"
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity, ease }}
+            animate={reduceVisualEffects ? { y: 0 } : { y: [0, 10, 0] }}
+            transition={
+              reduceVisualEffects
+                ? { duration: 0.2 }
+                : { duration: 1.5, repeat: Infinity, ease }
+            }
           />
         </div>
       </motion.div>

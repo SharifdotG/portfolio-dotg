@@ -23,9 +23,12 @@ export default function FloatingStats() {
     null,
   );
   const [leetcodeData, setLeetcodeData] = useState<LeetCodeStats | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [hasFetched, setHasFetched] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const prefersReducedMotion = useReducedMotion();
   const reducedMotion = Boolean(prefersReducedMotion);
+  const simplifyMotion = reducedMotion || isMobile;
   const { locale } = useLanguage();
   const copy = getCopy(locale);
 
@@ -81,7 +84,22 @@ export default function FloatingStats() {
   ];
 
   useEffect(() => {
+    const mediaQuery = window.matchMedia("(max-width: 767px)");
+    const updateMobileState = () => setIsMobile(mediaQuery.matches);
+
+    updateMobileState();
+    mediaQuery.addEventListener("change", updateMobileState);
+
+    return () => {
+      mediaQuery.removeEventListener("change", updateMobileState);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!isExpanded || hasFetched) return;
+
     let isActive = true;
+    setLoading(true);
 
     async function fetchData() {
       try {
@@ -95,21 +113,25 @@ export default function FloatingStats() {
       } catch (error) {
         console.error("Error fetching competitive programming data:", error);
       } finally {
-        if (isActive) setLoading(false);
+        if (isActive) {
+          setLoading(false);
+          setHasFetched(true);
+        }
       }
     }
-    fetchData();
+
+    void fetchData();
 
     return () => {
       isActive = false;
     };
-  }, []);
+  }, [hasFetched, isExpanded]);
 
   return (
     <>
       {/* Floating Button — clears mobile bottom nav */}
       <motion.div
-        className="fixed bottom-40 right-4 z-40 lg:bottom-24 lg:right-6"
+        className="fixed bottom-24 right-4 z-40 -translate-y-16 lg:bottom-7 lg:right-6"
         initial={
           reducedMotion ? { opacity: 0 } : { scale: 0.88, opacity: 0, y: 10 }
         }
@@ -126,7 +148,7 @@ export default function FloatingStats() {
           {!isExpanded && (
             <motion.button
               onClick={() => setIsExpanded(true)}
-              className="group relative rounded-full border border-ctp-surface0/60 bg-ctp-base/60 p-3 text-ctp-blue shadow-lg shadow-ctp-crust/25 backdrop-blur-xl transition-colors hover:border-ctp-surface1 hover:bg-ctp-base/75"
+              className="group relative rounded-full border border-ctp-surface0/60 bg-ctp-base/60 p-3 text-ctp-mauve shadow-lg shadow-ctp-crust/25 backdrop-blur-xl transition-colors hover:border-ctp-surface1 hover:bg-ctp-base/75"
               exit={{ scale: 0, opacity: 0 }}
               whileHover={reducedMotion ? undefined : { y: -3, scale: 1.05 }}
               whileTap={reducedMotion ? { scale: 1 } : { scale: 0.94 }}
@@ -144,7 +166,7 @@ export default function FloatingStats() {
         {isExpanded && (
           <>
             <motion.div
-              className="fixed inset-0 bg-ctp-crust/50 backdrop-blur-sm z-40"
+              className="fixed inset-0 z-40 bg-ctp-crust/55 backdrop-blur-[1px] md:backdrop-blur-sm"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -153,7 +175,7 @@ export default function FloatingStats() {
             />
 
             <motion.div
-              className="fixed bottom-24 right-4 z-50 max-h-[70vh] w-[calc(100vw-1rem)] max-w-2xl overflow-y-auto rounded-2xl border border-ctp-surface0/60 bg-ctp-base/78 p-5 shadow-2xl shadow-ctp-crust/35 backdrop-blur-xl lg:bottom-7 lg:right-6"
+              className="fixed bottom-24 right-4 z-50 w-[90vw] max-w-md max-h-[70vh] overflow-y-auto overscroll-contain rounded-2xl border border-ctp-surface0/60 bg-ctp-base/88 p-4 shadow-2xl shadow-ctp-crust/35 backdrop-blur-md sm:p-5 md:bottom-24 md:right-4 md:left-auto md:max-h-[70vh] md:w-[calc(100vw-1rem)] md:max-w-2xl lg:bottom-7 lg:right-6 lg:backdrop-blur-xl"
               initial={
                 reducedMotion
                   ? { opacity: 0 }
@@ -168,6 +190,7 @@ export default function FloatingStats() {
                   : { opacity: 0, scale: 0.97, y: 14 }
               }
               transition={{ duration: 0.28, ease }}
+              onClick={(event) => event.stopPropagation()}
             >
               {/* Header */}
               <div className="flex items-center justify-between mb-5">
@@ -221,19 +244,19 @@ export default function FloatingStats() {
                         <motion.div
                           key={s.label}
                           initial={
-                            reducedMotion
+                            simplifyMotion
                               ? { opacity: 0 }
                               : { opacity: 0, y: 8 }
                           }
                           animate={
-                            reducedMotion
+                            simplifyMotion
                               ? { opacity: 1 }
                               : { opacity: 1, y: 0 }
                           }
                           transition={{
                             duration: 0.2,
                             ease,
-                            delay: reducedMotion ? 0 : index * 0.04,
+                            delay: simplifyMotion ? 0 : index * 0.04,
                           }}
                           className="rounded-lg p-2.5 bg-ctp-surface0/30 border border-ctp-surface0/60"
                         >
@@ -272,19 +295,19 @@ export default function FloatingStats() {
                         <motion.div
                           key={item.label}
                           initial={
-                            reducedMotion
+                            simplifyMotion
                               ? { opacity: 0 }
                               : { opacity: 0, y: 8 }
                           }
                           animate={
-                            reducedMotion
+                            simplifyMotion
                               ? { opacity: 1 }
                               : { opacity: 1, y: 0 }
                           }
                           transition={{
                             duration: 0.2,
                             ease,
-                            delay: reducedMotion ? 0 : 0.14 + index * 0.05,
+                            delay: simplifyMotion ? 0 : 0.14 + index * 0.05,
                           }}
                           className="rounded-lg border border-ctp-surface0/60 bg-ctp-surface0/30 p-3"
                         >

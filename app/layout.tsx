@@ -5,12 +5,7 @@ import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { LanguageProvider } from "@/components/providers/LanguageProvider";
 import Header from "@/components/shared/Header";
 import Footer from "@/components/shared/Footer";
-import ScrollToTop from "@/components/shared/ScrollToTop";
-import FloatingThemeToggle from "@/components/shared/FloatingThemeToggle";
-import FloatingLanguageToggle from "@/components/shared/FloatingLanguageToggle";
-import SmoothScroll from "@/components/shared/SmoothScroll";
-import Chatbot from "@/components/features/chatbot/Chatbot";
-import FloatingStats from "@/components/features/stats/FloatingStats";
+import AppOverlays from "@/components/shared/AppOverlays";
 import {
   getCopy,
   LOCALE_COOKIE_NAME,
@@ -126,12 +121,7 @@ export default async function RootLayout({
             <Header />
             <main className="min-h-screen">{children}</main>
             <Footer />
-            <ScrollToTop />
-            <FloatingThemeToggle />
-            <FloatingLanguageToggle />
-            <SmoothScroll />
-            <FloatingStats />
-            <Chatbot />
+            <AppOverlays />
           </LanguageProvider>
         </ThemeProvider>
       </body>

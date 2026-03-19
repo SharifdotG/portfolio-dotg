@@ -1,182 +1,170 @@
-# portfolio-dotg (≧∇≦)ﾉ
+# portfolio-dotg
 
-> A modern, Catppuccin Mocha themed portfolio website built with Next.js 16, featuring real-time Codeforces and LeetCode stats, and an AI-powered chatbot assistant.
+A modern personal portfolio built with Next.js 16 App Router, React 19, TypeScript, and Tailwind CSS v4, featuring bilingual UI (English/Bangla), an AI chatbot, and live competitive programming stats.
 
-🌐 **Live Demo**: [https://www.sharifdotg.me](https://www.sharifdotg.me)
+## Live Site
 
-[![Next.js](https://img.shields.io/badge/Next.js-16-black?style=flat-square&logo=next.js)](https://nextjs.org/)
-[![React](https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react)](https://react.dev/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.7+-3178C6?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind-v4-38B2AC?style=flat-square&logo=tailwind-css)](https://tailwindcss.com/)
-[![Vercel](https://img.shields.io/badge/Vercel-Deployment-000000?style=flat-square&logo=vercel)](https://vercel.com/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
+- Production: [www.sharifdotg.me](https://www.sharifdotg.me)
 
-## Features
+## Screenshots and Highlights
 
-- **Modern Design**: Tailwind CSS v4 with Catppuccin color scheme (Dark/Light themes)
-- **High Performance**: Next.js 16 App Router with Turbopack
-- **Smooth Animations**: Framer Motion for delightful interactions
-- **Live Stats**: Real-time Codeforces and LeetCode competitive programming statistics
-- **AI Chatbot**: Vercel AI SDK powered chatbot with OpenRouter (DeepSeek Chat)
-- **Theme Switcher**: Seamless dark/light mode with localStorage persistence
-- **Fully Responsive**: Optimized for desktop, tablet, and mobile devices
-- **Accessible**: WCAG 2.1 compliant with semantic HTML and ARIA labels
+- Catppuccin token-based theming (light/dark)
+- Mobile-first responsive sections with motion
+- Floating AI chatbot with streaming responses
+- Floating competitive programming stats panel (Codeforces + LeetCode)
+- Contact form API integration via Resend
 
 ## Tech Stack
 
-| Category | Technologies |
-| --- | --- |
-| **Framework** | Next.js 16 (App Router, React Server Components) |
-| **Frontend** | React 19, TypeScript 5.7+ |
-| **Styling** | Tailwind CSS v4, Custom CSS Variables |
-| **Animations** | Framer Motion, GSAP |
-| **Charts** | Chart.js 4.4.x, react-chartjs-2 |
-| **AI** | Vercel AI SDK, OpenRouter API |
-| **Icons** | Lucide React |
-| **Fonts** | Google Fonts (Bricolage Grotesque, DM Sans, Cascadia Code) |
+- Framework: Next.js 16 (App Router)
+- UI: React 19, TypeScript, Tailwind CSS v4
+- Animation: Framer Motion
+- AI: Vercel AI SDK + OpenRouter
+- Email: Resend
+- Smooth scroll: Lenis
+- Package manager: Bun
 
-## Quick Start
+## Project Structure
+
+```text
+app/
+  api/
+    chat/route.ts
+    contact/route.ts
+    projects-stats/route.ts
+  globals.css
+  layout.tsx
+  page.tsx
+components/
+  features/
+  providers/
+  shared/
+  ui/
+lib/
+  api/
+  i18n/
+  constants.ts
+docs/
+public/
+```
+
+## Getting Started
 
 ### Prerequisites
 
-- Node.js 18+ and pnpm (or Corepack)
-- OpenRouter API key ([Get one free](https://openrouter.ai/keys))
+- Bun `>= 1.3`
+- Node.js `>= 20` (recommended for toolchain compatibility)
 
 ### Installation
 
 ```bash
-# Clone the repository
 git clone https://github.com/SharifdotG/portfolio-dotg.git
 cd portfolio-dotg
-
-# Install dependencies
-pnpm install
-
-# Set up environment variables
+bun install
 cp .env.local.example .env.local
 ```
 
 ### Environment Variables
 
-Edit `.env.local` and add your API keys:
+Set these in `.env.local`:
 
 ```env
-# Required - AI Chatbot
-OPENROUTER_API_KEY=sk-or-v1-your_key_here
+OPENROUTER_API_KEY=your_openrouter_api_key
+RESEND_API_KEY=your_resend_api_key
 
-# Optional - Improves API rate limits (5000/hour vs 60/hour)
-GITHUB_TOKEN=ghp_your_token_here
+# Optional
+RESEND_FROM=Sharif Portfolio <onboarding@resend.dev>
+RESEND_TO=sharifmdyousuf007@gmail.com
+GITHUB_TOKEN=your_github_token
 ```
 
-### Development
+### Run
 
 ```bash
-pnpm dev
+bun run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
-
-## Sections
-
-| Section | Description |
-| --- | --- |
-| **Hero** | Animated terminal with typewriter effect |
-| **About** | Personal story, education, and fun facts |
-| **Experience** | Timeline of education and teaching roles |
-| **Skills** | Interactive grid with proficiency levels |
-| **Projects** | Filterable showcase with GitHub links |
-| **Achievements** | ICPC, contests, scholarships, certifications |
-| **Contact** | Social links and contact form |
-| **CP Dashboard** | Live Codeforces & LeetCode stats |
-| **Chatbot** | Floating AI assistant (Claude 3.5 Sonnet) |
-
-## Customization
-
-### Update Personal Information
-
-Edit [`lib/constants.ts`](lib/constants.ts):
-
-```typescript
-export const PERSONAL_INFO = {
-  name: "Your Name",
-  username: "YourHandle",
-  title: "Your Title",
-  email: "your@email.com",
-  // ... more fields
-};
-
-export const SKILLS = {
-  languages: [/* ... */],
-  frameworks: [/* ... */],
-  // ...
-};
-
-export const PROJECTS = [/* ... */];
-export const ACHIEVEMENTS = [/* ... */];
-```
-
-### Customize Theme Colors
-
-Edit [`app/globals.css`](app/globals.css) to modify Catppuccin colors:
-
-```css
-@theme {
-  --color-ctp-blue: #89b4fa;  /* Change to your brand color */
-  --color-ctp-mauve: #cba6f7;
-  /* ... more colors */
-}
-```
-
-### Modify AI Chatbot Prompt
-
-Edit [`app/api/chat/route.ts`](app/api/chat/route.ts):
-
-```typescript
-const systemPrompt = `You are an AI assistant representing...`;
-```
+Open [http://localhost:3000](http://localhost:3000)
 
 ## Scripts
 
-```bash
-pnpm dev      # Start development server (Turbopack)
-pnpm build    # Build for production
-pnpm start    # Start production server
-pnpm lint     # Run ESLint
-```
+- `bun run dev` - start local development server
+- `bun run build` - create production build
+- `bun run start` - run production server
+- `bun run lint` - run ESLint
 
-## Contributing
+## Localization
 
-Contributions are welcome! Feel free to:
+The project supports English (`en`) and Bangla (`bn`) with cookie-based locale persistence and dynamic Bangla text translation support.
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit changes (`git commit -m 'Add AmazingFeature'`)
-4. Push to branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+- Full guide: [docs/localization-bangla.md](docs/localization-bangla.md)
 
-## License
+## API and Feature Docs
 
-This project is open source and available under the [MIT License](LICENSE).
+- Chatbot architecture and usage: [docs/chatbot.md](docs/chatbot.md)
+- Floating stats API usage: [docs/floating-stats-api.md](docs/floating-stats-api.md)
+- Deployment guide: [DEPLOYMENT.md](DEPLOYMENT.md)
+
+## Core Sections
+
+- Hero
+- About
+- Experience
+- Skills
+- Projects
+- Achievements
+- Contact
+
+## Performance Notes
+
+Recent mobile-focused improvements include:
+
+- Deferred loading of heavy floating overlays (chatbot and stats)
+- Simplified high-cost animations on mobile
+- Responsive floating stats panel as a mobile-safe bottom sheet
+- Lazy stats fetching only when the stats panel is opened
+
+## Customization
+
+Primary content source:
+
+- `lib/constants.ts`
+
+Primary localization source:
+
+- `lib/i18n/translations.ts`
+
+Root shell composition:
+
+- `app/layout.tsx`
+
+Home page composition:
+
+- `app/page.tsx`
+
+## Contributing and Community
+
+- Contributing guide: [CONTRIBUTING.md](CONTRIBUTING.md)
+- Code of conduct: [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
+- License: [LICENSE](LICENSE)
+
+## Troubleshooting
+
+- Ensure required env vars are set before using chatbot or contact API.
+- If external APIs rate-limit, UI falls back safely for stats where implemented.
+- Run lint/build locally before opening a pull request.
 
 ## Contact
 
-- **GitHub**: [@SharifdotG](https://github.com/SharifdotG)
-- **LinkedIn**: [@sharifdotg](https://linkedin.com/in/sharifdotg)
-- **Email**: <sharifmdyousuf007@gmail.com>
-- **Codeforces**: [@SharifdotG](https://codeforces.com/profile/SharifdotG)
-- **LeetCode**: [@SharifdotG](https://leetcode.com/SharifdotG)
+- GitHub: [@SharifdotG](https://github.com/SharifdotG)
+- LinkedIn: [sharifdotg](https://linkedin.com/in/sharifdotg)
+- Email: [sharifmdyousuf007@gmail.com](mailto:sharifmdyousuf007@gmail.com)
 
-## Acknowledgments
+## Acknowledgements
 
-- [Next.js](https://nextjs.org/) - The React Framework
-- [Vercel](https://vercel.com/) - Deployment platform
-- [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS
-- [Framer Motion](https://www.framer.com/motion/) - Animation library
-- [Catppuccin](https://github.com/catppuccin/catppuccin) - Soothing pastel theme
-- [OpenRouter](https://openrouter.ai/) - Unified LLM API
-
----
-
-**Built with 💝 by [Sharif Md. Yousuf](https://github.com/SharifdotG)**
-
-Star this repo if you found it helpful!
+- Next.js
+- Tailwind CSS
+- Framer Motion
+- Catppuccin
+- OpenRouter
+- Resend

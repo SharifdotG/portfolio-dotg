@@ -63,6 +63,7 @@ function InfiniteScrollingLogos() {
   const prefersReducedMotion = useReducedMotion();
   const reducedMotion = Boolean(prefersReducedMotion);
   const isDark = theme === "dark";
+  const [isMobile, setIsMobile] = useState(false);
   const [failedImages, setFailedImages] = useState<Set<string>>(new Set());
   const [activeLogoKey, setActiveLogoKey] = useState<string | null>(null);
   const [hoverPaused, setHoverPaused] = useState(false);
@@ -72,8 +73,22 @@ function InfiniteScrollingLogos() {
   const [segmentWidth, setSegmentWidth] = useState(0);
   const marqueeX = useMotionValue(0);
 
+  const shouldLoop = !reducedMotion && !isMobile;
+
   const marqueePaused =
-    reducedMotion || segmentWidth === 0 || hoverPaused || touchPaused;
+    !shouldLoop || segmentWidth === 0 || hoverPaused || touchPaused;
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(max-width: 767px)");
+    const updateMobileState = () => setIsMobile(mediaQuery.matches);
+
+    updateMobileState();
+    mediaQuery.addEventListener("change", updateMobileState);
+
+    return () => {
+      mediaQuery.removeEventListener("change", updateMobileState);
+    };
+  }, []);
 
   useAnimationFrame((_time, delta) => {
     if (marqueePaused) {
@@ -87,6 +102,10 @@ function InfiniteScrollingLogos() {
   });
 
   useEffect(() => {
+    if (!shouldLoop) {
+      return;
+    }
+
     const segmentElement = segmentRef.current;
     if (!segmentElement) {
       return;
@@ -107,7 +126,7 @@ function InfiniteScrollingLogos() {
     resizeObserver.observe(segmentElement);
 
     return () => resizeObserver.disconnect();
-  }, [isDark, failedImages.size]);
+  }, [failedImages.size, isDark, shouldLoop]);
 
   useEffect(() => {
     marqueeX.set(0);
@@ -181,10 +200,10 @@ function InfiniteScrollingLogos() {
 
         <motion.div
           className="flex w-max"
-          style={{ x: marqueeX, willChange: "transform" }}
+          style={shouldLoop ? { x: marqueeX, willChange: "transform" } : {}}
           aria-live="off"
         >
-          {[0, 1].map((segmentIndex) => (
+          {(shouldLoop ? [0, 1] : [0]).map((segmentIndex) => (
             <div
               key={`segment-${segmentIndex}`}
               ref={segmentIndex === 0 ? segmentRef : undefined}

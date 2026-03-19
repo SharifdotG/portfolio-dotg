@@ -20,7 +20,7 @@ Complete guide to deploy your portfolio to Vercel and other platforms.
 
 ```bash
 # Install Vercel CLI globally
-pnpm add -g vercel
+bun add -g vercel
 
 # Login to Vercel
 vercel login
@@ -109,7 +109,7 @@ After deployment, verify:
 #### Vercel Analytics
 
 ```bash
-pnpm add @vercel/analytics
+bun add @vercel/analytics
 ```
 
 Add to `app/layout.tsx`:
@@ -127,7 +127,7 @@ import { Analytics } from '@vercel/analytics/react';
 #### Vercel Speed Insights
 
 ```bash
-pnpm add @vercel/speed-insights
+bun add @vercel/speed-insights
 ```
 
 Add to `app/layout.tsx`:
@@ -157,13 +157,13 @@ Update environment variables in Vercel:
 1. Install Netlify CLI:
 
    ```bash
-   pnpm add -g netlify-cli
+   bun add -g netlify-cli
    ```
 
 2. Build the project:
 
    ```bash
-   pnpm build
+   bun run build
    ```
 
 3. Deploy:
@@ -188,19 +188,19 @@ git clone https://github.com/SharifdotG/portfolio-dotg.git
 cd portfolio-dotg
 
 # Install dependencies
-pnpm install
+bun install
 
 # Create .env.local
 echo "OPENROUTER_API_KEY=your_key_here" > .env.local
 
 # Build for production
-pnpm build
+bun run build
 
 # Install PM2
-pnpm add -g pm2
+bun add -g pm2
 
 # Start with PM2
-pm2 start pnpm --name "portfolio" -- start
+pm2 start bun --name "portfolio" -- run start
 
 # Save PM2 config
 pm2 save
@@ -219,7 +219,7 @@ pm2 startup
 
 ```bash
 # Run type checking locally
-pnpm build
+bun run build
 
 # Fix reported errors
 # Ensure all imports are correct
@@ -273,7 +273,7 @@ Ensure all images in `/public/projects/` are:
 Check bundle size:
 
 ```bash
-pnpm build
+bun run build
 ```
 
 Review output for large chunks and consider:
@@ -296,14 +296,14 @@ Vercel automatically handles:
 
 ```bash
 # Check outdated packages
-pnpm outdated
+bun outdated
 
 # Update dependencies
-pnpm update
+bun update
 
 # Test after updates
-pnpm build
-pnpm dev
+bun run build
+bun run dev
 ```
 
 ### Backup Strategy
