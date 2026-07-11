@@ -1,14 +1,44 @@
 import { createOpenRouter } from "@openrouter/ai-sdk-provider";
 import { streamText, convertToModelMessages, type UIMessage } from "ai";
 import { resolveLocale } from "@/lib/i18n/translations";
+import { getClientIp, rateLimit } from "@/lib/rate-limit";
+
+const CHAT_MODEL = "arcee-ai/trinity-large-preview:free";
+
+// Abuse guards: cap conversation size and total text so a single request
+// can't rack up token cost or be used to smuggle a huge prompt-injection payload.
+const MAX_MESSAGES = 40;
+const MAX_TOTAL_CHARS = 16_000;
 
 // OpenRouter client using official provider
 const openrouter = createOpenRouter({
   apiKey: process.env.OPENROUTER_API_KEY,
 });
 
+function totalTextLength(messages: UIMessage[]): number {
+  let total = 0;
+  for (const message of messages) {
+    for (const part of message.parts ?? []) {
+      if (part.type === "text" && typeof part.text === "string") {
+        total += part.text.length;
+      }
+    }
+  }
+  return total;
+}
+
 export async function POST(req: Request) {
   try {
+    // Rate limit per IP — 15 requests / minute is generous for real chat use.
+    const ip = getClientIp(req);
+    const limit = rateLimit(`chat:${ip}`, 15, 60_000);
+    if (!limit.success) {
+      return Response.json(
+        { error: "Too many requests. Please slow down." },
+        { status: 429, headers: { "Retry-After": String(limit.retryAfter) } },
+      );
+    }
+
     const body = (await req.json()) as {
       messages?: UIMessage[];
       locale?: string;
@@ -17,6 +47,20 @@ export async function POST(req: Request) {
     if (!Array.isArray(body.messages)) {
       return Response.json(
         { error: "Invalid request payload. 'messages' must be an array." },
+        { status: 400 },
+      );
+    }
+
+    if (body.messages.length > MAX_MESSAGES) {
+      return Response.json(
+        { error: "Conversation too long. Please start a new chat." },
+        { status: 400 },
+      );
+    }
+
+    if (totalTextLength(body.messages) > MAX_TOTAL_CHARS) {
+      return Response.json(
+        { error: "Message content is too large." },
         { status: 400 },
       );
     }
@@ -100,7 +144,7 @@ You are an AI assistant for Sharif Md. Yousuf. Use only the facts below and answ
 
   Other Notes
   - Theme toggling handled client-side; avoid relying on localStorage outside ThemeProvider.
-  - Chat API streams via OpenRouter; model: openai/gpt-oss-20b:free.
+  - Chat API streams via OpenRouter.
 
   Response Rules
   - Keep answers concise and factual.
@@ -113,7 +157,7 @@ You are an AI assistant for Sharif Md. Yousuf. Use only the facts below and answ
     const modelMessages = await convertToModelMessages(body.messages);
 
     const result = streamText({
-      model: openrouter("arcee-ai/trinity-large-preview:free"),
+      model: openrouter(CHAT_MODEL),
       system: systemPrompt,
       messages: modelMessages,
       temperature: 0.7,

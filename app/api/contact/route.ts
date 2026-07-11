@@ -1,16 +1,54 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
+import { getClientIp, rateLimit } from "@/lib/rate-limit";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+// Field length caps to reject oversized/abusive submissions.
+const MAX_NAME = 100;
+const MAX_EMAIL = 200;
+const MAX_MESSAGE = 5000;
+
 export async function POST(req: NextRequest) {
   try {
+    // Rate limit per IP — 5 messages / 10 minutes is plenty for a contact form.
+    const ip = getClientIp(req);
+    const limit = rateLimit(`contact:${ip}`, 5, 10 * 60_000);
+    if (!limit.success) {
+      return NextResponse.json(
+        { error: "Too many messages. Please try again later." },
+        { status: 429, headers: { "Retry-After": String(limit.retryAfter) } },
+      );
+    }
+
     const { name, email, message } = await req.json();
 
     // Validate input
     if (!name || !email || !message) {
       return NextResponse.json(
         { error: "All fields are required" },
+        { status: 400 },
+      );
+    }
+
+    if (
+      typeof name !== "string" ||
+      typeof email !== "string" ||
+      typeof message !== "string"
+    ) {
+      return NextResponse.json(
+        { error: "Invalid field types" },
+        { status: 400 },
+      );
+    }
+
+    if (
+      name.length > MAX_NAME ||
+      email.length > MAX_EMAIL ||
+      message.length > MAX_MESSAGE
+    ) {
+      return NextResponse.json(
+        { error: "One or more fields exceed the maximum allowed length" },
         { status: 400 },
       );
     }

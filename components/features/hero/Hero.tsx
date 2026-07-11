@@ -157,6 +157,7 @@ export default function Hero() {
                         : PERSONAL_INFO.name
                     }
                     fill
+                    sizes="(max-width: 640px) 66vw, (max-width: 1024px) 24rem, 25rem"
                     className="object-cover object-top"
                     priority
                   />
@@ -179,9 +180,9 @@ export default function Hero() {
               className="font-display text-5xl font-bold tracking-tight sm:text-6xl lg:text-7xl leading-[1.35]"
             >
               <span
-                className={`inline-block animate-text-gradient ${
-                  locale === "bn" ? "translate-y-[0.04em]" : ""
-                }`}
+                className={`inline-block ${
+                  reduceVisualEffects ? "gradient-text" : "animate-text-gradient"
+                } ${locale === "bn" ? "translate-y-[0.04em]" : ""}`}
               >
                 {heroName.first}
               </span>{" "}

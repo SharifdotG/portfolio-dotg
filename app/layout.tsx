@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
-import { Bricolage_Grotesque, DM_Sans, Cascadia_Code } from "next/font/google";
+import {
+  Bricolage_Grotesque,
+  DM_Sans,
+  Cascadia_Code,
+  Hind_Siliguri,
+} from "next/font/google";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { LanguageProvider } from "@/components/providers/LanguageProvider";
 import Header from "@/components/shared/Header";
@@ -35,6 +40,17 @@ const cascadiaCode = Cascadia_Code({
   variable: "--font-cascadia",
   display: "swap",
   weight: ["400", "500", "600", "700"],
+});
+
+// Bengali Font - Hind Siliguri (self-hosted, non-blocking).
+// Only English/Latin is preloaded; the Bengali fallback loads lazily so it
+// never blocks first paint for the majority (English) visitors.
+const hindSiliguri = Hind_Siliguri({
+  subsets: ["bengali", "latin"],
+  variable: "--font-hind-siliguri",
+  display: "swap",
+  weight: ["400", "500", "600", "700"],
+  preload: false,
 });
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -113,9 +129,16 @@ export default async function RootLayout({
     <html
       lang={initialLocale}
       suppressHydrationWarning
-      className={`${bricolage.variable} ${dmSans.variable} ${cascadiaCode.variable} ${initialLocale === "bn" ? "locale-bn" : ""}`}
+      className={`${bricolage.variable} ${dmSans.variable} ${cascadiaCode.variable} ${hindSiliguri.variable} ${initialLocale === "bn" ? "locale-bn" : ""}`}
     >
       <body className={`${dmSans.className} antialiased`}>
+        {/* Apply the persisted/system theme before first paint to avoid a
+            flash of the wrong theme (FOUC) for light-mode visitors. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('theme');if(t!=='light'&&t!=='dark'){t=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}if(t==='light'){document.documentElement.classList.add('light');}}catch(e){}})();`,
+          }}
+        />
         <ThemeProvider>
           <LanguageProvider initialLocale={initialLocale}>
             <Header />
